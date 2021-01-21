@@ -25,14 +25,8 @@ honours-*.tar
 # Temporary files for e.g. tests
 /tmp
 
-# Created by https://www.toptal.com/developers/gitignore/api/elixir,code
-# Edit at https://www.toptal.com/developers/gitignore?templates=elixir,code
-
-### Code ###
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-*.code-workspace
+# Created by https://www.toptal.com/developers/gitignore/api/elixir
+# Edit at https://www.toptal.com/developers/gitignore?templates=elixir
 
 ### Elixir ###
 /_build
