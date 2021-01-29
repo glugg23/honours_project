@@ -7,6 +7,7 @@
 % !TEX encoding = UTF-8 Unicode
 \usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
 \usepackage{graphicx} % support the \includegraphics command and options
+\usepackage{pdfpages}
 
 \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
 
@@ -106,8 +107,8 @@ So on and so forth...
 \section{Second Formal Review Output}
 Insert a copy of the project review form you were given at the end of the review by the second marker
 
-\section{Diary Sheets (or other project management evidence)}
-Insert diary sheets here together with any project management plan you have
+\section{Diary Sheets}
+\includepdf[pages=-, pagecommand={}]{../management/project_diary/week1.pdf}
 
 \section{Appendix 4 and following}
 insert content here and for each of the other appendices, the title may be just on a page by itself, the pages of the appendices are not numbered, unless an included document such as a user manual or design document is itself pager numbered.
