@@ -1,0 +1,4 @@
+*.docx
+
+# Office temp files start with these characters
+~$*
