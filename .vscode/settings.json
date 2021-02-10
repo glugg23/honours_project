@@ -1,3 +1,4 @@
 {
-    "elixirLS.projectDir": "src"
+    "elixirLS.projectDir": "src",
+    "latex-workshop.chktex.enabled": true
 }
