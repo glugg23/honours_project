@@ -10,7 +10,7 @@ Introduction here.
 
 \subsubsection{Erlang}
 
-The Erlang\footnote{\url{https://www.erlang.org/}} language was introduced by \citeA{armstrong1990erlang} as an experimental new programming language to be used for programming telephony systems.
+The Erlang\footnote{\url{https://www.erlang.org/}} programming language was introduced by \citeA{armstrong1990erlang} as an experimental new programming language to be used for programming telephony systems.
 Erlang is designed around using concurrent processes with no shared memory, which communicate using asynchronous message passing.
 All of this is built into the language definition.~\cite{armstrong2007history}
 The fact that this behaviour is implemented on a language basis and not as a third-party library is beneficial as it allows us to implement the basic Actor principle of message passing entirely using Erlang processes.
@@ -34,6 +34,17 @@ However, they mention that the drawbacks of Erlang are a lack of process synchro
 While Erlang has been used for implementing other types of scientific modelling, it has yet to be used for modelling supply chains.
 
 \subsubsection{Elixir}
+
+The Elixir\footnote{\url{https://elixir-lang.org/}} programming language can be considered to be a more modern version of Erlang.
+Elixir compiles to the same byte code that the Erlang runtime uses.
+This allows Elixir code to call code written in Erlang with no runtime overhead.
+Elixir uses a syntax similar to Ruby, which is more modern than the Prolog inspired syntax of Erlang.~\cite{loder2016erlang}
+
+As Elixir is a fairly new programming language it has yet to be used for any type of modelling research.
+However, it has been used for web development and real-time applications.
+
+For this project I have chosen to use Elixir for implementing my supply chain model.
+I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
 
 \subsubsection{Jade}
 
