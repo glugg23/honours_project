@@ -46,6 +46,15 @@ However, it has been used for web development and real-time applications.
 For this project I have chosen to use Elixir for implementing my supply chain model.
 I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
 
-\subsubsection{Jade}
+\subsubsection{JADE}
+
+JADE (\textbf{J}ava \textbf{A}gent \textbf{DE}velopment Framework)\footnote{\url{https://jade.tilab.com/}} is a Java framework for developing agent-based applications, and was one of the first FIPA specification compliant frameworks.~\cite{bellifemine1999jade}
+JADE provides a platform for executing agents via composable behaviours and allowing both local and distributed agents to communicate with each other.
+One optimisation that JADE provides is that FIPA ACL messages are transported between JADE agents on the same platform as Java objects, instead of needing to be serialised into a string format.
+For agents on different platforms the message is converted as required but this provides a performance boost for local agents.
+
+\citeA{bergenti2020first} note that in the 20 years that the JADE framework has been available, it has been extensively used in academia for software agent research as well as being used to introduce students to agent-oriented programming.
+However, \shortciteA{bergenti2020first} also mention that students using JADE struggle with the complexity of the framework, if they do not have any prior knowledge of software agents.
+They propose Jadescript as a language to provide a dedicated syntax for constructing and using JADE agents.
 
 \subsubsection{NetLogo}
