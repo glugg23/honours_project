@@ -15,7 +15,7 @@ Erlang is designed around using concurrent processes with no shared memory, whic
 All of this is built into the language definition.~\cite{armstrong2007history}
 The fact that this behaviour is implemented on a language basis and not as a third-party library is beneficial as it allows us to implement the basic Actor principle of message passing entirely using Erlang processes.
 
-\shortciteA{varela2004modelling} describes a method for implementing agents using multiple Erlang processes to represent individual components of an agent.
+\citeA{varela2004modelling} describes a method for implementing agents using multiple Erlang processes to represent individual components of an agent.
 These processes communicate with one another to execute overall actions for the agent, and one or more processes are dedicated to communicating with other agents in the system.
 They also describe the notion of a supervisor tree, which is a tree-like hierarchy of agents where each agent monitors the state of any agents below it.
 This allows fault tolerance as long as the supervisor stores the initial state of all the agents it monitors.
@@ -24,9 +24,9 @@ This allows fault tolerance as long as the supervisor stores the initial state o
 They found that while Erlang fully met the criteria for distribution support, it did not fully support agent behaviour composition and extension, which would be required for agent model compliance.
 They also found that Erlang lacked logical inference support to provide rationality to agents.
 They propose the eXAT\footnote{\textbf{e}rlang e\textbf{X}perimental \textbf{A}gent \textbf{T}ool} platform as a suitable library for fixing these issues.~\cite{di2003exat}
-However, \shortciteA{peregud2012implementing} found that the eXAT platform was cumbersome to write models with, was practically discontinued since 2005 and has no community support and no production systems using it.
+However, \citeA{peregud2012implementing} found that the eXAT platform was cumbersome to write models with, was practically discontinued since 2005 and has no community support and no production systems using it.
 
-\shortciteA{santana2017interscsimulator} have used Erlang to model a large scale traffic simulation using millions of agents.
+\citeA{santana2017interscsimulator} have used Erlang to model a large scale traffic simulation using millions of agents.
 They note that the parallelism provided by Erlang processes and the ability to run Erlang code distributed on multiple machines simultaneously are the main factors for the performance they achieved.
 However, they mention that the drawbacks of Erlang are a lack of process synchronisation mechanisms and a general lack of IDE\footnote{Integrated Development Environment} tooling.
 % Mention Sim-Diasca?
