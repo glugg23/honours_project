@@ -11,7 +11,7 @@ start_link(Args) ->
 
 init(Args) ->
     logger:notice("[~s] Starting", [Args#state.name]),
-    {ok, Ref} = timer:send_interval(1_000, self(), hello),
+    {ok, Ref} = timer:send_interval(1_000, hello),
     ArgsInterval = Args#state{discovery = Ref},
     {ok, ArgsInterval}.
 
@@ -24,7 +24,7 @@ handle_info(hello, State) ->
            logger:notice("[~s] I'm ~p", [State#state.name, self()]),
 
            logger:notice("[~s] Starting to count", [State#state.name]),
-           ?MODULE ! count
+           timer:send_interval(1_000, count)
     end,
 
     {noreply, State};
@@ -37,7 +37,6 @@ handle_info(count, State) ->
            hello_agent_partner:die(),
            {stop, normal, State};
        true ->
-           timer:send_after(1_000, ?MODULE, count),
            {noreply, State#state{count = State#state.count + 1}}
     end.
 

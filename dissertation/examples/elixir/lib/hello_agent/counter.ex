@@ -4,7 +4,7 @@ defmodule HelloAgent.Counter do
 
   def init(state) do
     Logger.info("[#{state[:name]}] Starting")
-    {:ok, ref} = :timer.send_interval(1_000, self(), :hello)
+    {:ok, ref} = :timer.send_interval(1_000, :hello)
     state = Map.put(state, :discovery, ref)
     {:ok, state}
   end
@@ -22,7 +22,7 @@ defmodule HelloAgent.Counter do
       Logger.info("[#{state[:name]}] I'm #{inspect(self())}")
 
       Logger.info("[#{state[:name]}] Starting to count")
-      Process.send(__MODULE__, :count, [])
+      :timer.send_interval(1_000, :count)
     end
 
     {:noreply, state}
@@ -36,7 +36,6 @@ defmodule HelloAgent.Counter do
       HelloAgent.Partner.die()
       {:stop, :normal, state}
     else
-      Process.send_after(__MODULE__, :count, 1_000)
       {:noreply, %{state | count: state[:count] + 1}}
     end
   end
