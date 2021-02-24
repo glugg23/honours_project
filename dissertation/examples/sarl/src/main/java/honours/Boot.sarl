@@ -1,0 +1,14 @@
+package honours
+
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+
+agent Boot {
+    uses Lifecycle
+
+    on Initialize {
+        spawn(Counter)
+        spawn(Partner)
+        killMe
+    }
+}

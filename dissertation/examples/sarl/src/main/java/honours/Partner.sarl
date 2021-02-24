@@ -1,0 +1,29 @@
+package honours
+
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+
+event Hello
+
+event Die
+
+agent Partner {
+    uses Lifecycle, DefaultContextInteractions, Logging
+
+    on Initialize {
+        loggingName = "PARTNER"
+        info("Starting")
+    }
+
+    on Hello [ !isFromMe ] {
+        info("Say hello!")
+        emit(new Hello)
+    }
+
+    on Die {
+        info("is dying")
+        killMe
+    }
+}

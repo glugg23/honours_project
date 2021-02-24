@@ -1,0 +1,54 @@
+package honours
+
+import io.sarl.core.Behaviors
+import io.sarl.core.DefaultContextInteractions
+import io.sarl.core.Initialize
+import io.sarl.core.Lifecycle
+import io.sarl.core.Logging
+import io.sarl.core.Schedules
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
+
+event Hello
+
+event Count
+
+event Die
+
+agent Counter {
+    uses Lifecycle, Schedules, DefaultContextInteractions, Behaviors, Logging
+
+    val count = new AtomicInteger
+    var started = new AtomicBoolean
+
+    on Initialize {
+        loggingName = "COUNTER"
+        info("Starting")
+        task("discovery").every(1000) [
+            emit(new Hello)
+        ]
+    }
+
+    on Hello [ !isFromMe && !started.get ] {
+        info("Found another agent => " + occurrence.source)
+        info("I'm " + defaultAddress)
+        started.set(true)
+        task("discovery").cancel
+        info("Starting to count")
+        wake(new Count)
+    }
+
+    on Count {
+        info("count => " + count.get)
+        if(count.get == 3) {
+            info("orders Partner to die")
+            emit(new Die)
+            killMe
+        } else {
+            in(1000) [
+                count.incrementAndGet
+                wake(new Count)
+            ]
+        }
+    }
+}
