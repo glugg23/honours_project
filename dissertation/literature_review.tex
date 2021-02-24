@@ -29,7 +29,6 @@ However, \citeA{peregud2012implementing} found that the eXAT platform was cumber
 \citeA{santana2017interscsimulator} have used Erlang to model a large scale traffic simulation using millions of agents.
 They note that the parallelism provided by Erlang processes and the ability to run Erlang code distributed on multiple machines simultaneously are the main factors for the performance they achieved.
 However, they mention that the drawbacks of Erlang are a lack of process synchronisation mechanisms and a general lack of IDE\footnote{Integrated Development Environment} tooling.
-% Mention Sim-Diasca?
 
 While Erlang has been used for implementing other types of scientific modelling, it has yet to be used for modelling supply chains.
 
@@ -41,7 +40,13 @@ This allows Elixir code to call code written in Erlang with no runtime overhead.
 Elixir uses a syntax similar to Ruby, which is more modern than the Prolog inspired syntax of Erlang.~\cite{loder2016erlang}
 
 As Elixir is a fairly new programming language it has yet to be used for any type of modelling research.
-However, it has been used for web development and real-time applications.
+\citeA{fedrecheski2016elixir} compared Elixir with Java for use in Internet of Things software.
+They found that while the Java implementation used 5\% to 15\% less CPU load, the Elixir version was shorter in terms of lines of code, consumed significantly less memory, and handled HTTP responses better under heavy load.
+
+While Elixir has not yet found much use in the scientific community, it has been used for web development and real-time applications.
+Discord had been an early adopter of Elixir for its messaging platform and was able to scale its application to handle five million concurrent users using it.~\cite{vishnevskiy2017how}
+\citeA{pinterest2017introducing} have used Elixir to implement a notification system.
+They found that the Elixir version had ten times fewer lines of code than the original Java version, and ran faster as well.
 
 For this project I have chosen to use Elixir for implementing my supply chain model.
 I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
