@@ -99,6 +99,16 @@ This example uses the OTP\footnote{Open Telecom Platform} generic server behavio
 This allows the agents to be managed by an OTP process supervisor, as seen in \cref{lst:erl_sup}.
 The benefit of this is that agents that crash can then be automatically restarted by the supervisor.
 
+eXAT has been compared with Java and JADE by \citeA{di2005using}.
+They mention that since Java does not support function clause pattern matching and requires the use of objects to provide a symbolic language, eXAT is superior for implementing and agent-based model.
+While \shortciteA{peregud2012implementing} is overall critical of eXAT, they mention a benefit of it is that it allows a large amount of eXAT agents to run at once regardless of size.
+Compared to JADE which suggests the use of fewer but larger agents in general.
+It should be noted that both of these positives are a result of the Erlang language and not something entirely specific to the eXAT platform.
+
+It was not possible to write a counter agent example in eXAT\@.
+The platform depends on deprecated dependencies causing it to fail to compile on \verb|Erlang/OTP 23.2.6|.
+As a result of this and the fact that the last update to eXAT was done by \shortciteA{peregud2012implementing} in 2012, this project seems to be completely inactive.
+
 For this project I have chosen to use Elixir for implementing my supply chain model.
 I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
 
