@@ -1,7 +1,6 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage{titlesec}
 \usepackage{fancyhdr}
-\usepackage{titlesec}
 \newcommand{\sectionbreak}{\clearpage}
 % !TEX encoding = UTF-8 Unicode
 \usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
@@ -16,8 +15,10 @@
 \usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
 \usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
 \usepackage[toc,page]{appendix}
+\usepackage{listings} % use for code listings
 \usepackage[hidelinks]{hyperref} % for clickable links, hide the colour boxes surrounding the links
 \usepackage{apacite} % needs to be loaded here or hyperref breaks things
+\usepackage{cleveref} % use to reference multiple things at once, load here or it breaks
 
 \pagestyle{fancyplain}
 \fancyhf{}
@@ -25,9 +26,16 @@
 \renewcommand{\footrulewidth}{0.5pt}
 \setlength{\headheight}{15pt}
 \fancyhead[L]{Johann Leonhardt --- 40315336}
-\fancyhead[R]{SOC10101 Honors Project}
+\fancyhead[R]{SOC10101 Honours Project}
 \fancyfoot[L]{}
 \fancyfoot[C]{\thepage}
+
+\lstdefinestyle{code}{
+    numbers=left,
+    breaklines=true,
+    showstringspaces=false,
+}
+\lstset{basicstyle=\tiny, style=code}
 
 \begin{document}
 

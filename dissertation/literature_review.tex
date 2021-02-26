@@ -48,9 +48,6 @@ Discord had been an early adopter of Elixir for its messaging platform and was a
 \citeA{pinterest2017introducing} have used Elixir to implement a notification system.
 They found that the Elixir version had ten times fewer lines of code than the original Java version, and ran faster as well.
 
-For this project I have chosen to use Elixir for implementing my supply chain model.
-I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
-
 \subsubsection{JADE}
 
 JADE (\textbf{J}ava \textbf{A}gent \textbf{DE}velopment Framework)\footnote{\url{https://jade.tilab.com/}} is a Java framework for developing agent-based applications, and was one of the first FIPA specification compliant frameworks.~\cite{bellifemine1999jade}
@@ -86,3 +83,38 @@ The reason why SARL is designed to be agnostic is the belief that a more general
 SARL compiles to Java byte code and can be run on the Janus platform, although other platforms can be used as well.~\cite{rodriguez2014sarl}
 
 As SARL is a relatively new agent-oriented programming language, it has yet to be used for SCM and has also not seen much use for general agent-based modelling yet.
+
+\subsubsection{Comparison Between Technologies}
+
+This section compares all the previously mentioned technologies, in order to evaluate them for this project.
+A short example program has written for each technology, so that the ease of writing a multi-agent system can be objectively compared.
+See \Cref{tab:tech_comparison} for an overview of the comparison.
+
+The example multi-agent model that was written for each technology is a ``counter agent'' program.
+This program has two agents, the first agent discovers the second agent and then counts to three before telling the other agent to terminate.
+This is a very simple example of multiple agents interacting with each other, and is designed to show how much support a given technology has for agent-oriented primitives such as message passing and defining repeating actions.
+
+\Cref{lst:erl_app,lst:erl_sup,lst:erl_counter,lst:erl_partner} shows the counter agent example written in Erlang.
+This example uses the OTP\footnote{Open Telecom Platform} generic server behaviour to implement message receiving and agent behaviour.
+This allows the agents to be managed by an OTP process supervisor, as seen in \cref{lst:erl_sup}.
+The benefit of this is that agents that crash can then be automatically restarted by the supervisor.
+
+For this project I have chosen to use Elixir for implementing my supply chain model.
+I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
+
+\begin{table}[h]
+    \centering
+    \caption{Technology Comparison}\label{tab:tech_comparison}
+    \begin{tabular}{@{}lllll@{}}
+        \toprule
+        Name & SCM & FIPA & Difficulty & Active Project\\
+        \midrule
+        Erlang & No & No &  & Yes\\
+        eXAT & No & Yes & N/A & No\\
+        Elixir & No & No &  & Yes\\
+        JADE & Yes & Yes &  & No?\\
+        NetLogo & Yes & Plugin &  & Yes\\
+        SARL & No & No &  & Yes\\
+        \bottomrule
+    \end{tabular}
+\end{table}
