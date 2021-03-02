@@ -119,6 +119,17 @@ This is calling a function in the \verb|timer| module of the Erlang standard lib
 One of the reasons why the Elixir code is shorter than the Erlang code is due to Elixir's use of macros for metaprogramming.
 The Elixir statement \verb|use GenServer| is a macro which provides default implementations for functions such as \verb|handle_call/3| and \verb|handle_cast/2| which need to be implemented in Erlang manually (see lines 43--47 in \cref{lst:erl_counter}).
 
+\citeA{christos2016agent} have compared the experience writing a supply chain model in both NetLogo and JADE\@.
+They found that NetLogo not requiring an external IDE for programming and having easily embeddable graphical controls made it easy to use.
+However, they conclude that JADE programs provide more flexible and robust programs assuming the user is willing to spend the time to learn the technology.
+
+\Cref{lst:netlogo} shows the counter agent example implemented in NetLogo.
+This is the shortest implementation of the counter agent at only 32 lines of code.
+This conciseness however comes at a price.
+NetLogo does not have a native way to send messages between `turtles' and has no way for a `turtle' to refuse to do an action it has been asked to do.
+While this makes example programs short and easy to read, it would likely cause issues as models grow larger and more complex.
+NetLogo does have a library\footnote{\url{https://users.uom.gr/~iliass/projects/NetLogo/}} to support sending messages between agents, however, this library only supports \verb|NetLogo 5| whereas the current version is \verb|NetLogo 6.2|.~\cite{sakellariou2008enhancing}
+
 For this project I have chosen to use Elixir for implementing my supply chain model.
 I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
 
