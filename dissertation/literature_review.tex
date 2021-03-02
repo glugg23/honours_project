@@ -119,6 +119,16 @@ This is calling a function in the \verb|timer| module of the Erlang standard lib
 One of the reasons why the Elixir code is shorter than the Erlang code is due to Elixir's use of macros for metaprogramming.
 The Elixir statement \verb|use GenServer| is a macro which provides default implementations for functions such as \verb|handle_call/3| and \verb|handle_cast/2| which need to be implemented in Erlang manually (see lines 43--47 in \cref{lst:erl_counter}).
 
+\Cref{lst:jade_counter,lst:jade_partner} shows the counter agent example implemented using JADE\@.
+This implementation comes to 96 lines of code and is therefore the longest example program.
+From this we can see that JADE is indeed a more complex framework to use than the other technologies that have been covered here.
+An example of this would be the number of lines of code required in order to send a simple message between two agents.
+Lines 28--31 of \cref{lst:jade_counter} show that JADE requires four lines of code to send the message ``Hello'' to another agent, due to all messages being required to conform to the FIPA ACL message format.
+
+Another point to mention is that JADE has not had a new release since 2017, and the mailing lists for user support have been taken offline.
+This calls into question whether JADE is still an active project.
+\shortciteA{bergenti2020first} mention a shift towards developing Jadescript, however, at present this project does not seem to be generally available for review.
+
 \citeA{christos2016agent} have compared the experience writing a supply chain model in both NetLogo and JADE\@.
 They found that NetLogo not requiring an external IDE for programming and having easily embeddable graphical controls made it easy to use.
 However, they conclude that JADE programs provide more flexible and robust programs assuming the user is willing to spend the time to learn the technology.
@@ -155,7 +165,7 @@ I believe that the benefits of using a language that can leverage the features o
         Erlang & No & No & 81 &  & Yes\\
         eXAT & No & Yes & N/A & N/A & No\\
         Elixir & No & No & 71 &  & Yes\\
-        JADE & Yes & Yes &  &  & No?\\
+        JADE & Yes & Yes & 96 &  & No?\\
         NetLogo & Yes & Plugin & 32 &  & Yes\\
         SARL & No & No & 78 &  & Yes\\
         \bottomrule
