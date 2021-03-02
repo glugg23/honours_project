@@ -130,22 +130,34 @@ NetLogo does not have a native way to send messages between `turtles' and has no
 While this makes example programs short and easy to read, it would likely cause issues as models grow larger and more complex.
 NetLogo does have a library\footnote{\url{https://users.uom.gr/~iliass/projects/NetLogo/}} to support sending messages between agents, however, this library only supports \verb|NetLogo 5| whereas the current version is \verb|NetLogo 6.2|.~\cite{sakellariou2008enhancing}
 
+\citeA{feraud2017first} compare SARL with other technologies such as JADE and NetLogo.
+They mention that an advantage of JADE is that it provides graphical tools for debugging and monitoring running agents.
+However, they mention that JADE suffers from having an overly complex programming API which makes it harder to develop applications with it.
+They also mention that while NetLogo suffers from the perception of being a tool solely for teaching, its GUI elements simplify the overall develop of models.
+For SARL they mention that the intuitive syntax helps the user to deal with the necessary aspects for creating a multi-agent system.
+It should be noted that this paper was written by the authors of the SARL language.
+
+\Cref{lst:sarl_boot,lst:sarl_counter,lst:sarl_partner} shows the counter agent example written in SARL\@.
+This example program is implemented in 78 lines of code.
+We can see the benefits of SARL being a domain-specific language for multi-agent systems, by how concise it is for operations such as emitting messages.
+However, one of the issues that was found when implementing this example in SARL is that the documentation for SARL is still very sparse due to it being a relatively new technology.
+
 For this project I have chosen to use Elixir for implementing my supply chain model.
 I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
 
 \begin{table}[h]
     \centering
     \caption{Technology Comparison}\label{tab:tech_comparison}
-    \begin{tabular}{@{}lllll@{}}
+    \begin{tabular}{@{}llllll@{}}
         \toprule
-        Name & SCM & FIPA & Difficulty & Active Project\\
+        Name & SCM & FIPA & LOC & Difficulty & Active Project\\
         \midrule
-        Erlang & No & No &  & Yes\\
-        eXAT & No & Yes & N/A & No\\
-        Elixir & No & No &  & Yes\\
-        JADE & Yes & Yes &  & No?\\
-        NetLogo & Yes & Plugin &  & Yes\\
-        SARL & No & No &  & Yes\\
+        Erlang & No & No & 81 &  & Yes\\
+        eXAT & No & Yes & N/A & N/A & No\\
+        Elixir & No & No & 71 &  & Yes\\
+        JADE & Yes & Yes &  &  & No?\\
+        NetLogo & Yes & Plugin & 32 &  & Yes\\
+        SARL & No & No & 78 &  & Yes\\
         \bottomrule
     \end{tabular}
 \end{table}

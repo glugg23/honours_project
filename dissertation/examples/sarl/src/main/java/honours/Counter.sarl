@@ -19,7 +19,7 @@ agent Counter {
     uses Lifecycle, Schedules, DefaultContextInteractions, Behaviors, Logging
 
     val count = new AtomicInteger
-    var started = new AtomicBoolean
+    val started = new AtomicBoolean
 
     on Initialize {
         loggingName = "COUNTER"
