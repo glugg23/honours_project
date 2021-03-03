@@ -84,6 +84,16 @@ SARL compiles to Java byte code and can be run on the Janus platform, although o
 
 As SARL is a relatively new agent-oriented programming language, it has yet to be used for SCM and has also not seen much use for general agent-based modelling yet.
 
+\subsubsection{SPADE}
+
+SPADE\footnote{\url{https://spade-mas.readthedocs.io/en/latest/}} is a Python platform for implementing multi-agent systems.
+SPADE allows agents to communicate FIPA ACL messages via XMPP (e\textbf{X}tensible \textbf{M}essaging and \textbf{P}resence \textbf{P}rotocol) or HTTP for older agents that do not support this.
+SPADE provides security mechanisms to prevent unauthorised agents; a username and password is required to log an agent into the message router.~\cite{gregori2006jabber}
+The benefit of using Python for SPADE is the ability to use it alongside other popular Artificial Intelligence libraries.
+As SPADE uses a protocol that is commonly used for instant messaging between humans, it allows humans to communicate easily with agents.~\cite{palanca2020spade}
+
+While SPADE has not been used for SCM, it has been used for modelling free-floating car sharing by \citeA{marti2020free}.
+
 \subsubsection{Comparison Between Technologies}
 
 This section compares all the previously mentioned technologies, in order to evaluate them for this project.
@@ -152,6 +162,13 @@ This example program is implemented in 78 lines of code.
 We can see the benefits of SARL being a domain-specific language for multi-agent systems, by how concise it is for operations such as emitting messages.
 However, one of the issues that was found when implementing this example in SARL is that the documentation for SARL is still very sparse due to it being a relatively new technology.
 
+\Cref{lst:spade_hello_agent,lst:spade_counter,lst:spade_partner} shows the counter agent example using SPADE\@.
+While SPADE is written in a similar style to JADE, the more concise nature of Python means the example program is only 79 lines of code long.
+An issue that can be seen is SPADE's lack of convenient behaviour classes.
+While JADE has a class for defining a sequence of behaviours, the only way to do this in SPADE is to use a finite state machine behaviour (see lines 46--53 of \cref{lst:spade_counter}).
+Another issue is that, at present, SPADE entirely relies on third-party XMPP servers.
+This requires the user to learn how to setup an XMPP server before even starting to use SPADE\@.
+
 For this project I have chosen to use Elixir for implementing my supply chain model.
 I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
 
@@ -168,6 +185,7 @@ I believe that the benefits of using a language that can leverage the features o
         JADE & Yes & Yes & 96 &  & No?\\
         NetLogo & Yes & Plugin & 32 &  & Yes\\
         SARL & No & No & 78 &  & Yes\\
+        SPADE & No & Yes & 79 &  & Yes\\
         \bottomrule
     \end{tabular}
 \end{table}
