@@ -100,6 +100,24 @@ This section compares all the previously mentioned technologies, in order to eva
 A short example program has written for each technology, so that the ease of writing a multi-agent system can be objectively compared.
 See \Cref{tab:tech_comparison} for an overview of the comparison.
 
+\begin{table}[h]
+    \centering
+    \caption{Technology Comparison}\label{tab:tech_comparison}
+    \begin{tabular}{llllll}
+        \toprule
+        Name & SCM & FIPA & LOC & Difficulty to Use & Active Project\\
+        \midrule
+        Erlang & No & No & 81 & High & Yes\\[0.5ex]
+        eXAT & No & Yes & --- & --- & No\\[0.5ex]
+        Elixir & No & No & 71 & Low & Yes\\[0.5ex]
+        JADE & Yes & Yes & 96 & High & No?\\[0.5ex]
+        NetLogo & Yes & Plugin & 32 & Low & Yes\\[0.5ex]
+        SARL & No & No & 78 & Medium & Yes\\[0.5ex]
+        SPADE & No & Yes & 79 & Medium & Yes\\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
 The example multi-agent model that was written for each technology is a `counter agent' program.
 This program has two agents, the first agent discovers the second agent and then counts to three before telling the other agent to terminate.
 This is a very simple example of multiple agents interacting with each other, and is designed to show how much support a given technology has for agent-oriented primitives such as message passing and defining repeating actions.
@@ -171,21 +189,3 @@ This requires the user to learn how to setup an XMPP server before even starting
 
 For this project I have chosen to use Elixir for implementing my supply chain model.
 I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
-
-\begin{table}[h]
-    \centering
-    \caption{Technology Comparison}\label{tab:tech_comparison}
-    \begin{tabular}{@{}llllll@{}}
-        \toprule
-        Name & SCM & FIPA & LOC & Difficulty & Active Project\\
-        \midrule
-        Erlang & No & No & 81 &  & Yes\\
-        eXAT & No & Yes & N/A & N/A & No\\
-        Elixir & No & No & 71 &  & Yes\\
-        JADE & Yes & Yes & 96 &  & No?\\
-        NetLogo & Yes & Plugin & 32 &  & Yes\\
-        SARL & No & No & 78 &  & Yes\\
-        SPADE & No & Yes & 79 &  & Yes\\
-        \bottomrule
-    \end{tabular}
-\end{table}
