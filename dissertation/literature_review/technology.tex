@@ -1,0 +1,183 @@
+\subsection{Technologies for Agent-based Modelling}
+
+\subsubsection{Erlang}
+
+The Erlang\footnote{\url{https://www.erlang.org/}} programming language was introduced by \citeA{armstrong1990erlang} as an experimental new programming language to be used for programming telephony systems.
+Erlang is designed around using concurrent processes with no shared memory, which communicate using asynchronous message passing.
+All of this is built into the language definition.~\cite{armstrong2007history}
+The fact that this behaviour is implemented on a language basis and not as a third-party library is beneficial as it allows us to implement the basic Actor principle of message passing entirely using Erlang processes.
+
+\citeA{varela2004modelling} describes a method for implementing agents using multiple Erlang processes to represent individual components of an agent.
+These processes communicate with one another to execute overall actions for the agent, and one or more processes are dedicated to communicating with other agents in the system.
+They also describe the notion of a supervisor tree, which is a tree-like hierarchy of agents where each agent monitors the state of any agents below it.
+This allows fault tolerance as long as the supervisor stores the initial state of all the agents it monitors.
+
+\citeA{di2005using} evaluated Erlang on three metrics: Agent Model Compliance, Support for Rationality and Support for Distribution.
+They found that while Erlang fully met the criteria for distribution support, it did not fully support agent behaviour composition and extension, which would be required for agent model compliance.
+They also found that Erlang lacked logical inference support to provide rationality to agents.
+They propose the eXAT (\textbf{e}rlang e\textbf{X}perimental \textbf{A}gent \textbf{T}ool) platform as a suitable library for fixing these issues.~\cite{di2003exat}
+However, \citeA{peregud2012implementing} found that the eXAT platform was cumbersome to write models with, was practically discontinued since 2005 and has no community support and no production systems using it.
+
+\citeA{santana2017interscsimulator} have used Erlang to model a large scale traffic simulation using millions of agents.
+They note that the parallelism provided by Erlang processes and the ability to run Erlang code distributed on multiple machines simultaneously are the main factors for the performance they achieved.
+However, they mention that the drawbacks of Erlang are a lack of process synchronisation mechanisms and a general lack of IDE tooling.
+
+While Erlang has been used for implementing other types of scientific modelling, it has yet to be used for modelling supply chains.
+
+\subsubsection{Elixir}
+
+The Elixir\footnote{\url{https://elixir-lang.org/}} programming language can be considered to be a more modern version of Erlang.
+Elixir compiles to the same byte code that the Erlang runtime uses.
+This allows Elixir code to call code written in Erlang with no runtime overhead.
+Elixir uses a syntax similar to Ruby, which is more modern than the Prolog inspired syntax of Erlang.~\cite{loder2016erlang}
+
+As Elixir is a fairly new programming language it has yet to be used for any type of modelling research.
+\citeA{fedrecheski2016elixir} compared Elixir with Java for use in Internet of Things software.
+They found that while the Java implementation used 5\% to 15\% less CPU load, the Elixir version was shorter in terms of lines of code, consumed significantly less memory, and handled HTTP responses better under heavy load.
+
+While Elixir has not yet found much use in the scientific community, it has been used for web development and real-time applications.
+Discord had been an early adopter of Elixir for its messaging platform and was able to scale its application to handle five million concurrent users using it.~\cite{vishnevskiy2017discord}
+\citeA{pinterest2017introducing} have used Elixir to implement a notification system.
+They found that the Elixir version had ten times fewer lines of code than the original Java version, and ran faster as well.
+
+\subsubsection{JADE}
+
+JADE (\textbf{J}ava \textbf{A}gent \textbf{DE}velopment Framework)\footnote{\url{https://jade.tilab.com/}} is a Java framework for developing agent-based applications, and was one of the first FIPA specification compliant frameworks.~\cite{bellifemine1999jade}
+JADE provides a platform for executing agents via composable behaviours and allowing both local and distributed agents to communicate with each other.
+One optimisation that JADE provides is that FIPA ACL messages are transported between JADE agents on the same platform as Java objects, instead of needing to be serialised into a string format.
+For agents on different platforms the message is converted as required but this provides a performance boost for local agents.
+
+\citeA{bergenti2020first} note that in the 20 years that the JADE framework has been available, it has been extensively used in academia for software agent research as well as being used to introduce students to agent-oriented programming.
+However, \shortciteA{bergenti2020first} also mention that students using JADE struggle with the complexity of the framework, if they do not have any prior knowledge of software agents.
+They propose Jadescript as a language to provide a dedicated syntax for constructing and using JADE agents.
+
+JADE has been used by \citeA{podobnik2006crocodileagent} for implementing an agent to compete in TAC SCM\@.
+As they were using an IKB agent model, they mention that a benefit of JADE was that they could separate each layer onto a different computer.
+While this results in a more complex system due to requiring lots of intercommunication, they still managed to reach the semi-finals of the competition once and the quarter-finals twice.~\cite{collins2009flexible}
+
+\subsubsection{NetLogo}
+
+NetLogo\footnote{\url{https://ccl.northwestern.edu/netlogo/}} is a multi-agent programming language which provides an environment for modelling complex systems over time
+It has been designed for use in both education and research, and since it has been written using Java it can be run on any major operating system.
+NetLogo uses agents called `turtles' to move over and interact with a grid of `patches'.
+Both of these can be programmed to have certain behaviours.
+NetLogo uses a primarily graphical interface to make it easy to view and modify the simulation while it is running.~\cite{tisue2004netlogo}
+
+While NetLogo is popular in general for agent-based modelling, only a few SCM models have used it.
+\citeA{arvitrida2015competition} used NetLogo to model the effect of competition and collaboration on supply chain performance.
+They selected NetLogo for being relatively simple but still providing all the features that they needed for this model.
+
+\subsubsection{SARL}
+
+SARL\footnote{\url{http://www.sarl.io/}} is a general-purpose agent-based programming language that aims to be both platform and architecturally agnostic.
+SARL provides native support for agent-oriented first-class abstractions but does not force the programmer to use them in any specific way.
+The reason why SARL is designed to be agnostic is the belief that a more general and less research focused or theoretical approach is required for agent-oriented programming to make a more significant impact on mainstream software engineering.
+SARL compiles to Java byte code and can be run on the Janus platform, although other platforms can be used as well.~\cite{rodriguez2014sarl}
+
+As SARL is a relatively new agent-oriented programming language, it has yet to be used for SCM and has also not seen much use for general agent-based modelling yet.
+
+\subsubsection{SPADE}
+
+SPADE\footnote{\url{https://spade-mas.readthedocs.io/en/latest/}} is a Python platform for implementing multi-agent systems.
+SPADE allows agents to communicate FIPA ACL messages via XMPP (e\textbf{X}tensible \textbf{M}essaging and \textbf{P}resence \textbf{P}rotocol) or HTTP for older agents that do not support this.
+SPADE provides security mechanisms to prevent unauthorised agents; a username and password is required to log an agent into the message router.~\cite{gregori2006jabber}
+The benefit of using Python for SPADE is the ability to use it alongside other popular Artificial Intelligence libraries.
+As SPADE uses a protocol that is commonly used for instant messaging between humans, it allows humans to communicate easily with agents.~\cite{palanca2020spade}
+
+While SPADE has not been used for SCM, it has been used for modelling free-floating car sharing by \citeA{marti2020free}.
+
+\subsubsection{Comparison Between Technologies}
+
+This section compares all the previously mentioned technologies, in order to evaluate them for this project.
+A short example program has written for each technology, so that the ease of writing a multi-agent system can be objectively compared.
+See \Cref{tab:tech_comparison} for an overview of the comparison.
+
+\begin{table}[h]
+    \centering
+    \caption{Technology Comparison}\label{tab:tech_comparison}
+    \begin{tabular}{llllll}
+        \toprule
+        Name & SCM & FIPA & LOC & Difficulty to Use & Active Project\\
+        \midrule
+        Erlang & No & No & 81 & High & Yes\\[0.5ex]
+        eXAT & No & Yes & --- & --- & No\\[0.5ex]
+        Elixir & No & No & 71 & Low & Yes\\[0.5ex]
+        JADE & Yes & Yes & 96 & High & No?\\[0.5ex]
+        NetLogo & Yes & Plugin & 32 & Low & Yes\\[0.5ex]
+        SARL & No & No & 78 & Medium & Yes\\[0.5ex]
+        SPADE & No & Yes & 79 & Medium & Yes\\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The example multi-agent model that was written for each technology is a `counter agent' program.
+This program has two agents, the first agent discovers the second agent and then counts to three before telling the other agent to terminate.
+This is a very simple example of multiple agents interacting with each other, and is designed to show how much support a given technology has for agent-oriented primitives such as message passing and defining repeating actions.
+The lines of code for these programs has been counted as the number of lines not blank or containing a comment.
+
+\Cref{lst:erl_app,lst:erl_sup,lst:erl_counter,lst:erl_partner} shows the counter agent example written in Erlang.
+This example uses the Open Telecom Platform (OTP) generic server behaviour to implement message receiving and agent behaviour.
+This allows the agents to be managed by an OTP process supervisor, as seen in \cref{lst:erl_sup}.
+The benefit of this is that agents that crash can then be automatically restarted by the supervisor.
+This example program comes to 81 lines of code.
+
+eXAT has been compared with Java and JADE by \citeA{di2005using}.
+They mention that since Java does not support function clause pattern matching and requires the use of objects to provide a symbolic language, eXAT is superior for implementing and agent-based model.
+While \shortciteA{peregud2012implementing} is overall critical of eXAT, they mention a benefit of it is that it allows a large amount of eXAT agents to run at once regardless of size.
+Compared to JADE which suggests the use of fewer but larger agents in general.
+It should be noted that both of these positives are a result of the Erlang language and not something entirely specific to the eXAT platform.
+
+It was not possible to write a counter agent example in eXAT\@.
+The platform depends on deprecated dependencies causing it to fail to compile on \verb|Erlang/OTP 23.2.6|.
+As a result of this and the fact that the last update to eXAT was done by \shortciteA{peregud2012implementing} in 2012, this project seems to be completely inactive.
+
+\Cref{lst:ex_app,lst:ex_counter,lst:ex_partner} shows the counter agent example in Elixir.
+This program is implemented in 71 lines of code.
+Comparing this to the Erlang program we can see that Elixir allows us to write code that is almost semantically equivalent to Erlang, just using a more modern syntax.
+We can see the Erlang compatibility of Elixir by the call to \verb|:timer.send_interval/2| on line 25 of \cref{lst:ex_counter}.
+This is calling a function in the \verb|timer| module of the Erlang standard library to send a message every second.
+One of the reasons why the Elixir code is shorter than the Erlang code is due to Elixir's use of macros for metaprogramming.
+The Elixir statement \verb|use GenServer| is a macro which provides default implementations for functions such as \verb|handle_call/3| and \verb|handle_cast/2| which need to be implemented in Erlang manually (see lines 43--47 in \cref{lst:erl_counter}).
+
+\Cref{lst:jade_counter,lst:jade_partner} shows the counter agent example implemented using JADE\@.
+This implementation comes to 96 lines of code and is therefore the longest example program.
+From this we can see that JADE is indeed a more complex framework to use than the other technologies that have been covered here.
+An example of this would be the number of lines of code required in order to send a simple message between two agents.
+Lines 28--31 of \cref{lst:jade_counter} show that JADE requires four lines of code to send the message ``Hello'' to another agent, due to all messages being required to conform to the FIPA ACL message format.
+
+Another point to mention is that JADE has not had a new release since 2017, and the mailing lists for user support have been taken offline.
+This calls into question whether JADE is still an active project.
+\shortciteA{bergenti2020first} mention a shift towards developing Jadescript, however, at present this project does not seem to be generally available for review.
+
+\citeA{christos2016agent} have compared the experience writing a supply chain model in both NetLogo and JADE\@.
+They found that NetLogo not requiring an external IDE for programming and having easily embeddable graphical controls made it easy to use.
+However, they conclude that JADE programs provide more flexible and robust programs assuming the user is willing to spend the time to learn the technology.
+
+\Cref{lst:netlogo} shows the counter agent example implemented in NetLogo.
+This is the shortest implementation of the counter agent at only 32 lines of code.
+This conciseness however comes at a price.
+NetLogo does not have a native way to send messages between `turtles' and has no way for a `turtle' to refuse to do an action it has been asked to do.
+While this makes example programs short and easy to read, it would likely cause issues as models grow larger and more complex.
+NetLogo does have a library\footnote{\url{https://users.uom.gr/~iliass/projects/NetLogo/}} to support sending messages between agents, however, this library only supports \verb|NetLogo 5| whereas the current version is \verb|NetLogo 6.2|.~\cite{sakellariou2008enhancing}
+
+\citeA{feraud2017first} compare SARL with other technologies such as JADE and NetLogo.
+They mention that an advantage of JADE is that it provides graphical tools for debugging and monitoring running agents.
+However, they mention that JADE suffers from having an overly complex programming API which makes it harder to develop applications with it.
+They also mention that while NetLogo suffers from the perception of being a tool solely for teaching, its GUI elements simplify the overall develop of models.
+For SARL they mention that the intuitive syntax helps the user to deal with the necessary aspects for creating a multi-agent system.
+It should be noted that this paper was written by the authors of the SARL language.
+
+\Cref{lst:sarl_boot,lst:sarl_counter,lst:sarl_partner} shows the counter agent example written in SARL\@.
+This example program is implemented in 78 lines of code.
+We can see the benefits of SARL being a domain-specific language for multi-agent systems, by how concise it is for operations such as emitting messages.
+However, one of the issues that was found when implementing this example in SARL is that the documentation for SARL is still very sparse due to it being a relatively new technology.
+
+\Cref{lst:spade_hello_agent,lst:spade_counter,lst:spade_partner} shows the counter agent example using SPADE\@.
+While SPADE is written in a similar style to JADE, the more concise nature of Python means the example program is only 79 lines of code long.
+An issue that can be seen is SPADE's lack of convenient behaviour classes.
+While JADE has a class for defining a sequence of behaviours, the only way to do this in SPADE is to use a finite state machine behaviour (see lines 46--53 of \cref{lst:spade_counter}).
+Another issue is that, at present, SPADE entirely relies on third-party XMPP servers.
+This requires the user to learn how to setup an XMPP server before even starting to use SPADE\@.
+
+For this project I have chosen to use Elixir for implementing my supply chain model.
+I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
