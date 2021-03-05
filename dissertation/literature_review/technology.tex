@@ -115,8 +115,15 @@ This program has two agents, the first agent discovers the second agent and then
 This is a very simple example of multiple agents interacting with each other, and is designed to show how much support a given technology has for agent-oriented primitives such as message passing and defining repeating actions.
 The lines of code for these programs has been counted as the number of lines not blank or containing a comment.
 
+\citeA{kruger2019evaluation} compare Erlang with JADE in a slightly different domain than most other research mentioned in this section.
+That being for use in holonic manufacturing systems, where JADE is currently the de-facto framework to use for research.
+They found that while JADE uses less processor time due to using less operating system threads, Erlang uses less memory.
+They also found that using Erlang resulted in shorter, more maintainable code when writing extensions for the system.
+However, they note that Erlang's lack of standardisation, such as with FIPA, and a lack of graphical debugging tools were a challenge when developing a system using it.
+This mirrors the findings of \shortciteA{fedrecheski2016elixir} who found that Elixir performed better than Java.
+
 \Cref{lst:erl_app,lst:erl_sup,lst:erl_counter,lst:erl_partner} shows the counter agent example written in Erlang.
-This example uses the Open Telecom Platform (OTP) generic server behaviour to implement message receiving and agent behaviour.
+This example uses the OTP (Open Telecom Platform) generic server behaviour to implement message receiving and agent behaviour.
 This allows the agents to be managed by an OTP process supervisor, as seen in \cref{lst:erl_sup}.
 The benefit of this is that agents that crash can then be automatically restarted by the supervisor.
 This example program comes to 81 lines of code.
