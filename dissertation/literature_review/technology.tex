@@ -52,7 +52,7 @@ One optimisation that JADE provides is that FIPA ACL messages are transported be
 For agents on different platforms the message is converted as required but this provides a performance boost for local agents.
 
 \citeA{bergenti2020first} note that in the 20 years that the JADE framework has been available, it has been extensively used in academia for software agent research as well as being used to introduce students to agent-oriented programming.
-However, \shortciteA{bergenti2020first} also mention that students using JADE struggle with the complexity of the framework, if they do not have any prior knowledge of software agents.
+However, \citeA{bergenti2020first} also mention that students using JADE struggle with the complexity of the framework, if they do not have any prior knowledge of software agents.
 They propose Jadescript as a language to provide a dedicated syntax for constructing and using JADE agents.
 
 JADE has been used by \citeA{podobnik2006crocodileagent} for implementing an agent to compete in TAC SCM\@.
@@ -124,7 +124,7 @@ That being for use in holonic manufacturing systems, where JADE is currently the
 They found that while JADE uses less processor time due to using less operating system threads, Erlang uses less memory.
 They also found that using Erlang resulted in shorter, more maintainable code when writing extensions for the system.
 However, they note that Erlang's lack of standardisation, such as with FIPA, and a lack of graphical debugging tools were a challenge when developing a system using it.
-This mirrors the findings of \shortciteA{fedrecheski2016elixir} who found that Elixir performed better than Java.
+This mirrors the findings of \citeA{fedrecheski2016elixir} who found that Elixir performed better than Java.
 
 \Cref{lst:erl_app,lst:erl_sup,lst:erl_counter,lst:erl_partner} shows the counter agent example written in Erlang.
 This example uses the OTP (Open Telecom Platform) generic server behaviour to implement message receiving and agent behaviour.
@@ -134,13 +134,13 @@ This example program comes to 81 lines of code.
 
 eXAT has been compared with Java and JADE by \citeA{di2005using}.
 They mention that since Java does not support function clause pattern matching and requires the use of objects to provide a symbolic language, eXAT is superior for implementing and agent-based model.
-While \shortciteA{peregud2012implementing} is overall critical of eXAT, they mention a benefit of it is that it allows a large amount of eXAT agents to run at once regardless of size.
+While \citeA{peregud2012implementing} is overall critical of eXAT, they mention a benefit of it is that it allows a large amount of eXAT agents to run at once regardless of size.
 Compared to JADE which suggests the use of fewer but larger agents in general.
 It should be noted that both of these positives are a result of the Erlang language and not something entirely specific to the eXAT platform.
 
 It was not possible to write a counter agent example in eXAT\@.
 The platform depends on deprecated dependencies causing it to fail to compile on \verb|Erlang/OTP 23.2.6|.
-As a result of this and the fact that the last update to eXAT was done by \shortciteA{peregud2012implementing} in 2012, this project seems to be completely inactive.
+As a result of this and the fact that the last update to eXAT was done by \citeA{peregud2012implementing} in 2012, this project seems to be completely inactive.
 
 \Cref{lst:ex_app,lst:ex_counter,lst:ex_partner} shows the counter agent example in Elixir.
 This program is implemented in 71 lines of code.
@@ -158,7 +158,7 @@ Lines 28--31 of \cref{lst:jade_counter} show that JADE requires four lines of co
 
 Another point to mention is that JADE has not had a new release since 2017, and the mailing lists for user support have been taken offline.
 This calls into question whether JADE is still an active project.
-\shortciteA{bergenti2020first} mention a shift towards developing Jadescript, however, at present this project does not seem to be generally available for review.
+\citeA{bergenti2020first} mention a shift towards developing Jadescript, however, at present this project does not seem to be generally available for review.
 
 \citeA{christos2016agent} have compared the experience writing a supply chain model in both NetLogo and JADE\@.
 They found that NetLogo not requiring an external IDE for programming and having easily embeddable graphical controls made it easy to use.
