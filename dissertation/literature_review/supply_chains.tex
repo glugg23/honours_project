@@ -30,11 +30,21 @@ Later competitions also added a reputation system between suppliers and trading 
 \citeA{collins2010pushing} mentions that TAC SCM has allowed considerable pro\-gress to be made for developing strategies and architectures for managing risk in dynamic supply chain environments.
 However, these strategies and ideas have not yet been packaged in a way to allow the development of human-oriented decision support tools.
 
-Unfortunately, the TAC SCM competition has not been run since 2011, with PowerTAC becoming the preferred competition for adversarial trading agent research.
+Unfortunately, the TAC SCM competition has not been run since 2011, with Power TAC becoming the preferred competition for adversarial trading agent research.
 
 While this project is not about designing a competition trading agent and regardless of the fact that TAC SCM is no longer an active competition, it is still important for grounding this project in the existing literature for supply chain modelling.
 As a result of this, this project will use a similar theme of PC assembly for the model.
 
-PowerTAC\@.
+Power TAC\footnote{\url{https://powertac.org/}} is a trading agent competition that has been running yearly since starting in 2012.
+The authors of this competition have built it off of their experience running TAC SCM, and at present it is the primary trading agent competition in the field.~\cite{ketter2013power}
 
-Other multi-agent models.
+Power TAC was created as a competition due to a lack of other means for experimenting with different market designs and policies regarding retail power production.
+Most power girds are managed by a regulated monopoly and lack the necessary monitoring capabilities to be considered a `smart grid'.
+Power TAC was created as a low risk way to model potential real world policies for renewable energy markets.~\cite{ketter2013power}
+
+Entries to Power TAC need to implement a broker agent which aggregates energy supply and demand and tries to earn a profit from doing so.
+Brokers need to design tariffs and offer these to various types of customers.
+Pricing for energy can vary depending on the time of day and the effect of weather.
+Each simulation runs for approximately 60 simulated days and at the end of this time the broker agent which has the highest monetary payment minus costs and fees is the winner.~\cite{ketter2020power}
+
+Although Power TAC covers a different domain than this project does, many entries and winners have written papers about their agents and these could be beneficial to see the general patterns of agent design.
