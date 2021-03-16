@@ -1,5 +1,30 @@
 {
     "elixirLS.projectDir": "src",
     "latex-workshop.chktex.enabled": true,
-    "latex-workshop.chktex.run": "onType"
+    "latex-workshop.chktex.run": "onType",
+    "latex-workshop.latex.outDir": "%DIR%/_build",
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=%OUTDIR%",
+                "-auxdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {}
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "latexmk",
+            "tools": [
+                "latexmk"
+            ]
+        }
+    ]
 }
