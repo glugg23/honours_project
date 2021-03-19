@@ -16,10 +16,10 @@ These processes communicate with one another to execute overall actions for the 
 They also describe the notion of a supervisor tree, which is a tree-like hierarchy of agents where each agent monitors the state of any agents below it.
 This allows fault tolerance as long as the supervisor stores the initial state of all the agents it monitors.
 
-\citeA{di2005using} evaluated Erlang on three metrics: Agent Model Compliance, Support for Rationality and Support for Distribution.
+\citeA{distefano2005using} evaluated Erlang on three metrics: Agent Model Compliance, Support for Rationality and Support for Distribution.
 They found that while Erlang fully met the criteria for distribution support, it did not fully support agent behaviour composition and extension, which would be required for agent model compliance.
 They also found that Erlang lacked logical inference support to provide rationality to agents.
-They propose the eXAT (\textbf{e}rlang e\textbf{X}perimental \textbf{A}gent \textbf{T}ool) platform as a suitable library for fixing these issues.~\cite{di2003exat}
+They propose the eXAT (\textbf{e}rlang e\textbf{X}perimental \textbf{A}gent \textbf{T}ool) platform as a suitable library for fixing these issues.~\cite{distefano2003exat}
 However, \citeA{peregud2012implementing} found that the eXAT platform was cumbersome to write models with, was practically discontinued since 2005 and has no community support and no production systems using it.
 
 \citeA{santana2017interscsimulator} have used Erlang to model a large scale traffic simulation using millions of agents.
@@ -132,7 +132,7 @@ This allows the agents to be managed by an OTP process supervisor, as seen in \c
 The benefit of this is that agents that crash can then be automatically restarted by the supervisor.
 This example program comes to 81 lines of code.
 
-eXAT has been compared with Java and JADE by \citeA{di2005using}.
+eXAT has been compared with Java and JADE by \citeA{distefano2005using}.
 They mention that since Java does not support function clause pattern matching and requires the use of objects to provide a symbolic language, eXAT is superior for implementing and agent-based model.
 While \citeA{peregud2012implementing} is overall critical of eXAT, they mention a benefit of it is that it allows a large amount of eXAT agents to run at once regardless of size.
 Compared to JADE which suggests the use of fewer but larger agents in general.
