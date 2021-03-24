@@ -2,7 +2,7 @@
 
 This section provides an overview of several programming languages and frameworks which have been used for multi-agent systems.
 While some technologies have been used extensively for modelling supply chains, other technologies that have not been used in this field are covered as well.
-At the end a comparison is drawn between all the mentioned technologies to determine which one should be used for this project.
+At the end a comparison is drawn between all the mentioned technologies in order to indicate why Elixir has been chosen as the primary language for this project.
 
 \subsubsection{Erlang}
 
@@ -78,7 +78,7 @@ SARL provides native support for agent-oriented first-class abstractions but doe
 The reason why SARL is designed to be agnostic is the belief that a more general and less research focused or theoretical approach is required for agent-oriented programming to make a more significant impact on mainstream software engineering.
 SARL compiles to Java byte code and can be run on the Janus platform, although other platforms can be used as well.~\cite{rodriguez2014sarl}
 
-As SARL is a relatively new agent-oriented programming language, it has yet to be used for SCM and has also not seen much use for general agent-based modelling yet.
+As SARL is a relatively new agent-oriented programming language, it has yet to be used for general agent-based systems.
 
 \subsubsection{SPADE}
 
@@ -88,7 +88,7 @@ SPADE provides security mechanisms to prevent unauthorised agents; a username an
 The benefit of using Python for SPADE is the ability to use it alongside other popular Artificial Intelligence libraries.
 As SPADE uses a protocol that is commonly used for instant messaging between humans, it allows humans to communicate easily with agents.~\cite{palanca2020spade}
 
-While SPADE has not been used for SCM, it has been used for modelling free-floating car sharing by \citeA{marti2020free}.
+While SPADE has not been used in many multi-agent systems, it has been used for modelling free-floating car sharing by \citeA{marti2020free}.
 
 \subsubsection{Comparison Between Technologies}
 
@@ -190,5 +190,7 @@ While JADE has a class for defining a sequence of behaviours, the only way to do
 Another issue is that, at present, SPADE entirely relies on third-party XMPP servers.
 This requires the user to learn how to setup an XMPP server before even starting to use SPADE\@.
 
-For this project I have chosen to use Elixir for implementing my supply chain model.
-I believe that the benefits of using a language that can leverage the features of Erlang while simultaneously having a more modern syntax, outweighs the potential issues of using a language that has not yet been used for research purposes.
+The reason why Elixir has been chosen for this project is its short and concise syntax for multi-agent system primitives such as message sending.
+This plus being able to leverage the abilities of Erlang's OTP modules, should make it possible to implement a multi-agent system without having to rely on third-party frameworks like Java needs to do with JADE\@.
+JADE has been chosen as the comparison technology due to its dominance in existing multi-agent systems.
+Making this a worthwhile comparison if it can be shown that other technologies exist that produce better systems than JADE\@.

@@ -1,8 +1,14 @@
 \subsection{Supply Chains}
 
-\subsubsection{Just-in-Time Manufacturing}
+As this project is implementing a multi-agent system there needs to be some real life system that is now being automated via agents.
+For this project I have chosen to write a multi-agent system for a supply chain.
+Supply chains are an ideal target for agent-based systems as individuals in the supply chain need to manage a lot of tasks, such as price, production, storage, etc.
+This means an agent with a comprehensive set of rules would be able to simplify and potentially optimise steps in the supply chain.
 
-This section aims to place the research questions noted in \cref{sec:research_questions} within the broader context of JIT manufacturing.
+This section starts with an overview of the techniques used in real world supply chains.
+Then some of the existing multi-agent systems for supply chains will be discussed.
+
+\subsubsection{Just-in-Time Manufacturing}
 
 Just-in-Time (JIT) manufacturing is a management philosophy originating from Japan in the early 1970's and has over time been applied worldwide.
 The main concept behind JIT manufacturing is the idea of lean manufacturing.
@@ -15,11 +21,6 @@ This is one of the areas that this project will be investigating to see under wh
 
 One of the limitations of JIT manufacturing is the lack of a safety stock of products.
 This means that in the case of inaccurate demand forecasting there is no buffer of already produced goods to fall back on.~\cite{javadian2013just}
-This project also aims to see if a system can be developed which can build safety stocks under good conditions, which can then be used to mitigate unideal conditions.
-
-How can JIT handle changes in demand?
-
-How can JIT handle situational stockpiling?
 
 \subsubsection{Multi-Agent Modelling of Supply Chains}
 
@@ -43,8 +44,8 @@ However, these strategies and ideas have not yet been packaged in a way to allow
 
 Unfortunately, the TAC SCM competition has not been run since 2011, with Power TAC becoming the preferred competition for adversarial trading agent research.
 
-While this project is not about designing a competition trading agent and regardless of the fact that TAC SCM is no longer an active competition, it is still important for grounding this project in the existing literature for supply chain modelling.
-As a result of this, this project will use a similar theme of PC assembly for the model.
+While this project is not about designing a competition trading agent and regardless of the fact that TAC SCM is no longer an active competition, it is still important as it provides a large number of examples for how agents can be designed.
+As a result of this, this project will be about creating a multi-agent system for a supply chain of PC manufacturing.
 
 Power TAC\footnote{\url{https://powertac.org/}} is a trading agent competition that has been running yearly since starting in 2012.
 The authors of this competition have built it off of their experience running TAC SCM, and at present it is the primary trading agent competition in the field.~\cite{ketter2013power}

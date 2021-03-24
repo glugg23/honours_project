@@ -24,7 +24,8 @@ The protocol for dialog, the type of communication, any message metadata, how th
 FIPA ACL uses a smaller number of performatives than KQML but gives each of these a formal definition which must be followed for all systems that are FIPA compliant.
 FIPA ACL uses the same S-expression syntax as KQML does, but provides an additional optional semantic language for the `content' field of the message.~\cite{obrien1998fipa}
 
-This project does not intend to use a huge amount of complicated agents running on different machines.
-The model is intended to be a singular complex agent that communicates with several other simple agents running on the same machine.
-Therefore, adopting the use of FIPA ACL might cause unnecessary complexity for this system.
-If a simple custom agent communication language is defined, it is worth incorporating ideas from FIPA ACL such as the use of a performatives or having a description of the intent of the message.
+JADE uses FIPA ACL messaging for the messages that get sent.
+Elixir uses Erlang messages which can be any type defined by the language.
+A typical message would be a tuple of an atom and a map of values.
+While a full implementation of the FIPA protocol would be outside the scope of this project, ideas can still be drawn from the FIPA ACL messaging format.
+The atom part of the typical message tuple could be used as a performative definition while the map contains the content of the message.
