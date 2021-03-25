@@ -1,14 +1,27 @@
 \section{Introduction}
 
-Multi-agent systems.
+This project aims to see how effective it is to write a multi-agent system in Elixir.
 
-What is Elixir.
+A multi-agent systems consists of several intelligent agents that interact with each other in order to achieve either common or conflicting goals.
+In complex systems, agents can be used instead of humans for decision making.
+One of these areas that this project will be looking at is the management of supply chains.
+Supply chains have multiple individual parts to them, each of which is trying to maximise their own profits.
+If this can be done with a multi-agent system then decisions can be made more rapidly which could improve the supply chain as a whole.
 
-Why Elixir could be used for multi-agent systems.
+Elixir is a functional programming language that uses the Erlang VM\@.
+This gives Elixir a lot of advantages for writing fault tolerant distributed systems.
+Such as lightweight threads which do not share state and can only communicate using messages.
+Elixir could be considered a good technology to use for implementing multi-agent systems as the concepts behind agent-based design can be easily mapped to existing functionality in the language itself.
 
-Project aims: implement system in Elixir, implement same system in JADE, compare.
+Most multi-agent systems have been implemented using a framework called JADE\@.
+This is a Java framework that allows you to create FIPA compliant agent systems.
+This project tries to see whether Elixir as a language is better suited for writing agents or whether the specification compliance of JADE is enough to ensure it is a good choice.
 
-Why this research is important: Elixir has not been used for this before.
+The aims of this project is to implement a multi-agent system in Elixir and then to reimplement the same system using JADE\@.
+After this is done, both of these systems can be compared to find which one is superior.
+
+This project could be important for other computer scientists studying multi-agent systems as Elixir has not yet been used in this area.
+If the Elixir implementation is more performant and easier to write than a version written in JADE, it could show that more modern technologies should be considered over using JADE\@.
 
 \subsection{Deliverables}
 
