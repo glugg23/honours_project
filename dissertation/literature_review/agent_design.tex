@@ -2,7 +2,22 @@
 
 \subsubsection{Composition}
 
-Mention IKB, Blackboard System, Holons.
+Holons.
+
+Blackboard System.
+
+\citeA{vytelingum2005framework} propose a new framework for designing trading agents.
+This framework is called the Information Knowledge Behavior (IKB) framework.
+This framework splits the agent into three distinct layers which can only communicate with the layers next to it.
+
+The Information layer handles gathering all the public information that is available in the environment and then adding the private information from the agent to it.
+This layer filters out any unnecessary information but is still usually a noisy view of all the information that can be gathered.
+The Knowledge layer then infers knowledge from the Information layer, converting it into a form that can be used by the Behavior layer.
+The Behavior layer then take the knowledge from the Knowledge layer and uses it to decide the best course of action.
+
+\citeA{vytelingum2005framework} believe that this framework is important as it provides a structured approach to designing agents, one which they found lacking from existing design strategies.
+
+The IKB framework has been used by \citeA{podobnik2006crocodileagent} to develop a fairly successful trading agent for the TAC SCM competition.
 
 \subsubsection{Communication}
 
