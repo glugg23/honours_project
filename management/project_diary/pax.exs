@@ -2,7 +2,7 @@
 
 tasks =
   File.ls!()
-  |> Enum.filter(fn f -> f =~ ~r".*\.pdf$" end)
+  |> Enum.filter(&Path.extname(&1) == ".pdf")
   |> Enum.map(&Task.async(fn -> System.cmd("pdfannotextractor", [&1]) end))
 
 Task.yield_many(tasks, :infinity)
