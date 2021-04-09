@@ -2,11 +2,15 @@
 
 This project aims to see how effective it is to write a multi-agent system in \citeA{elixir2021elixir}.
 
-A multi-agent systems consists of several intelligent agents that interact with each other in order to achieve either common or conflicting goals.
-In complex systems, agents can be used instead of humans for decision making.
-One of these areas that this project will be looking at is the management of supply chains.
-Supply chains have multiple individual parts to them, each of which is trying to maximise their own profits.
-If this can be done with a multi-agent system then decisions can be made more rapidly which could improve the supply chain as a whole.
+A multi-agent system consists of several intelligent agents that interact with each other in order to achieve either common or conflicting goals.
+In complex systems, agents can be used instead of humans for decision making by given them a set of rules to follow.
+One of the areas where the use of agents seems promising is for managing supply chains.
+
+Supply chains naturally have multiple entities that compose them, each of which is trying to ensure they can meet demand requirements and not lose money.
+Current supply chains rely on long standing orders from a select few companies, however, using agents to manage the buying and selling of goods would allow the benefits of shorter term contracts to be evaluated faster.
+
+Due to the complexity of a supply chain where an agent needs to make decisions about procurement, production and selling, this seems like an ideal test case to use for benchmarking technologies for implementing multi-agent systems.
+This project will use the scenario that was used in the TAC SCM competition, which was the manufacturing of PCs from individual components, to ensure that the performance measured is comparable with research that has already been done in this area.
 
 Elixir is a functional programming language that uses the Erlang VM\@.
 This gives Elixir a lot of advantages for writing fault tolerant distributed systems.
