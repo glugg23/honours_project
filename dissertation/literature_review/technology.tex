@@ -1,8 +1,8 @@
-\subsection{Technologies for Agent-based Modelling}
+\subsection{Technologies for Multi-Agent Systems}
 
-This section provides an overview of several programming languages and frameworks which have been used for multi-agent systems.
-While some technologies have been used extensively for modelling supply chains, other technologies that have not been used in this field are covered as well.
-At the end a comparison is drawn between all the mentioned technologies in order to indicate why Elixir has been chosen as the primary language for this project.
+This section provides an overview of several programming languages and frameworks which can be used for implementing multi-agent systems.
+While some technologies covered here have been used extensively for this, other technologies mentioned have not yet been used for research.
+At the end a comparison is drawn between all the covered technologies in order to indicate why Elixir has been chosen as the primary language for this project.
 
 \subsubsection{Erlang}
 
@@ -26,7 +26,7 @@ However, \citeA{peregud2012implementing} found that the eXAT platform was cumber
 They note that the parallelism provided by Erlang processes and the ability to run Erlang code distributed on multiple machines simultaneously are the main factors for the performance they achieved.
 However, they mention that the drawbacks of Erlang are a lack of process synchronisation mechanisms and a general lack of IDE tooling.
 
-While Erlang has been used for implementing other types of scientific modelling, it has yet to be used for modelling supply chains.
+While Erlang has been used for implementing other types of scientific modelling, it has yet to be used for implementing a supply chain system.
 
 \subsubsection{Elixir}
 
@@ -35,7 +35,7 @@ Elixir compiles to the same byte code that the Erlang runtime uses.
 This allows Elixir code to call code written in Erlang with no runtime overhead.
 Elixir uses a syntax similar to Ruby, which is more modern than the Prolog inspired syntax of Erlang.~\cite{loder2016erlang}
 
-As Elixir is a fairly new programming language it has yet to be used for any type of modelling research.
+As Elixir is a fairly new programming language it has yet to be used for any type of agent-based research.
 \citeA{fedrecheski2016elixir} compared Elixir with Java for use in Internet of Things software.
 They found that while the Java implementation used 5\% to 15\% less CPU load, the Elixir version was shorter in terms of lines of code, consumed significantly less memory, and handled HTTP responses better under heavy load.
 
@@ -56,7 +56,7 @@ However, \citeA{bergenti2020first} also mention that students using JADE struggl
 They propose Jadescript as a language to provide a dedicated syntax for constructing and using JADE agents.
 
 JADE has been used by \citeA{podobnik2006crocodileagent} for implementing an agent to compete in TAC SCM\@.
-As they were using an IKB agent model, they mention that a benefit of JADE was that they could separate each layer onto a different computer.
+As they were using the IKB agent framework, they mention that a benefit of JADE was that they could separate each layer onto a different computer.
 While this results in a more complex system due to requiring lots of intercommunication, they still managed to reach the semi-finals of the competition once and the quarter-finals twice.~\cite{collins2009flexible}
 
 \subsubsection{NetLogo}
@@ -67,7 +67,7 @@ NetLogo uses agents called `turtles' to move over and interact with a grid of `p
 Both of these can be programmed to have certain behaviours.
 NetLogo uses a primarily graphical interface to make it easy to view and modify the simulation while it is running.~\cite{tisue2004netlogo}
 
-While NetLogo is popular in general for agent-based modelling, only a few SCM models have used it.
+While NetLogo is popular in general for agent-based modelling, only a few supply chain models have used it.
 \citeA{arvitrida2015competition} used NetLogo to model the effect of competition and collaboration on supply chain performance.
 They selected NetLogo for being relatively simple but still providing all the features that they needed for this model.
 
@@ -114,7 +114,7 @@ See \Cref{tab:tech_comparison} for an overview of the comparison.
     \end{tabular}
 \end{table}
 
-The example multi-agent model that was written for each technology is a `counter agent' program.
+The example multi-agent system that was written for each technology is a `counter agent' program.
 This program has two agents, the first agent discovers the second agent and then counts to three before telling the other agent to terminate.
 This is a very simple example of multiple agents interacting with each other, and is designed to show how much support a given technology has for agent-oriented primitives such as message passing and defining repeating actions.
 The lines of code for these programs has been counted as the number of lines not blank or containing a comment.
@@ -133,7 +133,7 @@ The benefit of this is that agents that crash can then be automatically restarte
 This example program comes to 81 lines of code.
 
 eXAT has been compared with Java and JADE by \citeA{distefano2005using}.
-They mention that since Java does not support function clause pattern matching and requires the use of objects to provide a symbolic language, eXAT is superior for implementing and agent-based model.
+They mention that since Java does not support function clause pattern matching and requires the use of objects to provide a symbolic language, eXAT is superior for implementing an agent-based model.
 While \citeA{peregud2012implementing} is overall critical of eXAT, they mention a benefit of it is that it allows a large amount of eXAT agents to run at once regardless of size.
 Compared to JADE which suggests the use of fewer but larger agents in general.
 It should be noted that both of these positives are a result of the Erlang language and not something entirely specific to the eXAT platform.
