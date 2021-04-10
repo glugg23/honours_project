@@ -2,9 +2,19 @@
 
 \subsubsection{Composition}
 
-Holons.
+One of the traditional ways to design an agent is to use a Blackboard System.
+This design idea was first used by the Hearsay-II system for interpreting human speech in the 1970's and 80's.
+A Blackboard System works by having a global knowledge store known as the Blackboard where all the information about the system is available.
+This Blackboard is then read by multiple Knowledge Sources who independently decide if they have anything to add back to the Blackboard.
+The process of which Knowledge Source is allowed to write to the Blackboard is managed by a Control component which selects what sort of new knowledge is believed to be the most beneficial at that moment.~\cite{nii1986blackboard}
 
-Blackboard System.
+As each Knowledge Source acts independently, this makes a Blackboard System a good way to collate multiple Knowledge Sources which have been implemented in different ways.
+As the only way for a Knowledge Source to communicate is via adding knowledge to the Blackboard, it doesn't matter if one Knowledge Source uses a rule-based system while another uses a neural network.
+Another benefit of a Blackboard System is that the Control component can choose which Knowledge Sources to trigger activation on.
+This allows a Blackboard System to have many Knowledge Sources, some of which are only activation in rare situations.~\cite{corkill1991blackboard}
+
+\citeA{corkill1991blackboard} mentions that one of the reasons that few Blackboard Systems have been implemented is a lack of commercial tooling, meaning that every Blackboard System needs to be implemented from scratch.
+While it seemed as though Blackboard System technology was becoming more available in the 1990's, 30 years later this does not seem to have been the case and a Blackboard System would need to be implemented from scratch nowadays.
 
 \citeA{vytelingum2005framework} propose a new framework for designing trading agents.
 This framework is called the Information Knowledge Behavior (IKB) framework.
