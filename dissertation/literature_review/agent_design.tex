@@ -1,5 +1,10 @@
 \subsection{Agent-based Design}
 
+This section looks at different ways that agents can be designed and how agents can communicate with each other in a multi-agent system.
+
+While Elixir and JADE place no restrictions on how agents can be designed, they do impose some restrictions as to how they can communicate.
+JADE agents can only communicate with each other using FIPA ACL messages, while Elixir allows processes to send any valid Elixir term between each other.
+
 \subsubsection{Composition}
 
 One of the traditional ways to design an agent is to use a Blackboard System.
@@ -28,6 +33,11 @@ The Behavior layer then take the knowledge from the Knowledge layer and uses it 
 \citeA{vytelingum2005framework} believe that this framework is important as it provides a structured approach to designing agents, one which they found lacking from existing design strategies.
 
 The IKB framework has been used by \citeA{podobnik2006crocodileagent} to develop a fairly successful trading agent for the TAC SCM competition.
+
+This project will be using an IKB framework in order to implement the agents in the supply chain system.
+There are two reasons why the IKB framework has been chosen over the more traditional Blackboard System.
+The first is that using Knowledge Sources with differing implementations would not be a benefit in answering the research questions of this project, so a more general Behavior layer would be sufficient.
+The second is that the nature of this project requires two implementations from scratch in order to properly compare Elixir and JADE, and so a more complex Blackboard System would require more time to develop.
 
 \subsubsection{Communication}
 
