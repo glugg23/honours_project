@@ -2,18 +2,18 @@
 
 This project aims to see how effective it is to write a multi-agent system in \citeA{elixir2021elixir}.
 
-A multi-agent system consists of several intelligent agents that interact with each other in order to achieve either common or conflicting goals.
-In complex systems, agents can be used instead of humans for decision making by given them a set of rules to follow.
+A multi-agent system consists of several intelligent agents that interact with each other to achieve either common or conflicting goals.
+In complex systems, agents can be used instead of humans for decision making by giving them a set of rules to follow.
 One of the areas where the use of agents seems promising is for managing supply chains.
 
 Supply chains naturally have multiple entities that compose them, each of which is trying to ensure they can meet demand requirements and not lose money.
-Current supply chains rely on long standing orders from a select few companies, however, using agents to manage the buying and selling of goods would allow the benefits of shorter term contracts to be evaluated faster.
+Current supply chains rely on long-standing orders from a select few companies, however, using agents to manage the buying and selling of goods would allow the benefits of short term contracts to be evaluated faster.
 
 Due to the complexity of a supply chain where an agent needs to make decisions about procurement, production and selling, this seems like an ideal test case to use for benchmarking technologies for implementing multi-agent systems.
 This project will use the scenario that was used in the TAC SCM competition, which was the manufacturing of PCs from individual components, to ensure that the performance measured is comparable with research that has already been done in this area.
 
 Elixir is a functional programming language that uses the Erlang VM\@.
-This gives Elixir a lot of advantages for writing fault tolerant distributed systems.
+This gives Elixir a lot of advantages for writing fault-tolerant distributed systems.
 Such as lightweight threads which do not share state and can only communicate using messages.
 Elixir could be considered a good technology to use for implementing multi-agent systems as the concepts behind agent-based design can be easily mapped to existing functionality in the language itself.
 
@@ -21,11 +21,11 @@ Most multi-agent systems have been implemented using a framework called JADE\@.~
 This is a Java framework that allows you to create FIPA compliant agent systems.
 This project tries to see whether Elixir as a language is better suited for writing agents or whether the specification compliance of JADE is enough to ensure it is a good choice.
 
-The aims of this project is to implement a multi-agent system in Elixir and then to reimplement the same system using JADE\@.
+This project aims to implement a multi-agent system in Elixir and then to reimplement the same system using JADE\@.
 After this is done, both of these systems can be compared to find which one is superior.
 
 This project could be important for other computer scientists studying multi-agent systems as Elixir has not yet been used in this area.
-If the Elixir implementation is more performant and easier to write than a version written in JADE, it could show that more modern technologies should be considered over using JADE\@.
+If the Elixir implementation is more performant and easier to write than a version written in JADE, it could show that more modern technologies should be considered instead of using JADE\@.
 
 \subsection{Deliverables}
 

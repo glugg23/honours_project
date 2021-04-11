@@ -8,7 +8,7 @@ JADE agents can only communicate with each other using FIPA ACL messages, while 
 \subsubsection{Composition}
 
 One of the traditional ways to design an agent is to use a Blackboard System.
-This design idea was first used by the Hearsay-II system for interpreting human speech in the 1970's and 80's.
+This design idea was first used by the Hearsay-II system for interpreting human speech in the 1970s and `80s.
 A Blackboard System works by having a global knowledge store known as the Blackboard where all the information about the system is available.
 This Blackboard is then read by multiple Knowledge Sources who independently decide if they have anything to add back to the Blackboard.
 The process of which Knowledge Source is allowed to write to the Blackboard is managed by a Control component which selects what sort of new knowledge is believed to be the most beneficial at that moment.~\cite{nii1986blackboard}
@@ -16,10 +16,10 @@ The process of which Knowledge Source is allowed to write to the Blackboard is m
 As each Knowledge Source acts independently, this makes a Blackboard System a good way to collate multiple Knowledge Sources which have been implemented in different ways.
 As the only way for a Knowledge Source to communicate is via adding knowledge to the Blackboard, it doesn't matter if one Knowledge Source uses a rule-based system while another uses a neural network.
 Another benefit of a Blackboard System is that the Control component can choose which Knowledge Sources to trigger activation on.
-This allows a Blackboard System to have many Knowledge Sources, some of which are only activation in rare situations.~\cite{corkill1991blackboard}
+This allows a Blackboard System to have many Knowledge Sources, some of which are only activated in rare situations.~\cite{corkill1991blackboard}
 
 \citeA{corkill1991blackboard} mentions that one of the reasons that few Blackboard Systems have been implemented is a lack of commercial tooling, meaning that every Blackboard System needs to be implemented from scratch.
-While it seemed as though Blackboard System technology was becoming more available in the 1990's, 30 years later this does not seem to have been the case and a Blackboard System would need to be implemented from scratch nowadays.
+While it seemed as though Blackboard System technology was becoming more available in the 1990s, 30 years later this does not seem to have been the case and a Blackboard System would need to be implemented from scratch nowadays.
 
 \citeA{vytelingum2005framework} propose a new framework for designing trading agents.
 This framework is called the Information Knowledge Behavior (IKB) framework.
@@ -28,16 +28,16 @@ This framework splits the agent into three distinct layers which can only commun
 The Information layer handles gathering all the public information that is available in the environment and then adding the private information from the agent to it.
 This layer filters out any unnecessary information but is still usually a noisy view of all the information that can be gathered.
 The Knowledge layer then infers knowledge from the Information layer, converting it into a form that can be used by the Behavior layer.
-The Behavior layer then take the knowledge from the Knowledge layer and uses it to decide the best course of action.
+The Behavior layer then takes the knowledge from the Knowledge layer and uses it to decide the best course of action.
 
 \citeA{vytelingum2005framework} believe that this framework is important as it provides a structured approach to designing agents, one which they found lacking from existing design strategies.
 
 The IKB framework has been used by \citeA{podobnik2006crocodileagent} to develop a fairly successful trading agent for the TAC SCM competition.
 
-This project will be using an IKB framework in order to implement the agents in the supply chain system.
+This project will be using an IKB framework to implement the agents in the supply chain system.
 There are two reasons why the IKB framework has been chosen over the more traditional Blackboard System.
 The first is that using Knowledge Sources with differing implementations would not be a benefit in answering the research questions of this project, so a more general Behavior layer would be sufficient.
-The second is that the nature of this project requires two implementations from scratch in order to properly compare Elixir and JADE, and so a more complex Blackboard System would require more time to develop.
+The second is that the nature of this project requires two implementations from scratch to properly compare Elixir and JADE, and so a more complex Blackboard System would require more time to develop.
 
 \subsubsection{Communication}
 
@@ -47,15 +47,15 @@ It uses an extendable set of performatives to indicate which type of message is 
 The syntax of the message is based on a balanced parenthesis list similar to the syntax of Common Lisp and can be transmitted as plain text or in a binary form.~\cite{finin1994kqml}
 
 KQML has been criticised by \citeA{cohen1995communicative} for not having a precisely defined set of semantics.
-This means when an agent sends a message with a certain performative, there is a no way of knowing if the other agent has implemented the same meaning of that performative.
+This means when an agent sends a message with a certain performative, there is no way of knowing if the other agent has implemented the same meaning of that performative.
 Another issue they mention is that there is no way in KQML to ask an agent to complete a task in the future.
 
-The Foundation for Intelligent Physical Agents Agent Communication Language (FIPA ACL) supersedes KQML and provides a more formally defined communication language which addresses some of the shortcomings of KQML\@.
+The Foundation for Intelligent Physical Agents Agent Communication Language (FIPA ACL) supersedes KQML and provides a more formally defined communication language that addresses some of the shortcomings of KQML\@.
 FIPA defines multiple specifications for agent management/interaction/communication/etc.
 However, this section will only focus on the specification for communication.
 
 FIPA ACL specifies that messages are composed of five levels.
-The protocol for dialog, the type of communication, any message metadata, how the content of the message is defined, and the ontology of the content expression.
+The protocol for dialogue, the type of communication, any message metadata, how the content of the message is defined, and the ontology of the content expression.
 FIPA ACL uses a smaller number of performatives than KQML but gives each of these a formal definition which must be followed for all systems that are FIPA compliant.
 FIPA ACL uses the same S-expression syntax as KQML does, but provides an additional optional semantic language for the `content' field of the message.~\cite{obrien1998fipa}
 

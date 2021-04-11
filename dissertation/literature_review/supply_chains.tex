@@ -1,22 +1,22 @@
 \subsection{Supply Chains}
 
-As this project is implementing a multi-agent system there needs to be some real life system that is now being automated via agents.
-For this project I have chosen to write a multi-agent system for a supply chain.
+As this project is implementing a multi-agent system there needs to be some real-life system that is now being automated via agents.
+For this project, I have chosen to write a multi-agent system for a supply chain.
 Supply chains are an ideal target for agent-based systems as individuals in the supply chain need to manage a lot of tasks, such as price, production, storage, etc.
 This means an agent with a comprehensive set of rules would be able to simplify and potentially optimise steps in the supply chain.
 
-This section starts with an overview of the techniques used in real world supply chains.
+This section starts with an overview of the techniques used in real-world supply chains.
 Then some of the existing multi-agent systems for supply chains will be discussed.
 
 \subsubsection{Just-in-Time Manufacturing}
 
-Just-in-Time (JIT) manufacturing is a management philosophy originating from Japan in the early 1970's and has over time been applied worldwide.
+Just-in-Time (JIT) manufacturing is a management philosophy originating from Japan in the early 1970s and has over time been applied worldwide.
 The main concept behind JIT manufacturing is the idea of lean manufacturing.
 This style prioritises the lack of waste in production, meaning the use of materials and time in the most efficient manner.
 This is achieved by using a pull system of production instead of a push system.
-A pull system only produces a product to when it is needed and only in the quantity that is required, whereas a push system pushes materials regardless if it is needed and uses stockpiling for unused resources.~\cite{javadian2013just}
+A pull system only produces a product when it is needed and only in the quantity that is required, whereas a push system pushes materials regardless if it is needed and uses stockpiling for unused resources.~\cite{javadian2013just}
 
-A benefit of JIT manufacturing is that by reducing waste and producing in smaller quantities, it is easier to be flexibly in order to match shifts in market demand.~\cite{javadian2013just}
+A benefit of JIT manufacturing is that by reducing waste and creating products in smaller quantities, it is easier to be flexible and match shifts in market demand.~\cite{javadian2013just}
 This is one of the areas that this project will be investigating to see under which circumstances it would be difficult for a JIT system to match customer demand.
 
 One of the limitations of JIT manufacturing is the lack of a safety stock of products.
@@ -27,14 +27,14 @@ This means that in the case of inaccurate demand forecasting there is no buffer 
 The Trading Agent Competition for Supply Chain Management (TAC SCM) was a competition with the intent of examining how automated agents perform in the context of dynamic supply chain management.
 This was done by having six PC assembly agents competing for raw resources such as CPU and memory components, as well as for the demand requests from customers.~\cite{sadeh2003tac}
 
-The Trading Agent Competition originally started in 2000 as a competition where each agent was a travel agent which was required to organise trips for eight clients and maximise their satisfaction.
+The Trading Agent Competition originally started in 2000 as a competition where each agent was a travel agent who was required to organise trips for eight clients and maximise their satisfaction.
 In 2002 the success of this competition prompted the organisers to introduce new challenges and this competition would then become TAC SCM in 2003.
-The motivations behind TAC SCM were the lack of an existing validation methodology which captured the inherently competitive nature of supply chains.~\cite{arunachalam2005supply}
+The motivations behind TAC SCM were the lack of an existing validation methodology that captured the inherently competitive nature of supply chains.~\cite{arunachalam2005supply}
 
 TAC SCM was designed so that only trading agents who could coordinate the issues of sourcing, procurement, production and customer bidding would be able to do well.
 Each agent needs to bid on RFQs (requests for quotes) from customers to assembly a certain number of PCs within a time frame.
 The components for these PCs would be procured from various suppliers of CPUs, motherboards, memory and hard drives via similar RFQs.
-Each trading agent has an identical factory which can only operate for a certain number of hours each day, and different PCs require a different amount of time to assemble.
+Each trading agent has an identical factory that can only operate for a certain number of hours each day, and different PCs require a different amount of time to assemble.
 Each agent starts with an empty bank account and needs to initially borrow money from the bank.
 The winner of the competition is the agent who has the greatest bank balance at the end of 220 days of production.~\cite{arunachalam2005supply}
 Later competitions also added a reputation system between suppliers and trading agents so that subversive market manipulation would be a less viable strategy.~\cite{collins2010pushing}
@@ -44,19 +44,19 @@ However, these strategies and ideas have not yet been packaged in a way to allow
 
 Unfortunately, the TAC SCM competition has not been run since 2011, with Power TAC becoming the preferred competition for adversarial trading agent research.
 
-While this project is not about designing a competition trading agent and regardless of the fact that TAC SCM is no longer an active competition, it is still important as it provides a large number of examples for how agents can be designed.
+While this project is not about designing a competition trading agent and although TAC SCM is no longer an active competition, it is still important as it provides a large number of examples of how agents can be designed.
 As a result of this, this project will be about creating a multi-agent system for a supply chain of PC manufacturing.
 
 Power TAC\footnote{\url{https://powertac.org/}} is a trading agent competition that has been running yearly since starting in 2012.
-The authors of this competition have built it off of their experience running TAC SCM, and at present it is the primary trading agent competition in the field.~\cite{ketter2013power}
+The authors of this competition have built it off of their experience running TAC SCM, and at present, it is the primary trading agent competition in the field.~\cite{ketter2013power}
 
 Power TAC was created as a competition due to a lack of other means for experimenting with different market designs and policies regarding retail power production.
-Most power girds are managed by a regulated monopoly and lack the necessary monitoring capabilities to be considered a `smart grid'.
-Power TAC was created as a low risk way to model potential real world policies for renewable energy markets.~\cite{ketter2013power}
+Most power grids are managed by a regulated monopoly and lack the necessary monitoring capabilities to be considered a `smart grid'.
+Power TAC was created as a low-risk way to model potential real-world policies for renewable energy markets.~\cite{ketter2013power}
 
 Entries to Power TAC need to implement a broker agent which aggregates energy supply and demand and tries to earn a profit from doing so.
 Brokers need to design tariffs and offer these to various types of customers.
 Pricing for energy can vary depending on the time of day and the effect of weather.
-Each simulation runs for approximately 60 simulated days and at the end of this time the broker agent which has the highest monetary payment minus costs and fees is the winner.~\cite{ketter2020power}
+Each simulation runs for approximately 60 simulated days and at the end of this time, the broker agent which has the highest monetary payment minus costs and fees is the winner.~\cite{ketter2020power}
 
 Although Power TAC covers a different domain than this project does, many entries and winners have written papers about their agents and these could be beneficial to see the general patterns of agent design.
