@@ -20,6 +20,7 @@ defmodule SupplyChain.MixProject do
 
   defp deps do
     [
+      {:libcluster, "~> 3.2"},
       {:credo, "~> 1.5", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]

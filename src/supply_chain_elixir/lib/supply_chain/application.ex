@@ -5,7 +5,15 @@ defmodule SupplyChain.Application do
 
   @impl true
   def start(_type, _args) do
-    children = []
+    topologies = [
+      gossip: [
+        strategy: Cluster.Strategy.Gossip
+      ]
+    ]
+
+    children = [
+      {Cluster.Supervisor, [topologies, [name: SupplyChain.ClusterSupervisor]]}
+    ]
 
     opts = [strategy: :one_for_one, name: SupplyChain.Supervisor]
     Supervisor.start_link(children, opts)
