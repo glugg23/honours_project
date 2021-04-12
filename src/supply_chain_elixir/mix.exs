@@ -19,6 +19,9 @@ defmodule SupplyChain.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:credo, "~> 1.5", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+    ]
   end
 end
