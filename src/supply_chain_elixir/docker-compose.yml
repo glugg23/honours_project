@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  agent1:
+    build: .
+    image: glugg23/supply_chain_elixir
+
+  agent2:
+      build: .
+      image: glugg23/supply_chain_elixir
+
+  agent3:
+    build: .
+    image: glugg23/supply_chain_elixir
