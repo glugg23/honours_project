@@ -1,6 +1,6 @@
-defmodule Honours do
+defmodule SupplyChain do
   @moduledoc """
-  Documentation for `Honours`.
+  Documentation for `SupplyChain`.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Honours do
 
   ## Examples
 
-      iex> Honours.hello()
+      iex> SupplyChain.hello()
       :world
 
   """

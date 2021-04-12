@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-honours-*.tar
+supply_chain-*.tar
 
 # Temporary files for e.g. tests
 /tmp
@@ -42,4 +42,4 @@ erl_crash.dump
 
 ### Elixir Patch ###
 
-# End of https://www.toptal.com/developers/gitignore/api/elixir,code
+# End of https://www.toptal.com/developers/gitignore/api/elixir

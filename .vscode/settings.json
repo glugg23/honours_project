@@ -1,5 +1,5 @@
 {
-    "elixirLS.projectDir": "src",
+    "elixirLS.projectDir": "src/supply_chain_elixir",
     "latex-workshop.chktex.enabled": true,
     "latex-workshop.chktex.run": "onType",
     "latex-workshop.latex.outDir": "%DIR%/_build",
