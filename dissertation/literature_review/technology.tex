@@ -8,7 +8,7 @@ At the end of this section, a comparison is drawn between all the covered techno
 
 The Erlang\footnote{\url{https://www.erlang.org/}} programming language was introduced by \citeA{armstrong1990erlang} as an experimental new programming language to be used for programming telephony systems.
 Erlang is designed around using concurrent processes with no shared memory, which communicate using asynchronous message passing.
-All of this is built into the language definition.~\cite{armstrong2007history}
+All of this is built into the language definition~\cite{armstrong2007history}.
 The fact that this behaviour is implemented on a language basis and not as a third-party library is beneficial as it allows us to implement the basic Actor principle of message passing entirely using Erlang processes.
 
 \citeA{varela2004modelling} describes a method for implementing agents using multiple Erlang processes to represent individual components of an agent.
@@ -19,7 +19,7 @@ This allows fault tolerance as long as the supervisor stores the initial state o
 \citeA{distefano2005using} evaluated Erlang on three metrics: Agent Model Compliance, Support for Rationality and Support for Distribution.
 They found that while Erlang fully met the criteria for distribution support, it did not fully support agent behaviour composition and extension, which would be required for agent model compliance.
 They also found that Erlang lacked logical inference support to provide rationality to agents.
-They propose the eXAT (\textbf{e}rlang e\textbf{X}perimental \textbf{A}gent \textbf{T}ool) platform as a suitable library for fixing these issues.~\cite{distefano2003exat}
+They propose the eXAT (\textbf{e}rlang e\textbf{X}perimental \textbf{A}gent \textbf{T}ool) platform as a suitable library for fixing these issues~\cite{distefano2003exat}.
 However, \citeA{peregud2012implementing} found that the eXAT platform was cumbersome to write models with, was practically discontinued since 2005 and has no community support and no production systems using it.
 
 \citeA{santana2017interscsimulator} have used Erlang to model a large scale traffic simulation using millions of agents.
@@ -33,20 +33,20 @@ While Erlang has been used for implementing other types of scientific modelling,
 The Elixir programming language can be considered to be a more modern version of Erlang.
 Elixir compiles to the same byte code that the Erlang runtime uses.
 This allows Elixir code to call code written in Erlang with no runtime overhead.
-Elixir uses a syntax similar to Ruby, which is more modern than the Prolog inspired syntax of Erlang.~\cite{loder2016erlang}
+Elixir uses a syntax similar to Ruby, which is more modern than the Prolog inspired syntax of Erlang~\cite{loder2016erlang}.
 
 As Elixir is a fairly new programming language it has yet to be used for any type of agent-based research.
 \citeA{fedrecheski2016elixir} compared Elixir with Java for use in Internet of Things software.
 They found that while the Java implementation used 5\% to 15\% less CPU load, the Elixir version was shorter in terms of lines of code, consumed significantly less memory, and handled HTTP responses better under heavy load.
 
 While Elixir has not yet found much use in the scientific community, it has been used for web development and real-time applications.
-Discord had been an early adopter of Elixir for its messaging platform and was able to scale its application to handle five million concurrent users using it.~\cite{vishnevskiy2017discord}
+Discord had been an early adopter of Elixir for its messaging platform and was able to scale its application to handle five million concurrent users using it~\cite{vishnevskiy2017discord}.
 \citeA{pinterest2017introducing} have used Elixir to implement a notification system.
 They found that the Elixir version had ten times fewer lines of code than the original Java version, and ran faster as well.
 
 \subsubsection{JADE}
 
-JADE (\textbf{J}ava \textbf{A}gent \textbf{DE}velopment Framework)\footnote{\url{https://jade.tilab.com/}} is a Java framework for developing agent-based applications, and was one of the first FIPA specification compliant frameworks.~\cite{bellifemine1999jade}
+JADE (\textbf{J}ava \textbf{A}gent \textbf{DE}velopment Framework)\footnote{\url{https://jade.tilab.com/}} is a Java framework for developing agent-based applications, and was one of the first FIPA specification compliant frameworks~\cite{bellifemine1999jade}.
 JADE provides a platform for executing agents via composable behaviours and allowing both local and distributed agents to communicate with each other.
 One optimisation that JADE provides is that FIPA ACL messages are transported between JADE agents on the same platform as Java objects, instead of needing to be serialised into a string format.
 For agents on different platforms the message is converted as required but this provides a performance boost for local agents.
@@ -57,7 +57,7 @@ They propose Jadescript as a language to provide a dedicated syntax for construc
 
 JADE has been used by \citeA{podobnik2006crocodileagent} for implementing an agent to compete in TAC SCM\@.
 As they were using the IKB agent framework, they mention that a benefit of JADE was that they could separate each layer onto a different computer.
-While this results in a more complex system due to requiring lots of intercommunication, they still managed to reach the semi-finals of the competition once and the quarter-finals twice.~\cite{collins2009flexible}
+While this results in a more complex system due to requiring lots of intercommunication, they still managed to reach the semi-finals of the competition once and the quarter-finals twice~\cite{collins2009flexible}.
 
 \subsubsection{NetLogo}
 
@@ -65,7 +65,7 @@ NetLogo\footnote{\url{https://ccl.northwestern.edu/netlogo/}} is a multi-agent p
 It has been designed for use in both education and research, and since it has been written using Java it can be run on any major operating system.
 NetLogo uses agents called `turtles' to move over and interact with a grid of `patches'.
 Both of these can be programmed to have certain behaviours.
-NetLogo uses a primarily graphical interface to make it easy to view and modify the simulation while it is running.~\cite{tisue2004netlogo}
+NetLogo uses a primarily graphical interface to make it easy to view and modify the simulation while it is running~\cite{tisue2004netlogo}.
 
 While NetLogo is popular in general for agent-based modelling, only a few supply chain models have used it.
 \citeA{arvitrida2015competition} used NetLogo to model the effect of competition and collaboration on supply chain performance.
@@ -76,7 +76,7 @@ They selected NetLogo for being relatively simple but still providing all the fe
 SARL\footnote{\url{http://www.sarl.io/}} is a general-purpose agent-based programming language that aims to be both platform and architecturally agnostic.
 SARL provides native support for agent-oriented first-class abstractions but does not force the programmer to use them in any specific way.
 The reason why SARL is designed to be agnostic is the belief that a more general and less research-focused or theoretical approach is required for agent-oriented programming to make a more significant impact on mainstream software engineering.
-SARL compiles to Java byte code and can be run on the Janus platform, although other platforms can be used as well.~\cite{rodriguez2014sarl}
+SARL compiles to Java byte code and can be run on the Janus platform, although other platforms can be used as well~\cite{rodriguez2014sarl}.
 
 As SARL is a relatively new agent-oriented programming language, it has yet to be used for general agent-based systems.
 
@@ -84,9 +84,9 @@ As SARL is a relatively new agent-oriented programming language, it has yet to b
 
 SPADE\footnote{\url{https://spade-mas.readthedocs.io/en/latest/}} is a Python platform for implementing multi-agent systems.
 SPADE allows agents to communicate FIPA ACL messages via XMPP (e\textbf{X}tensible \textbf{M}essaging and \textbf{P}resence \textbf{P}rotocol) or HTTP for older agents that do not support this.
-SPADE provides security mechanisms to prevent unauthorised agents; a username and password are required to log an agent into the message router.~\cite{gregori2006jabber}
+SPADE provides security mechanisms to prevent unauthorised agents; a username and password are required to log an agent into the message router~\cite{gregori2006jabber}.
 The benefit of using Python for SPADE is the ability to use it alongside other popular Artificial Intelligence libraries.
-As SPADE uses a protocol that is commonly used for instant messaging between humans, it allows humans to communicate easily with agents.~\cite{palanca2020spade}
+As SPADE uses a protocol that is commonly used for instant messaging between humans, it allows humans to communicate easily with agents~\cite{palanca2020spade}.
 
 While SPADE has not been used in many multi-agent systems, it has been used for modelling free-floating car-sharing by \citeA{marti2020free}.
 
@@ -169,7 +169,7 @@ This is the shortest implementation of the counter agent at only 32 lines of cod
 This conciseness however comes at a price.
 NetLogo does not have a native way to send messages between `turtles' and has no way for a `turtle' to refuse to do an action it has been asked to do.
 While this makes example programs short and easy to read, it would likely cause issues as models grow larger and more complex.
-NetLogo does have a library\footnote{\url{https://users.uom.gr/~iliass/projects/NetLogo/}} to support sending messages between agents, however, this library only supports \verb|NetLogo 5| whereas the current version is \verb|NetLogo 6.2|.~\cite{sakellariou2008enhancing}
+NetLogo does have a library\footnote{\url{https://users.uom.gr/~iliass/projects/NetLogo/}} to support sending messages between agents, however, this library only supports \verb|NetLogo 5| whereas the current version is \verb|NetLogo 6.2|~\cite{sakellariou2008enhancing}.
 
 \citeA{feraud2017first} compare SARL with other technologies such as JADE and NetLogo.
 They mention that an advantage of JADE is that it provides graphical tools for debugging and monitoring running agents.
