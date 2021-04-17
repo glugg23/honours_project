@@ -36,7 +36,7 @@ The IKB framework has been used by \citeA{podobnik2006crocodileagent} to develop
 
 This project will be using an IKB framework to implement the agents in the supply chain system.
 There are two reasons why the IKB framework has been chosen over the more traditional Blackboard System.
-The first is that using Knowledge Sources with differing implementations would not be a benefit in answering the research questions of this project, so a more general Behavior layer would be sufficient.
+The first is that the benefit of being able to use Knowledge Sources with differing implementations does not apply here, as the performance of only one technology should be measured.
 The second is that the nature of this project requires two implementations from scratch to properly compare Elixir and JADE, and so a more complex Blackboard System would require more time to develop.
 
 \subsubsection{Communication}
@@ -48,7 +48,14 @@ The syntax of the message is based on a balanced parenthesis list similar to the
 
 KQML has been criticised by \citeA{cohen1995communicative} for not having a precisely defined set of semantics.
 This means when an agent sends a message with a certain performative, there is no way of knowing if the other agent has implemented the same meaning of that performative.
-Another issue they mention is that there is no way in KQML to ask an agent to complete a task in the future.
+
+In natural language, a performative utterance is where the speaker asserts or commands an action to be completed.
+KQML defines a set of performatives such as \verb|ACHIEVE|, \verb|ASK-IF|, \verb|DENY|, \verb|TELL|, etc.
+These define the types of communications that agents can have~\cite{cohen1995communicative}.
+For example, \verb|ACHIEVE| asserts that the agent needs to make something true about their environment.
+
+Another issue with the message semantics of KQML is that there is no way to ask an agent to complete a task in the future.
+The only option available is asking the agent to complete the task immediately which might not be possible~\cite{cohen1995communicative}.
 
 The Foundation for Intelligent Physical Agents Agent Communication Language (FIPA ACL) supersedes KQML and provides a more formally defined communication language that addresses some of the shortcomings of KQML\@.
 FIPA defines multiple specifications for agent management/interaction/communication/etc.

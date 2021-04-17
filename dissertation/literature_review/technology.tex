@@ -18,6 +18,7 @@ This allows fault tolerance as long as the supervisor stores the initial state o
 
 \citeA{distefano2005using} evaluated Erlang on three metrics: Agent Model Compliance, Support for Rationality and Support for Distribution.
 They found that while Erlang fully met the criteria for distribution support, it did not fully support agent behaviour composition and extension, which would be required for agent model compliance.
+They define compliance with an agent model to be the ability to express, compose and extend finite state machine based behaviours.
 They also found that Erlang lacked logical inference support to provide rationality to agents.
 They propose the eXAT (\textbf{e}rlang e\textbf{X}perimental \textbf{A}gent \textbf{T}ool) platform as a suitable library for fixing these issues~\cite{distefano2003exat}.
 However, \citeA{peregud2012implementing} found that the eXAT platform was cumbersome to write models with, was practically discontinued since 2005 and has no community support and no production systems using it.
@@ -58,6 +59,7 @@ They propose Jadescript as a language to provide a dedicated syntax for construc
 JADE has been used by \citeA{podobnik2006crocodileagent} for implementing an agent to compete in TAC SCM\@.
 As they were using the IKB agent framework, they mention that a benefit of JADE was that they could separate each layer onto a different computer.
 While this results in a more complex system due to requiring lots of intercommunication, they still managed to reach the semi-finals of the competition once and the quarter-finals twice~\cite{collins2009flexible}.
+This shows that the IKB framework did not hinder them from writing an effective and competitive agent.
 
 \subsubsection{NetLogo}
 
@@ -94,11 +96,11 @@ While SPADE has not been used in many multi-agent systems, it has been used for 
 
 This section compares all the previously mentioned technologies, in order to evaluate them for this project.
 A short example program has written for each technology so that the ease of writing a multi-agent system can be objectively compared.
-See \Cref{tab:tech_comparison} for an overview of the comparison.
+See \cref{tab:tech_comparison} for an overview of the comparison.
 
-\begin{table}[ht]
+\begin{table}[h]
     \centering
-    \caption{Technology Comparison}\label{tab:tech_comparison}
+    \caption{Technology Comparison, where ``LOC'' is the number of lines of code for an example program}\label{tab:tech_comparison}
     \begin{tabular}{llllll}
         \toprule
         Name & SCM & FIPA & LOC & Difficulty to Use & Active Project\\
@@ -168,6 +170,7 @@ However, they conclude that JADE programs provide more flexible and robust progr
 This is the shortest implementation of the counter agent at only 32 lines of code.
 This conciseness however comes at a price.
 NetLogo does not have a native way to send messages between `turtles' and has no way for a `turtle' to refuse to do an action it has been asked to do.
+This makes NetLogo unsuitable for writing distributed systems, as a lack of autonomy over program state means a poorly written agent can cause corruption to the rest of the system.
 While this makes example programs short and easy to read, it would likely cause issues as models grow larger and more complex.
 NetLogo does have a library\footnote{\url{https://users.uom.gr/~iliass/projects/NetLogo/}} to support sending messages between agents, however, this library only supports \verb|NetLogo 5| whereas the current version is \verb|NetLogo 6.2|~\cite{sakellariou2008enhancing}.
 
