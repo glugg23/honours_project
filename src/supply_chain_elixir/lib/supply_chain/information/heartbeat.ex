@@ -17,8 +17,9 @@ defmodule SupplyChain.Information.HeartBeat do
   def handle_info(:heartbeat, state) do
     registered =
       Registry.keys(SupplyChain.Information.Registry, Process.whereis(SupplyChain.Information))
+      |> Enum.sort()
 
-    connected = Node.list()
+    connected = Node.list() |> Enum.sort()
     diff = List.myers_difference(registered, connected)
 
     # No need to update registry if there has been no change
