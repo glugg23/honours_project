@@ -6,25 +6,26 @@ defmodule SupplyChain.Information.Server do
   use GenServer
 
   def init(state) do
-    {:ok, _} = Registry.start_link(keys: :unique, name: SupplyChain.Information.Registry)
-    # TODO: Waiting only 1 second is a race condition.
-    # There is no guarantee that libcluster will connect to all nodes in this time.
-    # Consider implementing a custom heartbeat to monitor Nodes.list/0?
-    Process.send_after(self(), :init, 1_000)
     {:ok, state}
   end
 
-  def handle_call(:info, _from, state) do
+  def handle_call(:get_info, _from, state) do
     {:reply, %{type: :agent}, state}
   end
 
-  def handle_info(:init, state) do
-    for n <- Node.list() do
-      info = SupplyChain.Information.info({SupplyChain.Information, n})
-      {:ok, _} = Registry.register(SupplyChain.Information.Registry, n, info)
+  def handle_cast({:update_registry, diff}, state) do
+    for node <- diff[:ins] do
+      # This could timeout, wrap in try/catch and handle late messages
+      # https://cultivatehq.com/posts/genserver-call-timeouts/
+      info = SupplyChain.Information.get_info({SupplyChain.Information, node})
+      {:ok, _} = Registry.register(SupplyChain.Information.Registry, node, info)
     end
 
-    Logger.info("#{Node.self()} is done")
+    for node <- diff[:del] do
+      :ok = Registry.unregister(SupplyChain.Information.Registry, node)
+    end
+
+    Logger.info("Updated node registry with #{inspect(diff)}")
 
     {:noreply, state}
   end
