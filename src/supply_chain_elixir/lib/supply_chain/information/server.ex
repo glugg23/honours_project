@@ -15,10 +15,15 @@ defmodule SupplyChain.Information.Server do
 
   def handle_cast({:update_registry, diff}, state) do
     for node <- diff[:ins] do
-      # This could timeout, wrap in try/catch and handle late messages
-      # https://cultivatehq.com/posts/genserver-call-timeouts/
-      info = SupplyChain.Information.get_info({SupplyChain.Information, node})
-      {:ok, _} = Registry.register(SupplyChain.Information.Registry, node, info)
+      try do
+        info = SupplyChain.Information.get_info({SupplyChain.Information, node})
+        case Registry.register(SupplyChain.Information.Registry, node, info) do
+          {:ok, _} -> :ok
+          {:error, {:already_registered, _}} -> Logger.warning("#{node} is already registered")
+        end
+      catch
+        :exit, {:timeout, _} -> Logger.warning("Registration timed out for #{node}")
+      end
     end
 
     for node <- diff[:del] do
@@ -27,6 +32,11 @@ defmodule SupplyChain.Information.Server do
 
     Logger.info("Updated node registry with #{inspect(diff)}")
 
+    {:noreply, state}
+  end
+
+  def handle_info(msg = {ref, _}, state) when is_reference(ref) do
+    Logger.debug("Ignoring late message #{inspect(msg)}")
     {:noreply, state}
   end
 end
