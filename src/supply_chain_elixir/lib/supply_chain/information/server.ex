@@ -5,21 +5,26 @@ defmodule SupplyChain.Information.Server do
 
   use GenServer
 
+  alias SupplyChain.Information
+  alias SupplyChain.Information.Registry, as: NodeRegistry
+  alias SupplyChain.Knowledge
+
   def init(_args) do
-    state = [config: SupplyChain.Knowledge.get_config()]
+    state = Knowledge.get_config()
     {:ok, state}
   end
 
   def handle_call(:get_info, _from, state) do
-    {:reply, state[:config], state}
+    {:reply, %{type: state[:type]}, state}
   end
 
   def handle_cast({:update_registry, diff}, state) do
     for node <- diff[:ins] do
       try do
-        info = SupplyChain.Information.get_info({SupplyChain.Information, node})
+        info = Information.get_info({Information, node})
+        info = Map.put(info, :ignore?, info[:type] in state[:information_filter])
 
-        case Registry.register(SupplyChain.Information.Registry, node, info) do
+        case Registry.register(NodeRegistry, node, info) do
           {:ok, _} -> :ok
           {:error, {:already_registered, _}} -> Logger.warning("#{node} is already registered")
         end
@@ -29,7 +34,7 @@ defmodule SupplyChain.Information.Server do
     end
 
     for node <- diff[:del] do
-      :ok = Registry.unregister(SupplyChain.Information.Registry, node)
+      :ok = Registry.unregister(NodeRegistry, node)
     end
 
     Logger.info("Updated node registry with #{inspect(diff)}")
