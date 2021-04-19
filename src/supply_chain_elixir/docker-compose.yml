@@ -3,11 +3,17 @@ services:
   agent1:
     build: .
     image: glugg23/supply_chain_elixir
+    environment:
+      - AGENT_TYPE=agent
 
   agent2:
     build: .
     image: glugg23/supply_chain_elixir
+    environment:
+      - AGENT_TYPE=agent
 
   agent3:
     build: .
     image: glugg23/supply_chain_elixir
+    environment:
+      - AGENT_TYPE=agent

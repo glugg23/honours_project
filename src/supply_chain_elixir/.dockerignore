@@ -6,4 +6,8 @@ test/
 
 .formatter.exs
 .gitignore
+.dockerignore
+Dockerfile
+docker-compose.yml
 *.md
+*.sh
