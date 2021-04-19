@@ -18,7 +18,7 @@ defmodule SupplyChain.Information do
     GenServer.start_link(SupplyChain.Information.Server, args, name: __MODULE__)
   end
 
-  def get_info(layer) do
+  def get_info(layer \\ __MODULE__) do
     GenServer.call(layer, :get_info)
   end
 

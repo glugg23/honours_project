@@ -13,6 +13,7 @@ defmodule SupplyChain.Application do
 
     children = [
       {Cluster.Supervisor, [topologies, [name: SupplyChain.ClusterSupervisor]]},
+      SupplyChain.Knowledge.Supervisor,
       SupplyChain.Information.Supervisor
     ]
 
