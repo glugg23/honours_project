@@ -16,13 +16,19 @@ defmodule SupplyChain.Knowledge.Server do
   end
 
   defp match_config_type(string) do
-    case string do
-      "agent" ->
-        Agent
+    type = String.to_atom(string)
+    valid_types = Application.get_env(:supply_chain, :agent_types)
 
-      _ ->
-        Logger.critical("Invalid string #{string} for AGENT_TYPE environment variable")
-        System.stop(1)
+    if type not in valid_types do
+      Logger.critical(
+        "\"#{string}\" is invalid for AGENT_TYPE, use one of #{
+          inspect(valid_types |> Enum.map(&to_string/1))
+        }"
+      )
+
+      System.stop(1)
     end
+
+    type
   end
 end

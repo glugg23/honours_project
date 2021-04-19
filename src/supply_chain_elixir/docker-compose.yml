@@ -1,19 +1,19 @@
 version: "3.9"
 services:
-  agent1:
+  manufacturer:
     build: .
     image: glugg23/supply_chain_elixir
     environment:
-      - AGENT_TYPE=agent
+      - AGENT_TYPE=manufacturer
 
-  agent2:
+  consumer:
     build: .
     image: glugg23/supply_chain_elixir
     environment:
-      - AGENT_TYPE=agent
+      - AGENT_TYPE=consumer
 
-  agent3:
+  producer:
     build: .
     image: glugg23/supply_chain_elixir
     environment:
-      - AGENT_TYPE=agent
+      - AGENT_TYPE=producer
