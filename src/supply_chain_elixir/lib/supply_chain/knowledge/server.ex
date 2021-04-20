@@ -6,7 +6,21 @@ defmodule SupplyChain.Knowledge.Server do
   use GenServer
 
   def init(_args) do
-    type = System.get_env("AGENT_TYPE") |> match_config_type()
+    type =
+      case System.fetch_env("AGENT_TYPE") do
+        {:ok, string} ->
+          match_config_type(string)
+
+        :error ->
+          Logger.critical(
+            "AGENT_TYPE is not set, use one of #{
+              inspect(Application.get_env(:supply_chain, :agent_types) |> Enum.map(&to_string/1))
+            }"
+          )
+
+          System.stop(1)
+      end
+
     state = [config: Application.get_env(:supply_chain, type)]
     {:ok, state}
   end
