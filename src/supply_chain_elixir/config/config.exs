@@ -13,3 +13,5 @@ config :supply_chain, :producer,
   information_filter: [:consumer, :producer]
 
 config :supply_chain, :agent_types, [:manufacturer, :consumer, :producer]
+
+import_config "#{config_env()}.exs"
