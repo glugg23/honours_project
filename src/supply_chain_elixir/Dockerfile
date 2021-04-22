@@ -9,7 +9,7 @@ RUN mix local.hex --force
 COPY mix.exs .
 COPY mix.lock .
 
-RUN mix deps.get
+RUN mix deps.get --only=prod
 RUN mix deps.compile
 
 COPY . .
