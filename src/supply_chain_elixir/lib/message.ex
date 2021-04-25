@@ -55,4 +55,9 @@ defmodule Message do
   def forward(msg, receiver) do
     %Message{msg | sender: msg.receiver, receiver: receiver}
   end
+
+  @spec send(Message.t()) :: Message.t()
+  def send(msg) do
+    send(msg.receiver, msg)
+  end
 end

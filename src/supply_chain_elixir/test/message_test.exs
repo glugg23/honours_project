@@ -1,5 +1,5 @@
 defmodule MessageTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Message
 
   test "creates correct message" do
@@ -175,6 +175,39 @@ defmodule MessageTest do
 
     msg = Message.forward(msg, {:c, :node3})
     result = Message.reply(msg, :accept, :ok)
+
+    assert expected === result
+  end
+
+  test "sending a message works" do
+    pid =
+      spawn_link(fn ->
+        receive do
+          msg -> Message.reply(msg, :accept, :ok) |> Message.send()
+        end
+      end)
+
+    Process.register(self(), :a)
+    Process.register(pid, :b)
+
+    reference = IEx.Helpers.ref(0, 1, 2, 3)
+    msg = Message.new(:inform, :a, :b, :hello, reference)
+
+    expected = %Message{
+      performative: :accept,
+      sender: :b,
+      receiver: :a,
+      reply_to: :b,
+      content: :ok,
+      conversation_id: reference
+    }
+
+    Message.send(msg)
+
+    result =
+      receive do
+        msg -> msg
+      end
 
     assert expected === result
   end

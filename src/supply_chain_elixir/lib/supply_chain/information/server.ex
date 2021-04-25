@@ -42,6 +42,11 @@ defmodule SupplyChain.Information.Server do
     {:noreply, state}
   end
 
+  def handle_info(msg = %Message{}, state) do
+    Logger.debug("Got message: #{inspect(msg, pretty: true)}")
+    {:noreply, state}
+  end
+
   def handle_info(msg = {ref, _}, state) when is_reference(ref) do
     Logger.debug("Ignoring late message #{inspect(msg)}")
     {:noreply, state}
