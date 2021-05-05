@@ -5,6 +5,8 @@ defmodule SupplyChain.Information.HeartBeat do
 
   use GenServer
 
+  alias :ets, as: ETS
+
   def init(state) do
     Process.send_after(self(), :heartbeat, :random.uniform(5_000))
     {:ok, state}
@@ -16,7 +18,7 @@ defmodule SupplyChain.Information.HeartBeat do
 
   def handle_info(:heartbeat, state) do
     registered =
-      Registry.keys(SupplyChain.Information.Registry, Process.whereis(SupplyChain.Information))
+      ETS.select(SupplyChain.Information.Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
       |> Enum.sort()
 
     connected = Node.list() |> Enum.sort()

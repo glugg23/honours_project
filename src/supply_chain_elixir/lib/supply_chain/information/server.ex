@@ -5,28 +5,30 @@ defmodule SupplyChain.Information.Server do
 
   use GenServer
 
+  alias :ets, as: ETS
+
   alias SupplyChain.Information
-  alias SupplyChain.Information.Registry, as: NodeRegistry
+  alias SupplyChain.Information.Nodes, as: Nodes
   alias SupplyChain.Knowledge
 
   def init(_args) do
+    ETS.new(Nodes, [:set, :protected, :named_table])
     state = Knowledge.get_config()
     {:ok, state}
   end
 
   def handle_call(:get_info, _from, state) do
-    {:reply, %{type: state[:type]}, state}
+    {:reply, state[:type], state}
   end
 
   def handle_cast({:update_registry, diff}, state) do
     for node <- diff[:ins] do
       try do
-        info = Information.get_info({Information, node})
-        info = Map.put(info, :ignore?, info[:type] in state[:information_filter])
+        type = Information.get_info({Information, node})
+        ignore = type in state[:information_filter]
 
-        case Registry.register(NodeRegistry, node, info) do
-          {:ok, _} -> :ok
-          {:error, {:already_registered, _}} -> Logger.warning("#{node} is already registered")
+        unless ETS.insert_new(Nodes, {node, type, ignore}) do
+          Logger.warning("#{node} is already registered")
         end
       catch
         :exit, {:timeout, _} -> Logger.warning("Registration timed out for #{node}")
@@ -34,7 +36,7 @@ defmodule SupplyChain.Information.Server do
     end
 
     for node <- diff[:del] do
-      :ok = Registry.unregister(NodeRegistry, node)
+      ETS.delete(Nodes, node)
     end
 
     Logger.info("Updated node registry with #{inspect(diff)}")

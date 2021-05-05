@@ -10,8 +10,7 @@ defmodule SupplyChain.Information.Supervisor do
   def init(_args) do
     children = [
       SupplyChain.Information,
-      SupplyChain.Information.HeartBeat,
-      {Registry, [keys: :unique, name: SupplyChain.Information.Registry]}
+      SupplyChain.Information.HeartBeat
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
