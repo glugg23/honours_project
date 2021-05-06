@@ -25,12 +25,12 @@ defmodule SupplyChain.Knowledge.Server do
             System.stop(1)
         end
 
-    state = [config: Application.get_env(:supply_chain, type)]
+    state = %{config: Application.get_env(:supply_chain, type)}
     {:ok, state}
   end
 
   def handle_call(:get_config, _from, state) do
-    {:reply, state[:config], state}
+    {:reply, state.config, state}
   end
 
   defp match_config_type(string) do

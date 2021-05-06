@@ -10,7 +10,8 @@ defmodule SupplyChain.Information.Supervisor do
   def init(_args) do
     children = [
       SupplyChain.Information,
-      SupplyChain.Information.HeartBeat
+      SupplyChain.Information.HeartBeat,
+      {Task.Supervisor, name: SupplyChain.Information.TaskSupervisor}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
