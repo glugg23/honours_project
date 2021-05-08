@@ -29,12 +29,7 @@ defmodule SupplyChain.Information.Server do
   end
 
   def handle_info({:nodeup, node}, state) do
-    task =
-      Task.Supervisor.async_nolink(TaskSupervisor, fn ->
-        {node, Information.get_info({Information, node})}
-      end)
-
-    {:noreply, %{state | tasks: [task.ref | state.tasks]}}
+    spawn_task(node, state)
   end
 
   def handle_info({:nodedown, node}, state) do
@@ -69,15 +64,22 @@ defmodule SupplyChain.Information.Server do
 
     case type do
       :timeout ->
-        task =
-          Task.Supervisor.async_nolink(TaskSupervisor, fn ->
-            {node, Information.get_info({Information, node})}
-          end)
+        spawn_task(node, state)
 
-        {:noreply, %{state | tasks: [task.ref | state.tasks]}}
+      :noproc ->
+        spawn_task(node, state)
 
       _ ->
         {:noreply, state}
     end
+  end
+
+  defp spawn_task(node, state) do
+    task =
+      Task.Supervisor.async_nolink(TaskSupervisor, fn ->
+        {node, Information.get_info({Information, node})}
+      end)
+
+    {:noreply, %{state | tasks: [task.ref | state.tasks]}}
   end
 end
