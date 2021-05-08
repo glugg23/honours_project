@@ -14,7 +14,8 @@ defmodule SupplyChain.Application do
     children = [
       {Cluster.Supervisor, [topologies, [name: SupplyChain.ClusterSupervisor]]},
       SupplyChain.Knowledge.Supervisor,
-      SupplyChain.Information.Supervisor
+      SupplyChain.Information.Supervisor,
+      SupplyChain.Behaviour.Supervisor
     ]
 
     opts = [strategy: :one_for_one, name: SupplyChain.Supervisor]
