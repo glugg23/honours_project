@@ -13,6 +13,7 @@ defmodule SupplyChain.Information.Server do
   alias SupplyChain.Knowledge
 
   def init(_args) do
+    :net_kernel.monitor_nodes(true)
     ETS.new(Nodes, [:set, :protected, :named_table])
     state = %{config: Knowledge.get_config(), tasks: []}
     {:ok, state}
@@ -22,47 +23,61 @@ defmodule SupplyChain.Information.Server do
     {:reply, state.config[:type], state}
   end
 
-  def handle_cast({:update_registry, diff}, state) do
-    tasks =
-      Enum.map(
-        diff[:ins],
-        &Task.Supervisor.async_nolink(TaskSupervisor, fn ->
-          {&1, Information.get_info({Information, &1})}
-        end)
-      )
-      |> Enum.map(fn t -> t.ref end)
-
-    Enum.each(diff[:del], &ETS.delete(Nodes, &1))
-
-    Logger.debug("Updated node registry with #{inspect(diff)}")
-
-    {:noreply, %{state | tasks: state.tasks ++ tasks}}
-  end
-
   def handle_info(msg = %Message{}, state) do
     Logger.notice("Got message: #{inspect(msg, pretty: true)}")
     {:noreply, state}
   end
 
-  def handle_info(msg = {ref, {node, type}}, state) when is_reference(ref) do
+  def handle_info({:nodeup, node}, state) do
+    task =
+      Task.Supervisor.async_nolink(TaskSupervisor, fn ->
+        {node, Information.get_info({Information, node})}
+      end)
+
+    {:noreply, %{state | tasks: [task.ref | state.tasks]}}
+  end
+
+  def handle_info({:nodedown, node}, state) do
+    ETS.delete(Nodes, node)
+    Logger.notice("Node down #{inspect(node)}")
+    {:noreply, state}
+  end
+
+  def handle_info({ref, {node, type}}, state) when is_reference(ref) do
     if ref in state.tasks do
       Process.demonitor(ref, [:flush])
 
       ignore = type in state.config[:information_filter]
 
-      unless ETS.insert_new(Nodes, {node, type, ignore}) do
+      if ETS.insert_new(Nodes, {node, type, ignore}) do
+        Logger.info("Node up #{inspect(node)}")
+      else
         Logger.warning("#{node} is already registered")
       end
 
       {:noreply, %{state | tasks: List.delete(state.tasks, ref)}}
     else
-      Logger.debug("Got: #{inspect(msg)}")
+      Logger.warning("Got node info with no valid task")
       {:noreply, state}
     end
   end
 
-  def handle_info({:DOWN, ref, :process, _, reason}, state) when is_reference(ref) do
+  def handle_info({:DOWN, ref, :process, _, reason = {type, {_, _, [{_, node}, _, _]}}}, state)
+      when is_reference(ref) do
     Logger.warning("Task #{inspect(ref)} failed with #{inspect(reason)}")
-    {:noreply, %{state | tasks: List.delete(state.tasks, ref)}}
+    state = %{state | tasks: List.delete(state.tasks, ref)}
+
+    case type do
+      :timeout ->
+        task =
+          Task.Supervisor.async_nolink(TaskSupervisor, fn ->
+            {node, Information.get_info({Information, node})}
+          end)
+
+        {:noreply, %{state | tasks: [task.ref | state.tasks]}}
+
+      _ ->
+        {:noreply, state}
+    end
   end
 end

@@ -21,8 +21,4 @@ defmodule SupplyChain.Information do
   def get_info(layer \\ __MODULE__) do
     GenServer.call(layer, :get_info)
   end
-
-  def update_registry(diff) do
-    GenServer.cast(__MODULE__, {:update_registry, diff})
-  end
 end

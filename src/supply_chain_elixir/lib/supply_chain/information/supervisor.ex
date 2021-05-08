@@ -10,7 +10,6 @@ defmodule SupplyChain.Information.Supervisor do
   def init(_args) do
     children = [
       SupplyChain.Information,
-      SupplyChain.Information.HeartBeat,
       {Task.Supervisor, name: SupplyChain.Information.TaskSupervisor}
     ]
 
