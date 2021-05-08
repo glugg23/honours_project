@@ -23,4 +23,8 @@ defmodule SupplyChain.Knowledge do
   def get_config() do
     GenServer.call(__MODULE__, :get_config)
   end
+
+  def ready?() do
+    GenServer.call(__MODULE__, :ready?)
+  end
 end

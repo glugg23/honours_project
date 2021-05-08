@@ -23,6 +23,10 @@ defmodule SupplyChain.Information.Server do
     {:reply, state.config[:type], state}
   end
 
+  def handle_call(:ready?, _from, state) do
+    {:reply, state.tasks === [], state}
+  end
+
   def handle_info(msg = %Message{}, state) do
     Logger.notice("Got message: #{inspect(msg, pretty: true)}")
     {:noreply, state}

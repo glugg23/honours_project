@@ -5,6 +5,9 @@ defmodule SupplyChain.Behaviour do
   The actual logic should be in seperate modules, which will be selected to run by start_link/1
   """
 
+  alias SupplyChain.Information
+  alias SupplyChain.Knowledge
+
   def child_spec(args) do
     %{
       id: SupplyChain.Behaviour,
@@ -17,5 +20,10 @@ defmodule SupplyChain.Behaviour do
 
   def start_link(args) do
     GenServer.start_link(SupplyChain.Behaviour.Server, args, name: __MODULE__)
+  end
+end
+
+  def ready?() do
+    Information.ready?() and Knowledge.ready?() and GenServer.call(__MODULE__, :ready?)
   end
 end

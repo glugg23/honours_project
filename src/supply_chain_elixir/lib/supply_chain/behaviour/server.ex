@@ -13,6 +13,10 @@ defmodule SupplyChain.Behaviour.Server do
     {:ok, %{}}
   end
 
+  def handle_call(:ready?, _from, state) do
+    {:reply, true, state}
+  end
+
   def handle_call(atom, from, state) do
     Logger.warning("Received call #{inspect(atom)} from #{inspect(from)}")
     {:reply, :noop, state}

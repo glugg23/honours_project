@@ -33,6 +33,10 @@ defmodule SupplyChain.Knowledge.Server do
     {:reply, state.config, state}
   end
 
+  def handle_call(:ready?, _from, state) do
+    {:reply, true, state}
+  end
+
   defp match_config_type(string) do
     type = String.to_atom(string)
     valid_types = Application.get_env(:supply_chain, :agent_types)

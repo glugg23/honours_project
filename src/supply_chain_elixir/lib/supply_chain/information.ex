@@ -21,4 +21,8 @@ defmodule SupplyChain.Information do
   def get_info(layer \\ __MODULE__) do
     GenServer.call(layer, :get_info)
   end
+
+  def ready?() do
+    GenServer.call(__MODULE__, :ready?)
+  end
 end
