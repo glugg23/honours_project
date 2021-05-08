@@ -1,3 +1,3 @@
 import Config
 
-config :supply_chain, :agent_type, :manufacturer
+config :supply_chain, :agent_type, :clock

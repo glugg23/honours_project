@@ -1,5 +1,11 @@
 version: "3.9"
 services:
+  clock:
+    build: .
+    image: glugg23/supply_chain_elixir
+    environment:
+      - AGENT_TYPE=clock
+
   manufacturer:
     build: .
     image: glugg23/supply_chain_elixir
