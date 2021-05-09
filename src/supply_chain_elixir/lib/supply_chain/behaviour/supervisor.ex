@@ -8,8 +8,10 @@ defmodule SupplyChain.Behaviour.Supervisor do
   end
 
   def init(_args) do
+    config = SupplyChain.Knowledge.get_config()
+
     children = [
-      SupplyChain.Behaviour
+      {SupplyChain.Behaviour, config}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

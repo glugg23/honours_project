@@ -19,9 +19,14 @@ defmodule SupplyChain.Behaviour do
   end
 
   def start_link(args) do
-    GenServer.start_link(SupplyChain.Behaviour.Server, args, name: __MODULE__)
+    case args[:type] do
+      :clock ->
+        GenStateMachine.start_link(SupplyChain.Clock.Behaviour, args, name: __MODULE__)
+
+      _ ->
+        GenServer.start_link(SupplyChain.Behaviour.Server, args, name: __MODULE__)
+    end
   end
-end
 
   def ready?() do
     Information.ready?() and Knowledge.ready?() and GenServer.call(__MODULE__, :ready?)

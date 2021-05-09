@@ -2,7 +2,8 @@ import Config
 
 config :supply_chain, :clock,
   type: :clock,
-  information_filter: []
+  information_filter: [],
+  agent_count: 3
 
 config :supply_chain, :manufacturer,
   type: :manufacturer,
