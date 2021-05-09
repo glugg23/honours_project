@@ -1,3 +1,3 @@
 import Config
 
-config :supply_chain, :agent_type, :clock
+System.put_env("AGENT_TYPE", "clock")

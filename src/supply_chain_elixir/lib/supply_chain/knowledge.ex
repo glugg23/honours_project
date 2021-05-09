@@ -16,8 +16,11 @@ defmodule SupplyChain.Knowledge do
     }
   end
 
-  def start_link(args) do
-    GenServer.start_link(SupplyChain.Knowledge.Server, args, name: __MODULE__)
+  def start_link(type) do
+    case type do
+      _ ->
+        GenServer.start_link(SupplyChain.Knowledge.Server, type, name: __MODULE__)
+    end
   end
 
   def get_config() do
