@@ -27,6 +27,11 @@ defmodule SupplyChain.Information.Server do
     {:reply, state.tasks === [], state}
   end
 
+  def handle_info(msg = %Message{performative: :inform, content: {:start_round, _}}, state) do
+    msg |> Message.reply(:inform, :finished) |> Message.send()
+    {:noreply, state}
+  end
+
   def handle_info(msg = %Message{}, state) do
     Logger.notice("Got message: #{inspect(msg, pretty: true)}")
     {:noreply, state}

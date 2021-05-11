@@ -10,13 +10,20 @@ defmodule SupplyChain.Clock.Behaviour do
 
   alias :ets, as: ETS
 
+  alias SupplyChain.Information
   alias SupplyChain.Information.Nodes, as: Nodes
   alias SupplyChain.Knowledge
   alias SupplyChain.Behaviour
   alias SupplyChain.Behaviour.TaskSupervisor, as: TaskSupervisor
 
   def init(args) do
-    {:ok, :setup, %{agent_count: args[:agent_count]}}
+    {:ok, :setup,
+     %{
+       agent_count: args[:agent_count],
+       round: 0,
+       max_rounds: args[:max_rounds],
+       finished_agents: []
+     }}
   end
 
   def handle_event(:internal, :ask_ready, :is_ready?, data) do
@@ -34,10 +41,39 @@ defmodule SupplyChain.Clock.Behaviour do
 
     if Enum.all?(ready, fn x -> x === {:ok, true} end) do
       Logger.info("All nodes ready")
-      {:next_state, :start_round, data}
+      {:next_state, :start_round, data, {:next_event, :internal, :anounce}}
     else
       Logger.debug("Not yet ready: #{inspect(ready)}")
       {:keep_state, data, {:next_event, :internal, :ask_ready}}
+    end
+  end
+
+  def handle_event(:internal, :anounce, :start_round, data) do
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
+    data = %{data | round: data.round + 1}
+
+    Logger.notice("Starting round #{data.round}")
+
+    Enum.map(nodes, fn n ->
+      Message.new(
+        :inform,
+        {Behaviour, Node.self()},
+        {Information, n},
+        {:start_round, %{round: data.round}}
+      )
+    end)
+    |> Enum.each(&Message.send/1)
+
+    {:next_state, :end_round, data}
+  end
+
+  def handle_event(:internal, :continue?, :end_round, data) do
+    data = %{data | finished_agents: []}
+
+    if data.round === data.max_rounds do
+      {:next_state, :finish, data}
+    else
+      {:next_state, :start_round, data, {:next_event, :internal, :anounce}}
     end
   end
 
@@ -63,6 +99,24 @@ defmodule SupplyChain.Clock.Behaviour do
       Logger.info("All nodes connected to clock agent")
 
       {:next_state, :is_ready?, data, {:next_event, :internal, :ask_ready}}
+    else
+      {:keep_state, data}
+    end
+  end
+
+  def handle_event(
+        :info,
+        %Message{performative: :inform, content: :finished, sender: {_, node}},
+        :end_round,
+        data
+      ) do
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}]) |> Enum.sort()
+    data = %{data | finished_agents: [node | data.finished_agents] |> Enum.sort()}
+
+    Logger.info("[#{length(data.finished_agents)}/#{length(nodes)}] agents finished")
+
+    if data.finished_agents === nodes do
+      {:keep_state, data, {:next_event, :internal, :continue?}}
     else
       {:keep_state, data}
     end

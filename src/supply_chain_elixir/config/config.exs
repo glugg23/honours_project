@@ -3,7 +3,8 @@ import Config
 config :supply_chain, :clock,
   type: :clock,
   information_filter: [],
-  agent_count: 3
+  agent_count: 3,
+  max_rounds: 220
 
 config :supply_chain, :manufacturer,
   type: :manufacturer,
