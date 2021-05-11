@@ -9,7 +9,7 @@ defmodule SupplyChain.Information do
       id: SupplyChain.Information,
       start: {SupplyChain.Information, :start_link, [args]},
       shutdown: 5_000,
-      restart: :permanent,
+      restart: :transient,
       type: :worker
     }
   end
@@ -24,5 +24,9 @@ defmodule SupplyChain.Information do
 
   def ready?(node \\ Node.self()) do
     GenServer.call({__MODULE__, node}, :ready?)
+  end
+
+  def stop(node \\ Node.self()) do
+    GenServer.call({__MODULE__, node}, :stop)
   end
 end

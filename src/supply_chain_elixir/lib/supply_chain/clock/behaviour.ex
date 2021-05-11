@@ -71,14 +71,29 @@ defmodule SupplyChain.Clock.Behaviour do
     data = %{data | finished_agents: []}
 
     if data.round === data.max_rounds do
-      {:next_state, :finish, data}
+      {:next_state, :finish, data, {:next_event, :internal, :stop_nodes}}
     else
       {:next_state, :start_round, data, {:next_event, :internal, :anounce}}
     end
   end
 
+  def handle_event(:internal, :stop_nodes, :finish, data) do
+    Logger.notice("Stopping all nodes")
+
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
+    Enum.each(nodes, &Behaviour.stop(&1))
+
+    Behaviour.stop()
+    {:keep_state, data}
+  end
+
   def handle_event({:call, from}, :ready?, _state, data) do
     {:keep_state, data, {:reply, from, true}}
+  end
+
+  def handle_event(:cast, :stop, :finish, _data) do
+    System.stop(0)
+    {:stop, :shutdown}
   end
 
   def handle_event(

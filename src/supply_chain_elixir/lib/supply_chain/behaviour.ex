@@ -13,7 +13,7 @@ defmodule SupplyChain.Behaviour do
       id: SupplyChain.Behaviour,
       start: {SupplyChain.Behaviour, :start_link, [args]},
       shutdown: 5_000,
-      restart: :permanent,
+      restart: :transient,
       type: :worker
     }
   end
@@ -31,5 +31,11 @@ defmodule SupplyChain.Behaviour do
   def ready?(node \\ Node.self()) do
     Information.ready?(node) and Knowledge.ready?(node) and
       GenServer.call({__MODULE__, node}, :ready?)
+  end
+
+  def stop(node \\ Node.self()) do
+    :ok = Information.stop(node)
+    :ok = Knowledge.stop(node)
+    GenServer.cast({__MODULE__, node}, :stop)
   end
 end

@@ -22,6 +22,11 @@ defmodule SupplyChain.Behaviour.Server do
     {:reply, :noop, state}
   end
 
+  def handle_cast(:stop, state) do
+    System.stop(0)
+    {:stop, :shutdown, state}
+  end
+
   def handle_cast(atom, state) do
     Logger.warning("Received cast #{inspect(atom)}")
     {:noreply, state}

@@ -21,6 +21,10 @@ defmodule SupplyChain.Knowledge.Server do
     {:reply, true, state}
   end
 
+  def handle_call(:stop, _from, state) do
+    {:stop, :shutdown, :ok, state}
+  end
+
   def handle_call(atom, from, state) do
     Logger.warning("Received call #{inspect(atom)} from #{inspect(from)}")
     {:reply, :noop, state}

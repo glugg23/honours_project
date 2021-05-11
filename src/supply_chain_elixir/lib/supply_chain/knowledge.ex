@@ -11,7 +11,7 @@ defmodule SupplyChain.Knowledge do
       id: SupplyChain.Knowledge,
       start: {SupplyChain.Knowledge, :start_link, [args]},
       shutdown: 5_000,
-      restart: :permanent,
+      restart: :transient,
       type: :worker
     }
   end
@@ -32,5 +32,9 @@ defmodule SupplyChain.Knowledge do
 
   def ready?(node \\ Node.self()) do
     GenServer.call({__MODULE__, node}, :ready?)
+  end
+
+  def stop(node \\ Node.self()) do
+    GenServer.call({__MODULE__, node}, :stop)
   end
 end

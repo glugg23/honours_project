@@ -21,6 +21,10 @@ defmodule SupplyChain.Clock.Knowledge do
     {:reply, true, state}
   end
 
+  def handle_call(:stop, _from, state) do
+    {:stop, :shutdown, :ok, state}
+  end
+
   def handle_info(
         msg = %Message{performative: :inform, content: {:nodeup, _}, sender: Information},
         state
