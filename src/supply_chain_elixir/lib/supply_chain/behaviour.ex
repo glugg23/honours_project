@@ -28,7 +28,8 @@ defmodule SupplyChain.Behaviour do
     end
   end
 
-  def ready?() do
-    Information.ready?() and Knowledge.ready?() and GenServer.call(__MODULE__, :ready?)
+  def ready?(node \\ Node.self()) do
+    Information.ready?(node) and Knowledge.ready?(node) and
+      GenServer.call({__MODULE__, node}, :ready?)
   end
 end

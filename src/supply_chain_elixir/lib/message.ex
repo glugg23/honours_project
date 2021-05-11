@@ -4,8 +4,7 @@ defmodule Message do
   It is loosely based on FIPA ACL.
   """
 
-  # TODO: Use specific atom values here once valid performatives have been decided
-  @type performative :: atom()
+  @type performative :: :inform
   # Do not use pids for agents
   @type agent :: atom() | {atom(), node()}
   @type t :: %Message{

@@ -11,7 +11,8 @@ defmodule SupplyChain.Behaviour.Supervisor do
     config = SupplyChain.Knowledge.get_config()
 
     children = [
-      {SupplyChain.Behaviour, config}
+      {SupplyChain.Behaviour, config},
+      {Task.Supervisor, name: SupplyChain.Behaviour.TaskSupervisor}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

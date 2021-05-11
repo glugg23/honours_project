@@ -5,8 +5,11 @@ defmodule SupplyChain.Clock.Knowledge do
 
   use GenServer
 
+  alias SupplyChain.Information
+  alias SupplyChain.Behaviour
+
   def init(type = :clock) do
-    state = %{config: Application.get_env(:supply_chain, type)}
+    state = %{config: Application.get_env(:supply_chain, type), send_nodeup?: true}
     {:ok, state}
   end
 
@@ -16,5 +19,23 @@ defmodule SupplyChain.Clock.Knowledge do
 
   def handle_call(:ready?, _from, state) do
     {:reply, true, state}
+  end
+
+  def handle_info(
+        msg = %Message{performative: :inform, content: {:nodeup, _}, sender: Information},
+        state
+      ) do
+    if state.send_nodeup? do
+      msg |> Message.forward(Behaviour) |> Message.send()
+    end
+
+    {:noreply, state}
+  end
+
+  def handle_info(
+        %Message{performative: :inform, content: %{send_nodeup: value}, sender: Behaviour},
+        state
+      ) do
+    {:noreply, %{state | send_nodeup?: value}}
   end
 end

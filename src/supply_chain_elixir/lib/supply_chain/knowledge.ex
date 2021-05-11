@@ -30,7 +30,7 @@ defmodule SupplyChain.Knowledge do
     GenServer.call(__MODULE__, :get_config)
   end
 
-  def ready?() do
-    GenServer.call(__MODULE__, :ready?)
+  def ready?(node \\ Node.self()) do
+    GenServer.call({__MODULE__, node}, :ready?)
   end
 end

@@ -22,7 +22,7 @@ defmodule SupplyChain.Information do
     GenServer.call(layer, :get_info)
   end
 
-  def ready?() do
-    GenServer.call(__MODULE__, :ready?)
+  def ready?(node \\ Node.self()) do
+    GenServer.call({__MODULE__, node}, :ready?)
   end
 end

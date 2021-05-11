@@ -33,7 +33,8 @@ defmodule SupplyChain.Information.Server do
   end
 
   def handle_info({:nodeup, node}, state) do
-    spawn_task(node, state)
+    ref = info_task(node)
+    {:noreply, %{state | tasks: [ref | state.tasks]}}
   end
 
   def handle_info({:nodedown, node}, state) do
@@ -46,10 +47,11 @@ defmodule SupplyChain.Information.Server do
     if ref in state.tasks do
       Process.demonitor(ref, [:flush])
 
-      ignore = type in state.config[:information_filter]
+      ignore? = type in state.config[:information_filter]
 
-      if ETS.insert_new(Nodes, {node, type, ignore}) do
+      if ETS.insert_new(Nodes, {node, type, ignore?}) do
         Logger.info("Node up #{inspect(node)}")
+        Message.new(:inform, Information, Knowledge, {:nodeup, node}) |> Message.send()
       else
         Logger.warning("#{node} is already registered")
       end
@@ -68,22 +70,24 @@ defmodule SupplyChain.Information.Server do
 
     case type do
       :timeout ->
-        spawn_task(node, state)
+        ref = info_task(node)
+        {:noreply, %{state | tasks: [ref | state.tasks]}}
 
       :noproc ->
-        spawn_task(node, state)
+        ref = info_task(node)
+        {:noreply, %{state | tasks: [ref | state.tasks]}}
 
       _ ->
         {:noreply, state}
     end
   end
 
-  defp spawn_task(node, state) do
+  defp info_task(node) do
     task =
       Task.Supervisor.async_nolink(TaskSupervisor, fn ->
         {node, Information.get_info({Information, node})}
       end)
 
-    {:noreply, %{state | tasks: [task.ref | state.tasks]}}
+    task.ref
   end
 end
