@@ -37,7 +37,7 @@ defmodule SupplyChain.Clock.Knowledge do
   end
 
   def handle_info(
-        %Message{performative: :inform, content: %{send_nodeup: value}, sender: Behaviour},
+        %Message{performative: :request, content: %{send_nodeup: value}, sender: Behaviour},
         state
       ) do
     {:noreply, %{state | send_nodeup?: value}}

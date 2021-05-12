@@ -106,7 +106,7 @@ defmodule SupplyChain.Clock.Behaviour do
 
     if current === data.agent_count do
       msg
-      |> Message.reply(:inform, %{send_nodeup: false})
+      |> Message.reply(:request, %{send_nodeup: false})
       # Use new function instead of this?
       |> Map.replace(:receiver, Knowledge)
       |> Message.send()
