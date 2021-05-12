@@ -107,8 +107,6 @@ defmodule SupplyChain.Clock.Behaviour do
     if current === data.agent_count do
       msg
       |> Message.reply(:request, %{send_nodeup: false})
-      # Use new function instead of this?
-      |> Map.replace(:receiver, Knowledge)
       |> Message.send()
 
       Logger.info("All nodes connected to clock agent")

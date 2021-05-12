@@ -211,4 +211,30 @@ defmodule MessageTest do
 
     assert expected === result
   end
+
+  test "can forward message with different reply_to" do
+    reference = IEx.Helpers.ref(0, 1, 2, 3)
+
+    msg = %Message{
+      performative: :request,
+      sender: {:a, :node1},
+      receiver: {:b, :node2},
+      reply_to: {:a, :node1},
+      content: %{finish: true},
+      conversation_id: reference
+    }
+
+    expected = %Message{
+      performative: :request,
+      sender: {:b, :node2},
+      receiver: {:c, :node3},
+      reply_to: {:b, :node2},
+      content: %{finish: true},
+      conversation_id: reference
+    }
+
+    result = Message.forward(msg, {:c, :node3}, {:b, :node2})
+
+    assert expected === result
+  end
 end

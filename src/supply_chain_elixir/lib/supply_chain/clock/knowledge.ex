@@ -6,6 +6,7 @@ defmodule SupplyChain.Clock.Knowledge do
   use GenServer
 
   alias SupplyChain.Information
+  alias SupplyChain.Knowledge
   alias SupplyChain.Behaviour
 
   def init(type = :clock) do
@@ -30,7 +31,7 @@ defmodule SupplyChain.Clock.Knowledge do
         state
       ) do
     if state.send_nodeup? do
-      msg |> Message.forward(Behaviour) |> Message.send()
+      msg |> Message.forward(Behaviour, Knowledge) |> Message.send()
     end
 
     {:noreply, state}
