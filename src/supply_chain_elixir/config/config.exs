@@ -20,4 +20,6 @@ config :supply_chain, :producer,
 
 config :supply_chain, :agent_types, [:clock, :manufacturer, :consumer, :producer]
 
+config :logger, :console, format: "$time [$level] $levelpad$metadata$message\n"
+
 import_config "#{config_env()}.exs"
