@@ -22,8 +22,13 @@ defmodule SupplyChain.Clock.Behaviour do
        agent_count: args[:agent_count],
        round: 0,
        max_rounds: args[:max_rounds],
+       automatic?: args[:automatic?],
        finished_agents: []
      }}
+  end
+
+  def new_round() do
+    GenStateMachine.cast(Behaviour, :new_round)
   end
 
   def handle_event(:internal, :ask_ready, :is_ready?, data) do
@@ -70,10 +75,10 @@ defmodule SupplyChain.Clock.Behaviour do
   def handle_event(:internal, :continue?, :end_round, data) do
     data = %{data | finished_agents: []}
 
-    if data.round === data.max_rounds do
-      {:next_state, :finish, data, {:next_event, :internal, :stop_nodes}}
+    if data.automatic? do
+      {:keep_state, data, {:next_event, :cast, :new_round}}
     else
-      {:next_state, :start_round, data, {:next_event, :internal, :anounce}}
+      {:keep_state, data}
     end
   end
 
@@ -89,6 +94,14 @@ defmodule SupplyChain.Clock.Behaviour do
 
   def handle_event({:call, from}, :ready?, _state, data) do
     {:keep_state, data, {:reply, from, true}}
+  end
+
+  def handle_event(:cast, :new_round, :end_round, data) do
+    if data.round === data.max_rounds do
+      {:next_state, :finish, data, {:next_event, :internal, :stop_nodes}}
+    else
+      {:next_state, :start_round, data, {:next_event, :internal, :anounce}}
+    end
   end
 
   def handle_event(:cast, :stop, :finish, _data) do
