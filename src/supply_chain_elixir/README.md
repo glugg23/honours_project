@@ -1,20 +1,14 @@
-# SupplyChain
+# Supply Chain Elixir
 
-**TODO: Add description**
+This is the supply chain agent network that has been written in Elixir.
 
-## Installation
+## Requirements
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `supply_chain` to your list of dependencies in `mix.exs`:
+- Docker
 
-```elixir
-def deps do
-  [
-    {:supply_chain, "~> 0.1.0"}
-  ]
-end
+## Build
+
+```sh
+docker compose build
+docker compose up
 ```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/supply_chain](https://hexdocs.pm/supply_chain).
