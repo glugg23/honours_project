@@ -32,7 +32,7 @@ defmodule SupplyChain.Information.Server do
   end
 
   def handle_info(msg = %Message{performative: :inform, content: {:start_round, _}}, state) do
-    msg |> Message.reply(:inform, :finished) |> Message.send()
+    msg |> Message.forward({Knowledge, Node.self()}) |> Message.send()
     {:noreply, state}
   end
 

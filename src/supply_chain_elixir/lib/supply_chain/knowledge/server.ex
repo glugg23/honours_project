@@ -8,6 +8,9 @@ defmodule SupplyChain.Knowledge.Server do
 
   use GenServer
 
+  alias SupplyChain.Information
+  alias SupplyChain.Behaviour
+
   def init(type) do
     state = %{config: Application.get_env(:supply_chain, type)}
     {:ok, state}
@@ -32,6 +35,18 @@ defmodule SupplyChain.Knowledge.Server do
 
   def handle_cast(atom, state) do
     Logger.warning("Received cast #{inspect(atom)}")
+    {:noreply, state}
+  end
+
+  def handle_info(
+        msg = %Message{
+          performative: :inform,
+          sender: {Information, _},
+          content: {:start_round, _}
+        },
+        state
+      ) do
+    msg |> Message.forward({Behaviour, Node.self()}) |> Message.send()
     {:noreply, state}
   end
 
