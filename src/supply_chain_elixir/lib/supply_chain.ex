@@ -12,9 +12,7 @@ defmodule SupplyChain do
     else
       :error ->
         Logger.critical(
-          "AGENT_TYPE not in #{
-            inspect(Application.get_env(:supply_chain, :agent_types) |> Enum.map(&to_string/1))
-          }"
+          "AGENT_TYPE not in #{inspect(Application.get_env(:supply_chain, :agent_types) |> Enum.map(&to_string/1))}"
         )
 
         System.stop(1)
