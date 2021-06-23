@@ -2,24 +2,24 @@ version: "3.9"
 services:
   clock:
     build: .
-    image: glugg23/supply_chain_elixir
+    image: ghcr.io/glugg23/honours_project:elixir
     environment:
       - AGENT_TYPE=clock
 
   manufacturer:
     build: .
-    image: glugg23/supply_chain_elixir
+    image: ghcr.io/glugg23/honours_project:elixir
     environment:
       - AGENT_TYPE=manufacturer
 
   consumer:
     build: .
-    image: glugg23/supply_chain_elixir
+    image: ghcr.io/glugg23/honours_project:elixir
     environment:
       - AGENT_TYPE=consumer
 
   producer:
     build: .
-    image: glugg23/supply_chain_elixir
+    image: ghcr.io/glugg23/honours_project:elixir
     environment:
       - AGENT_TYPE=producer
