@@ -23,6 +23,9 @@ defmodule SupplyChain.Behaviour do
       :clock ->
         GenStateMachine.start_link(SupplyChain.Clock.Behaviour, args, name: __MODULE__)
 
+      :producer ->
+        GenStateMachine.start_link(SupplyChain.Producer.Behaviour, args, name: __MODULE__)
+
       _ ->
         GenServer.start_link(SupplyChain.Behaviour.Server, args, name: __MODULE__)
     end
