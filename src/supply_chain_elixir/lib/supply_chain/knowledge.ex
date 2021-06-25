@@ -19,10 +19,10 @@ defmodule SupplyChain.Knowledge do
   def start_link(type) do
     case type do
       :clock ->
-        GenServer.start_link(SupplyChain.Clock.Knowledge, type, name: __MODULE__)
+        GenServer.start_link(SupplyChain.Knowledge.Clock, type, name: __MODULE__)
 
       :producer ->
-        GenServer.start_link(SupplyChain.Producer.Knowledge, type, name: __MODULE__)
+        GenServer.start_link(SupplyChain.Knowledge.Producer, type, name: __MODULE__)
 
       _ ->
         GenServer.start_link(SupplyChain.Knowledge.Server, type, name: __MODULE__)

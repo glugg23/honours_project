@@ -1,4 +1,4 @@
-defmodule SupplyChain.Clock.Knowledge do
+defmodule SupplyChain.Knowledge.Clock do
   @moduledoc """
   This defines the Knowledge layer for the Clock agent.
   """

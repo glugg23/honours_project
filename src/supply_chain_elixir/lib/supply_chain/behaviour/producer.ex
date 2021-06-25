@@ -1,4 +1,4 @@
-defmodule SupplyChain.Producer.Behaviour do
+defmodule SupplyChain.Behaviour.Producer do
   @moduledoc """
   This is a state machine for the behaviour of the Producer agent.
   """

@@ -1,4 +1,4 @@
-defmodule SupplyChain.Clock.Behaviour do
+defmodule SupplyChain.Behaviour.Clock do
   @moduledoc """
   This is a state machine for the behaviour of the clock agent.
   It ensures all the other agents are ready and then starts the rounds of the simulation.

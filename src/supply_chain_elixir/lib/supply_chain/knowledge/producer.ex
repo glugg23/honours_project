@@ -1,4 +1,4 @@
-defmodule SupplyChain.Producer.Knowledge do
+defmodule SupplyChain.Knowledge.Producer do
   @moduledoc """
   This defines the Knowledge layer for the Producer agent.
   """
