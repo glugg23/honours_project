@@ -27,8 +27,8 @@ defmodule SupplyChain.Clock.Behaviour do
      }}
   end
 
-  def new_round() do
-    GenStateMachine.cast(Behaviour, :new_round)
+  def new_round(node \\ Node.self()) do
+    GenStateMachine.cast({Behaviour, node}, :new_round)
   end
 
   def handle_event(:internal, :ask_ready, :is_ready?, data) do
@@ -64,7 +64,7 @@ defmodule SupplyChain.Clock.Behaviour do
         :inform,
         {Behaviour, Node.self()},
         {Information, n},
-        {:start_round, %{round: data.round}}
+        {:start_round, data.round}
       )
     end)
     |> Enum.each(&Message.send/1)

@@ -17,7 +17,11 @@ config :supply_chain, :consumer,
 
 config :supply_chain, :producer,
   type: :producer,
-  information_filter: [:consumer, :producer]
+  information_filter: [:consumer, :producer],
+  total_storage: 100,
+  production_capacity: 50,
+  base_sell_price: 100,
+  production_price: 50
 
 config :supply_chain, :agent_types, [:clock, :manufacturer, :consumer, :producer]
 
