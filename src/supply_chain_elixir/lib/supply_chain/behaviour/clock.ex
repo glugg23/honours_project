@@ -59,14 +59,15 @@ defmodule SupplyChain.Behaviour.Clock do
 
     Logger.notice("Starting round #{data.round}")
 
-    Enum.map(nodes, fn n ->
-      Message.new(
+    nodes
+    |> Enum.map(
+      &Message.new(
         :inform,
-        {Behaviour, Node.self()},
-        {Information, n},
+        {Information, Node.self()},
+        {Information, &1},
         {:start_round, data.round}
       )
-    end)
+    )
     |> Enum.each(&Message.send/1)
 
     {:next_state, :end_round, data}
@@ -132,7 +133,7 @@ defmodule SupplyChain.Behaviour.Clock do
 
   def handle_event(
         :info,
-        %Message{performative: :inform, content: :finished, sender: {_, node}},
+        %Message{performative: :inform, content: :finished, reply_to: {_, node}},
         :end_round,
         data
       ) do

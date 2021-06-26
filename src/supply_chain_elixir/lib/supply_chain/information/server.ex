@@ -36,8 +36,13 @@ defmodule SupplyChain.Information.Server do
     {:noreply, state}
   end
 
-  def handle_info(msg = %Message{}, state) do
-    Logger.notice("Got message: #{inspect(msg, pretty: true)}")
+  def handle_info(msg = %Message{sender: {_, node}}, state) do
+    ignore? = ETS.lookup_element(Nodes, node, 3)
+
+    unless ignore? do
+      msg |> Message.forward(Knowledge) |> Message.send()
+    end
+
     {:noreply, state}
   end
 

@@ -2,6 +2,7 @@ defmodule SupplyChain.Knowledge.Clock do
   @moduledoc """
   This defines the Knowledge layer for the Clock agent.
   """
+  require Logger
 
   use GenServer
 
@@ -34,6 +35,16 @@ defmodule SupplyChain.Knowledge.Clock do
       msg |> Message.forward(Behaviour, Knowledge) |> Message.send()
     end
 
+    {:noreply, state}
+  end
+
+  def handle_info(msg = %Message{performative: :inform, content: :finished}, state) do
+    msg |> Message.forward(Behaviour) |> Message.send()
+    {:noreply, state}
+  end
+
+  def handle_info(msg = %Message{}, state) do
+    Logger.debug("Ignoring message #{inspect(msg, pretty: true)}")
     {:noreply, state}
   end
 
