@@ -5,10 +5,25 @@ defmodule SupplyChain.Behaviour.Producer do
 
   use GenStateMachine
 
+  alias :ets, as: ETS
+
+  alias SupplyChain.Information
+  alias SupplyChain.Information.Nodes, as: Nodes
   alias SupplyChain.Knowledge
+  alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+  alias SupplyChain.Behaviour
 
   def init(_args) do
-    {:ok, :state, %{}}
+    {:ok, :start, %{round_msg: nil}}
+  end
+
+  def handle_event(:internal, :main, :run, data) do
+    {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
+  end
+
+  def handle_event(:internal, :send_finish_msg, :finish, data) do
+    data.round_msg |> Message.reply(:inform, :finished) |> Message.send()
+    {:next_state, :start, data}
   end
 
   def handle_event({:call, from}, :ready?, _state, data) do
@@ -27,10 +42,26 @@ defmodule SupplyChain.Behaviour.Producer do
           sender: {Knowledge, _},
           content: {:start_round, _}
         },
-        _state,
+        :start,
         data
       ) do
-    msg |> Message.reply(:inform, :finished) |> Message.send()
-    {:keep_state, data}
+    data = %{data | round_msg: msg}
+
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
+    amount = ETS.lookup_element(KnowledgeBase, :used_storage, 2)
+    price = ETS.lookup_element(KnowledgeBase, :base_sell_price, 2)
+
+    nodes
+    |> Enum.map(
+      &Message.new(
+        :inform,
+        {Behaviour, Node.self()},
+        {Information, &1},
+        {:selling, %{amount: amount, price: price}}
+      )
+    )
+    |> Enum.each(&Message.send/1)
+
+    {:next_state, :run, data, {:next_event, :internal, :main}}
   end
 end
