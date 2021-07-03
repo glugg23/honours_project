@@ -5,7 +5,13 @@ defmodule SupplyChain.Behaviour.Consumer do
 
   use GenStateMachine
 
+  alias :ets, as: ETS
+
+  alias SupplyChain.Information
+  alias SupplyChain.Information.Nodes, as: Nodes
   alias SupplyChain.Knowledge
+  alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+  alias SupplyChain.Behaviour
 
   def init(_args) do
     {:ok, :start, %{round_msg: nil}}
@@ -40,6 +46,22 @@ defmodule SupplyChain.Behaviour.Consumer do
         data
       ) do
     data = %{data | round_msg: msg}
+
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
+    amount = ETS.lookup_element(KnowledgeBase, :maximum_demand, 2)
+    price = ETS.lookup_element(KnowledgeBase, :price_per_unit, 2)
+
+    nodes
+    |> Enum.map(
+      &Message.new(
+        :inform,
+        {Behaviour, Node.self()},
+        {Information, &1},
+        {:buying, %{amount: amount, price: price}}
+      )
+    )
+    |> Enum.each(&Message.send/1)
+
     {:next_state, :run, data, {:next_event, :internal, :main}}
   end
 end
