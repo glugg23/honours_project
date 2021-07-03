@@ -49,7 +49,7 @@ defmodule SupplyChain.Behaviour.Producer do
 
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
     amount = ETS.lookup_element(KnowledgeBase, :used_storage, 2)
-    price = ETS.lookup_element(KnowledgeBase, :base_sell_price, 2)
+    price = ETS.lookup_element(KnowledgeBase, :price_per_unit, 2)
 
     nodes
     |> Enum.map(
