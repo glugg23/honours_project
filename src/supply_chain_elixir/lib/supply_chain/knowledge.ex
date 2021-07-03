@@ -24,6 +24,9 @@ defmodule SupplyChain.Knowledge do
       :producer ->
         GenServer.start_link(SupplyChain.Knowledge.Producer, type, name: __MODULE__)
 
+      :consumer ->
+        GenServer.start_link(SupplyChain.Knowledge.Consumer, type, name: __MODULE__)
+
       _ ->
         GenServer.start_link(SupplyChain.Knowledge.Server, type, name: __MODULE__)
     end
