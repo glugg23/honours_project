@@ -5,6 +5,8 @@ defmodule SupplyChain.Behaviour do
   The actual logic should be in separate modules, which will be selected to run by start_link/1
   """
 
+  require Logger
+
   alias SupplyChain.Information
   alias SupplyChain.Knowledge
 
@@ -33,7 +35,9 @@ defmodule SupplyChain.Behaviour do
         GenStateMachine.start_link(SupplyChain.Behaviour.Manufacturer, args, name: __MODULE__)
 
       _ ->
-        GenServer.start_link(SupplyChain.Behaviour.Server, args, name: __MODULE__)
+        Logger.critical("#{inspect(args[:type])} is not a valid Behaviour layer implementation")
+
+        System.stop(1)
     end
   end
 

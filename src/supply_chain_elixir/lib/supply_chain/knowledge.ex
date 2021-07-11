@@ -6,6 +6,8 @@ defmodule SupplyChain.Knowledge do
   It acts as the knowledge storage for the Behaviour layer.
   """
 
+  require Logger
+
   def child_spec(args) do
     %{
       id: SupplyChain.Knowledge,
@@ -31,7 +33,9 @@ defmodule SupplyChain.Knowledge do
         GenServer.start_link(SupplyChain.Knowledge.Manufacturer, type, name: __MODULE__)
 
       _ ->
-        GenServer.start_link(SupplyChain.Knowledge.Server, type, name: __MODULE__)
+        Logger.critical("#{inspect(type)} is not a valid Knowledge layer implementation")
+
+        System.stop(1)
     end
   end
 
