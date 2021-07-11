@@ -29,6 +29,9 @@ defmodule SupplyChain.Behaviour do
       :consumer ->
         GenStateMachine.start_link(SupplyChain.Behaviour.Consumer, args, name: __MODULE__)
 
+      :manufacturer ->
+        GenStateMachine.start_link(SupplyChain.Behaviour.Manufacturer, args, name: __MODULE__)
+
       _ ->
         GenServer.start_link(SupplyChain.Behaviour.Server, args, name: __MODULE__)
     end
