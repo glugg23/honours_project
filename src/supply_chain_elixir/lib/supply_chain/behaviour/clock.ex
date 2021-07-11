@@ -46,14 +46,14 @@ defmodule SupplyChain.Behaviour.Clock do
 
     if Enum.all?(ready, fn x -> x === {:ok, true} end) do
       Logger.info("All nodes ready")
-      {:next_state, :start_round, data, {:next_event, :internal, :anounce}}
+      {:next_state, :start_round, data, {:next_event, :internal, :announce}}
     else
       Logger.debug("Not yet ready: #{inspect(ready)}")
       {:keep_state, data, {:next_event, :internal, :ask_ready}}
     end
   end
 
-  def handle_event(:internal, :anounce, :start_round, data) do
+  def handle_event(:internal, :announce, :start_round, data) do
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
     data = %{data | round: data.round + 1}
 
@@ -101,7 +101,7 @@ defmodule SupplyChain.Behaviour.Clock do
     if data.round === data.max_rounds do
       {:next_state, :finish, data, {:next_event, :internal, :stop_nodes}}
     else
-      {:next_state, :start_round, data, {:next_event, :internal, :anounce}}
+      {:next_state, :start_round, data, {:next_event, :internal, :announce}}
     end
   end
 

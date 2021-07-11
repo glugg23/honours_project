@@ -2,7 +2,7 @@ defmodule SupplyChain.Behaviour do
   @moduledoc """
   The Behaviour layer for the agent.
   This handles the client side actions for defining the behaviour of the agent.
-  The actual logic should be in seperate modules, which will be selected to run by start_link/1
+  The actual logic should be in separate modules, which will be selected to run by start_link/1
   """
 
   alias SupplyChain.Information
