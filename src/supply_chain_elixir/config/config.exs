@@ -9,7 +9,11 @@ config :supply_chain, :clock,
 
 config :supply_chain, :manufacturer,
   type: :manufacturer,
-  information_filter: []
+  information_filter: [],
+  total_storage: 100,
+  production_capacity: 50,
+  price_per_unit: 100,
+  production_cost: 50
 
 config :supply_chain, :consumer,
   type: :consumer,
