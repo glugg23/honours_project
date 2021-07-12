@@ -7,9 +7,8 @@ defmodule SupplyChain.Knowledge.Producer do
 
   alias :ets, as: ETS
 
-  alias SupplyChain.Information
+  alias SupplyChain.{Information, Behaviour}
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
-  alias SupplyChain.Behaviour
 
   def init(type = :producer) do
     state = %{config: Application.get_env(:supply_chain, type)}

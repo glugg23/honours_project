@@ -7,11 +7,9 @@ defmodule SupplyChain.Behaviour.Producer do
 
   alias :ets, as: ETS
 
-  alias SupplyChain.Information
+  alias SupplyChain.{Information, Knowledge, Behaviour}
   alias SupplyChain.Information.Nodes, as: Nodes
-  alias SupplyChain.Knowledge
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
-  alias SupplyChain.Behaviour
 
   def init(_args) do
     {:ok, :start, %{round_msg: nil}}

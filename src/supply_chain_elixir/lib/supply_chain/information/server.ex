@@ -7,10 +7,9 @@ defmodule SupplyChain.Information.Server do
 
   alias :ets, as: ETS
 
-  alias SupplyChain.Information
+  alias SupplyChain.{Information, Knowledge}
   alias SupplyChain.Information.Nodes, as: Nodes
   alias SupplyChain.Information.TaskSupervisor, as: TaskSupervisor
-  alias SupplyChain.Knowledge
 
   def init(_args) do
     :net_kernel.monitor_nodes(true)

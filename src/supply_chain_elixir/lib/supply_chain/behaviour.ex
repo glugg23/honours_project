@@ -7,8 +7,7 @@ defmodule SupplyChain.Behaviour do
 
   require Logger
 
-  alias SupplyChain.Information
-  alias SupplyChain.Knowledge
+  alias SupplyChain.{Information, Knowledge}
 
   def child_spec(args) do
     %{
