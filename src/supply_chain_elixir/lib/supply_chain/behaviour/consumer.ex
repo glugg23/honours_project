@@ -46,7 +46,7 @@ defmodule SupplyChain.Behaviour.Consumer do
     data = %{data | round_msg: msg}
 
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
-    amount = ETS.lookup_element(KnowledgeBase, :maximum_demand, 2)
+    amount = ETS.lookup_element(KnowledgeBase, :demand, 2)
     price = ETS.lookup_element(KnowledgeBase, :price_per_unit, 2)
 
     nodes

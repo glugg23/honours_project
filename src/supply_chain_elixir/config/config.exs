@@ -12,22 +12,22 @@ config :supply_chain, :manufacturer,
   information_filter: [],
   total_storage: 100,
   production_capacity: 50,
-  price_per_unit: 100,
-  production_cost: 50
+  price_per_unit: 40,
+  production_cost: 10
 
 config :supply_chain, :consumer,
   type: :consumer,
   information_filter: [:producer],
-  maximum_demand: 25,
-  price_per_unit: 100
+  demand: 10,
+  price_per_unit: 50
 
 config :supply_chain, :producer,
   type: :producer,
   information_filter: [:consumer, :producer],
   total_storage: 100,
   production_capacity: 50,
-  price_per_unit: 100,
-  production_cost: 50
+  price_per_unit: 20,
+  production_cost: 10
 
 config :supply_chain, :agent_types, [:clock, :manufacturer, :consumer, :producer]
 

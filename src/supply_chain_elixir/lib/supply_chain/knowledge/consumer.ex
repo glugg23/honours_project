@@ -14,7 +14,7 @@ defmodule SupplyChain.Knowledge.Consumer do
     state = %{config: Application.get_env(:supply_chain, type)}
 
     ETS.new(KnowledgeBase, [:set, :protected, :named_table])
-    ETS.insert(KnowledgeBase, {:maximum_demand, state.config[:maximum_demand]})
+    ETS.insert(KnowledgeBase, {:demand, state.config[:demand]})
     ETS.insert(KnowledgeBase, {:price_per_unit, state.config[:price_per_unit]})
     ETS.insert(KnowledgeBase, {:money, 0})
 
