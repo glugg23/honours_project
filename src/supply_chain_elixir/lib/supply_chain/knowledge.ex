@@ -8,6 +8,64 @@ defmodule SupplyChain.Knowledge do
 
   require Logger
 
+  defmacro __using__(_opts) do
+    quote do
+      use GenServer
+
+      alias :ets, as: ETS
+
+      alias SupplyChain.{Information, Behaviour}
+      alias SupplyChain.Knowledge.Inbox, as: Inbox
+      alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+
+      @doc false
+      def handle_call(:get_config, _from, state) do
+        {:reply, state.config, state}
+      end
+
+      @doc false
+      def handle_call(:ready?, _from, state) do
+        {:reply, true, state}
+      end
+
+      @doc false
+      def handle_call(:stop, _from, state) do
+        {:stop, :shutdown, :ok, state}
+      end
+
+      @doc false
+      def handle_info(
+            %Message{performative: :inform, content: {:nodeup, _}, sender: Information},
+            state
+          ) do
+        {:noreply, state}
+      end
+
+      @doc false
+      def handle_info(
+            msg = %Message{
+              performative: :inform,
+              sender: {Information, _},
+              content: {:start_round, round}
+            },
+            state
+          ) do
+        ETS.insert(KnowledgeBase, {:round, round})
+        msg |> Message.forward({Behaviour, Node.self()}) |> Message.send()
+        {:noreply, state}
+      end
+
+      @doc false
+      def handle_info(msg = %Message{conversation_id: ref}, state) do
+        # This will only be messages that have passed the information filter
+        # Therefore store them in the inbox so that the Behaviour layer can process them
+        round = ETS.lookup_element(KnowledgeBase, :round, 2)
+        ETS.insert(Inbox, {ref, msg, round})
+        {:noreply, state}
+      end
+    end
+  end
+
   def child_spec(args) do
     %{
       id: SupplyChain.Knowledge,

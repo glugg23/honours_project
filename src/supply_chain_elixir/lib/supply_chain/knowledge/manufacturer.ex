@@ -3,16 +3,9 @@ defmodule SupplyChain.Knowledge.Manufacturer do
   This defines the Knowledge layer for the Manufacturer agent.
   """
 
-  require Logger
+  use SupplyChain.Knowledge
 
-  use GenServer
-
-  alias :ets, as: ETS
-
-  alias SupplyChain.{Information, Behaviour}
   alias SupplyChain.Information.Nodes, as: Nodes
-  alias SupplyChain.Knowledge.Inbox, as: Inbox
-  alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def init(type = :manufacturer) do
     state = %{
@@ -36,18 +29,6 @@ defmodule SupplyChain.Knowledge.Manufacturer do
     {:ok, state}
   end
 
-  def handle_call(:get_config, _from, state) do
-    {:reply, state.config, state}
-  end
-
-  def handle_call(:ready?, _from, state) do
-    {:reply, true, state}
-  end
-
-  def handle_call(:stop, _from, state) do
-    {:stop, :shutdown, :ok, state}
-  end
-
   def handle_info(
         msg = %Message{
           performative: :inform,
@@ -58,13 +39,6 @@ defmodule SupplyChain.Knowledge.Manufacturer do
       ) do
     ETS.insert(KnowledgeBase, {:round, round})
     state = %{state | round_msg: msg}
-    {:noreply, state}
-  end
-
-  def handle_info(
-        %Message{performative: :inform, content: {:nodeup, _}, sender: Information},
-        state
-      ) do
     {:noreply, state}
   end
 
@@ -96,14 +70,6 @@ defmodule SupplyChain.Knowledge.Manufacturer do
       state.round_msg |> Message.forward({Behaviour, Node.self()}) |> Message.send()
     end
 
-    {:noreply, state}
-  end
-
-  # This will only be messages that have passed the information filter
-  # Therefore store them in the inbox so that the Behaviour layer can process them
-  def handle_info(msg = %Message{conversation_id: ref}, state) do
-    round = ETS.lookup_element(KnowledgeBase, :round, 2)
-    ETS.insert(Inbox, {ref, msg, round})
     {:noreply, state}
   end
 end
