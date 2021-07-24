@@ -8,6 +8,7 @@ defmodule SupplyChain.Knowledge.Consumer do
   alias :ets, as: ETS
 
   alias SupplyChain.{Information, Behaviour}
+  alias SupplyChain.Knowledge.Inbox, as: Inbox
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def init(type = :consumer) do
@@ -17,6 +18,8 @@ defmodule SupplyChain.Knowledge.Consumer do
     ETS.insert(KnowledgeBase, {:demand, state.config[:demand]})
     ETS.insert(KnowledgeBase, {:price_per_unit, state.config[:price_per_unit]})
     ETS.insert(KnowledgeBase, {:money, 0})
+
+    ETS.new(Inbox, [:set, :protected, :named_table])
 
     {:ok, state}
   end
@@ -50,6 +53,12 @@ defmodule SupplyChain.Knowledge.Consumer do
       ) do
     ETS.insert(KnowledgeBase, {:round, round})
     msg |> Message.forward({Behaviour, Node.self()}) |> Message.send()
+    {:noreply, state}
+  end
+
+  def handle_info(msg = %Message{conversation_id: ref}, state) do
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+    ETS.insert(Inbox, {ref, msg, round})
     {:noreply, state}
   end
 end

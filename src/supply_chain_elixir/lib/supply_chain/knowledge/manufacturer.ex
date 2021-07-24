@@ -11,6 +11,7 @@ defmodule SupplyChain.Knowledge.Manufacturer do
 
   alias SupplyChain.{Information, Behaviour}
   alias SupplyChain.Information.Nodes, as: Nodes
+  alias SupplyChain.Knowledge.Inbox, as: Inbox
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def init(type = :manufacturer) do
@@ -29,6 +30,8 @@ defmodule SupplyChain.Knowledge.Manufacturer do
     ETS.insert(KnowledgeBase, {:money, 0})
     ETS.insert(KnowledgeBase, {:buying, []})
     ETS.insert(KnowledgeBase, {:selling, []})
+
+    ETS.new(Inbox, [:set, :protected, :named_table])
 
     {:ok, state}
   end
@@ -93,6 +96,14 @@ defmodule SupplyChain.Knowledge.Manufacturer do
       state.round_msg |> Message.forward({Behaviour, Node.self()}) |> Message.send()
     end
 
+    {:noreply, state}
+  end
+
+  # This will only be messages that have passed the information filter
+  # Therefore store them in the inbox so that the Behaviour layer can process them
+  def handle_info(msg = %Message{conversation_id: ref}, state) do
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+    ETS.insert(Inbox, {ref, msg, round})
     {:noreply, state}
   end
 end
