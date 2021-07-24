@@ -5,17 +5,23 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
   use GenStateMachine
 
+  alias :ets, as: ETS
+
   alias SupplyChain.Knowledge
+  alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def init(_args) do
     {:ok, :start, %{round_msg: nil}}
   end
 
   def handle_event(:internal, :main, :run, data) do
-    {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
+    {:next_state, :finish, data, {:next_event, :internal, :round_end_tasks}}
   end
 
-  def handle_event(:internal, :send_finish_msg, :finish, data) do
+  def handle_event(:internal, :round_end_tasks, :finish, data) do
+    # Reset the list of resource messages for the next round
+    ETS.insert(KnowledgeBase, {:buying, []})
+    ETS.insert(KnowledgeBase, {:selling, []})
     data.round_msg |> Message.reply(:inform, :finished) |> Message.send()
     {:next_state, :start, data}
   end

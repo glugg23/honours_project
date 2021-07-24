@@ -55,7 +55,7 @@ defmodule SupplyChain.Behaviour.Consumer do
         :inform,
         {Behaviour, Node.self()},
         {Information, &1},
-        {:buying, %{amount: amount, price: price}}
+        {:start_round, :buying, %{amount: amount, price: price}}
       )
     )
     |> Enum.each(&Message.send/1)

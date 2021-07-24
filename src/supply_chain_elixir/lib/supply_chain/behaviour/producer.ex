@@ -55,7 +55,7 @@ defmodule SupplyChain.Behaviour.Producer do
         :inform,
         {Behaviour, Node.self()},
         {Information, &1},
-        {:selling, %{amount: amount, price: price}}
+        {:start_round, :selling, %{amount: amount, price: price}}
       )
     )
     |> Enum.each(&Message.send/1)
