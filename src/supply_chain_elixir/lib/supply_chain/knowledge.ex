@@ -8,13 +8,15 @@ defmodule SupplyChain.Knowledge do
 
   require Logger
 
+  alias :ets, as: ETS
+
   defmacro __using__(_opts) do
     quote do
       use GenServer
 
       alias :ets, as: ETS
 
-      alias SupplyChain.{Information, Behaviour}
+      alias SupplyChain.{Information, Knowledge, Behaviour}
       alias SupplyChain.Knowledge.Inbox, as: Inbox
       alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
@@ -95,6 +97,14 @@ defmodule SupplyChain.Knowledge do
 
         System.stop(1)
     end
+  end
+
+  def insert_config(table, config) do
+    for {k, v} <- config do
+      ETS.insert(table, {k, v})
+    end
+
+    ETS.insert(table, {:money, 0})
   end
 
   def get_config() do
