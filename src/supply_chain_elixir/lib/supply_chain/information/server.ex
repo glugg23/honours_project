@@ -22,7 +22,14 @@ defmodule SupplyChain.Information.Server do
     {:reply, state.config[:type], state}
   end
 
-  def handle_call(:ready?, _from, state) do
+  def handle_call({:ready?, other_nodes}, _from, state) do
+    connected_nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}]) |> Enum.sort()
+    other_nodes = other_nodes |> Enum.filter(fn n -> n !== Node.self() end) |> Enum.sort()
+    different_nodes = List.myers_difference(connected_nodes, other_nodes)
+
+    tasks = Keyword.get(different_nodes, :ins, []) |> connect_to(state.tasks)
+    state = %{state | tasks: tasks}
+
     {:reply, state.tasks === [], state}
   end
 
@@ -93,6 +100,16 @@ defmodule SupplyChain.Information.Server do
       _ ->
         {:noreply, state}
     end
+  end
+
+  defp connect_to([h | nodes], tasks) do
+    ref = info_task(h)
+    tasks = [ref | tasks]
+    connect_to(nodes, tasks)
+  end
+
+  defp connect_to([], tasks) do
+    tasks
   end
 
   defp info_task(node) do

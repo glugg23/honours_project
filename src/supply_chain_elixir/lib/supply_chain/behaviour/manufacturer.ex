@@ -5,6 +5,8 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
   use GenStateMachine
 
+  require Logger
+
   alias :ets, as: ETS
 
   alias SupplyChain.Knowledge
@@ -40,11 +42,12 @@ defmodule SupplyChain.Behaviour.Manufacturer do
         msg = %Message{
           performative: :inform,
           sender: {Knowledge, _},
-          content: {:start_round, _}
+          content: {:start_round, round}
         },
         :start,
         data
       ) do
+    Logger.info("Round #{round}")
     data = %{data | round_msg: msg}
     {:next_state, :run, data, {:next_event, :internal, :main}}
   end

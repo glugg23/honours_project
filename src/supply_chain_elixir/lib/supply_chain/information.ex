@@ -22,8 +22,8 @@ defmodule SupplyChain.Information do
     GenServer.call(layer, :get_info)
   end
 
-  def ready?(node \\ Node.self()) do
-    GenServer.call({__MODULE__, node}, :ready?)
+  def ready?(node \\ Node.self(), other_nodes) do
+    GenServer.call({__MODULE__, node}, {:ready?, other_nodes})
   end
 
   def stop(node \\ Node.self()) do

@@ -5,6 +5,8 @@ defmodule SupplyChain.Behaviour.Producer do
 
   use GenStateMachine
 
+  require Logger
+
   alias :ets, as: ETS
 
   alias SupplyChain.{Information, Knowledge, Behaviour}
@@ -38,11 +40,13 @@ defmodule SupplyChain.Behaviour.Producer do
         msg = %Message{
           performative: :inform,
           sender: {Knowledge, _},
-          content: {:start_round, _}
+          content: {:start_round, round}
         },
         :start,
         data
       ) do
+    Logger.info("Round #{round}")
+
     data = %{data | round_msg: msg}
 
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])

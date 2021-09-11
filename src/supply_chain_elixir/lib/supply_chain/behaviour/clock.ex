@@ -38,7 +38,7 @@ defmodule SupplyChain.Behaviour.Clock do
         nodes,
         Behaviour,
         :ready?,
-        []
+        [[Node.self() | nodes]]
       )
       |> Enum.to_list()
 
