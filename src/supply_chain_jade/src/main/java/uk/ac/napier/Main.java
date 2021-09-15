@@ -1,7 +1,10 @@
 package uk.ac.napier;
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
+import jade.core.Agent;
+
+public class Main extends Agent {
+    @Override
+    protected void setup() {
+        System.out.println("Hello from " + this.getAID().getName());
     }
 }
