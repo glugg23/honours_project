@@ -1,0 +1,5 @@
+version: "3.9"
+services:
+  main:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
