@@ -9,6 +9,11 @@ RUN mvn exec:exec -Dexec.executable="echo" # Dummy exec to pull in deps
 
 COPY . .
 
+ARG NAME
+ARG PLATFORM
+RUN printf "agents=%s:uk.ac.napier.Main\n" $NAME >> ./src/main/resources/jade.properties
+RUN printf "platform_id=%s\n" $PLATFORM >> ./src/main/resources/jade.properties
+
 RUN mvn compile
 
 CMD ["mvn", "-Pmain", "exec:java"]
