@@ -1,37 +1,33 @@
 version: "3.9"
 services:
   clock:
-    build:
-      context: .
-      args:
-        NAME: clock
-        PLATFORM: clock_platform
-    image: ghcr.io/glugg23/honours_project:jade-clock
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - NAME=clock
+      - PLATFORM=clock_platform
     hostname: clock
 
   manufacturer:
-    build:
-      context: .
-      args:
-        NAME: manufacturer
-        PLATFORM: manufacturer_platform
-    image: ghcr.io/glugg23/honours_project:jade-manufacturer
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - NAME=manufacturer
+      - PLATFORM=manufacturer_platform
     hostname: manufacturer
 
   consumer:
-    build:
-      context: .
-      args:
-        NAME: consumer
-        PLATFORM: consumer_platform
-    image: ghcr.io/glugg23/honours_project:jade-consumer
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - NAME=consumer
+      - PLATFORM=consumer_platform
     hostname: consumer
 
   producer:
-    build:
-      context: .
-      args:
-        NAME: producer
-        PLATFORM: producer_platform
-    image: ghcr.io/glugg23/honours_project:jade-producer
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - NAME=producer
+      - PLATFORM=producer_platform
     hostname: producer

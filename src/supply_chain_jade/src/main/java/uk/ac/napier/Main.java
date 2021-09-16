@@ -1,31 +1,20 @@
 package uk.ac.napier;
 
-import jade.core.AID;
-import jade.core.Agent;
-import jade.core.behaviours.OneShotBehaviour;
-import jade.lang.acl.ACLMessage;
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
 
-public class Main extends Agent {
-    @Override
-    protected void setup() {
-        OneShotBehaviour behaviour = new OneShotBehaviour(this) {
-            @Override
-            public void action() {
-                System.out.println("Hello from " + myAgent.getAID().getName());
-                ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-                AID aid = new AID("clock@clock_platform", AID.ISGUID);
-                aid.addAddresses("http://clock:7778/acc");
-                msg.addReceiver(aid);
-                msg.setContent("Hello!");
-                send(msg);
+public class Main {
+    public static void main(String[] args) {
+        Runtime runtime = Runtime.instance();
 
-                for(int i = 0; i < 4; i++) {
-                    ACLMessage reply = blockingReceive();
-                    System.out.println(reply.getContent());
-                }
-            }
-        };
+        Profile profile = new ProfileImpl();
+        String name = System.getenv("NAME");
+        String platform = System.getenv("PLATFORM");
+        profile.setParameter(Profile.AGENTS, name + ":uk.ac.napier.MyAgent");
+        profile.setParameter(Profile.PLATFORM_ID, platform);
 
-        this.addBehaviour(behaviour);
+        runtime.setCloseVM(true);
+        runtime.createMainContainer(profile);
     }
 }
