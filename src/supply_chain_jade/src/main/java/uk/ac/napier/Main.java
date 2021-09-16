@@ -17,44 +17,53 @@ public class Main {
         Runtime runtime = Runtime.instance();
 
         Profile profile = new ProfileImpl();
-        String platform = System.getenv("PLATFORM");
         String type = System.getenv("AGENT_TYPE");
-        profile.setParameter(Profile.PLATFORM_ID, platform);
+        if(type == null) {
+            type = "";
+        }
+        profile.setParameter(Profile.PLATFORM_ID, type);
 
         runtime.setCloseVM(true);
         AgentContainer container = runtime.createMainContainer(profile);
 
-        if(type == null) {
-            type = "";
-        }
-
         try {
             switch(type) {
                 case "clock": {
-                    AgentController a = container.createNewAgent("clock", "uk.ac.napier.MyAgent", null);
-                    a.start();
+                    AgentController knowledge = container.createNewAgent("knowledge", "uk.ac.napier.knowledge.Clock", null);
+                    AgentController behaviour = container.createNewAgent("behaviour", "uk.ac.napier.behaviour.Clock", null);
+                    knowledge.start();
+                    behaviour.start();
                     break;
                 }
                 case "manufacturer": {
-                    AgentController a = container.createNewAgent("manufacturer", "uk.ac.napier.MyAgent", null);
-                    a.start();
+                    AgentController knowledge = container.createNewAgent("knowledge", "uk.ac.napier.knowledge.Manufacturer", null);
+                    AgentController behaviour = container.createNewAgent("behaviour", "uk.ac.napier.behaviour.Manufacturer", null);
+                    knowledge.start();
+                    behaviour.start();
                     break;
                 }
                 case "consumer": {
-                    AgentController a = container.createNewAgent("consumer", "uk.ac.napier.MyAgent", null);
-                    a.start();
+                    AgentController knowledge = container.createNewAgent("knowledge", "uk.ac.napier.knowledge.Consumer", null);
+                    AgentController behaviour = container.createNewAgent("behaviour", "uk.ac.napier.behaviour.Consumer", null);
+                    knowledge.start();
+                    behaviour.start();
                     break;
                 }
                 case "producer": {
-                    AgentController a = container.createNewAgent("producer", "uk.ac.napier.MyAgent", null);
-                    a.start();
+                    AgentController knowledge = container.createNewAgent("knowledge", "uk.ac.napier.knowledge.Producer", null);
+                    AgentController behaviour = container.createNewAgent("behaviour", "uk.ac.napier.behaviour.Producer", null);
+                    knowledge.start();
+                    behaviour.start();
                     break;
                 }
                 default:
                     logger.severe("AGENT_TYPE not in [\"clock\", \"manufacturer\", \"consumer\", \"producer\"]");
                     container.kill();
-                    break;
+                    return;
             }
+
+            AgentController information = container.createNewAgent("information", "uk.ac.napier.information.Information", null);
+            information.start();
 
         } catch(StaleProxyException e) {
             logger.log(Level.SEVERE, "Stale Proxy when creating agents", e);

@@ -5,7 +5,6 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=clock
-      - PLATFORM=clock_platform
     hostname: clock
 
   manufacturer:
@@ -13,7 +12,6 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=manufacturer
-      - PLATFORM=manufacturer_platform
     hostname: manufacturer
 
   consumer:
@@ -21,7 +19,6 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=consumer
-      - PLATFORM=consumer_platform
     hostname: consumer
 
   producer:
@@ -29,5 +26,4 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=producer
-      - PLATFORM=producer_platform
     hostname: producer
