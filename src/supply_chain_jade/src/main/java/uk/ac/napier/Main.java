@@ -13,7 +13,7 @@ public class Main extends Agent {
             public void action() {
                 System.out.println("Hello from " + myAgent.getAID().getName());
                 ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-                AID aid = new AID("clock@172.20.0.2:1099/JADE", AID.ISGUID);
+                AID aid = new AID("clock@clock_platform", AID.ISGUID);
                 aid.addAddresses("http://clock:7778/acc");
                 msg.addReceiver(aid);
                 msg.setContent("Hello!");

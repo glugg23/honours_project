@@ -11,8 +11,8 @@ COPY . .
 
 ARG NAME
 ARG PLATFORM
-RUN printf "agents=%s:uk.ac.napier.Main\n" $NAME >> ./src/main/resources/jade.properties
-RUN printf "platform_id=%s\n" $PLATFORM >> ./src/main/resources/jade.properties
+RUN printf "agents=%s:uk.ac.napier.Main\n" $NAME > ./src/main/resources/jade.properties
+RUN printf "platform-id=%s\n" $PLATFORM >> ./src/main/resources/jade.properties
 
 RUN mvn compile
 
