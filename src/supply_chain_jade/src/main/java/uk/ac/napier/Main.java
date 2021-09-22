@@ -62,7 +62,8 @@ public class Main {
                     return;
             }
 
-            AgentController information = container.createNewAgent("information", "uk.ac.napier.information.Information", null);
+            Object[] infoArgs = new Object[]{type};
+            AgentController information = container.createNewAgent("information", "uk.ac.napier.information.Information", infoArgs);
             information.start();
 
         } catch(StaleProxyException e) {
