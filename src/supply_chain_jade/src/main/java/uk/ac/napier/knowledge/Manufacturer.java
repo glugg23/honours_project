@@ -1,10 +1,9 @@
 package uk.ac.napier.knowledge;
 
-import jade.core.Agent;
-
-public class Manufacturer extends Agent {
+public class Manufacturer extends Knowledge {
     @Override
     protected void setup() {
+        super.setup();
         System.out.println(this.getName());
     }
 }
