@@ -1,11 +1,13 @@
 package uk.ac.napier.information;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import uk.ac.napier.Message;
 import uk.ac.napier.behaviours.GenServerBehaviour;
 
 import java.util.logging.Level;
@@ -34,7 +36,17 @@ public class Information extends Agent {
         GenServerBehaviour behaviour = new GenServerBehaviour(this) {
             @Override
             public void handle(ACLMessage message) {
-                System.out.println(message.getContent());
+                if(message.getPerformative() == ACLMessage.QUERY_IF && message.getContent().equals("ready?")) {
+                    ACLMessage forward = Message.forward(message, new AID("knowledge", AID.ISLOCALNAME));
+                    myAgent.send(forward);
+
+                } else if(message.getPerformative() == ACLMessage.NOT_UNDERSTOOD) {
+                    logger.warning(message.toString());
+
+                } else {
+                    ACLMessage reply = Message.reply(message, ACLMessage.NOT_UNDERSTOOD, null);
+                    myAgent.send(reply);
+                }
             }
         };
 

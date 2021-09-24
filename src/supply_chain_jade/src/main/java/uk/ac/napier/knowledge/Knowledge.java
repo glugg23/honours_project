@@ -19,9 +19,9 @@ import java.util.logging.Logger;
 public abstract class Knowledge extends Agent {
     final static Logger logger = Logger.getLogger(Knowledge.class.getName());
     protected Properties properties = new Properties();
-    protected boolean ready = false;
     protected int agentCount;
     protected ArrayList<String> agents = new ArrayList<>();
+    private boolean isReady = false;
 
     @Override
     protected void setup() {
@@ -78,7 +78,7 @@ public abstract class Knowledge extends Agent {
 
                 dfs = new ArrayList<>(failedDfs);
                 if(dfs.isEmpty()) {
-                    ready = true;
+                    isReady = true;
                     this.stop();
 
                 } else {
@@ -88,5 +88,9 @@ public abstract class Knowledge extends Agent {
         };
 
         this.addBehaviour(behaviour);
+    }
+
+    public boolean isReady() {
+        return isReady;
     }
 }

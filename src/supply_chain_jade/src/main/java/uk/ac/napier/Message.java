@@ -24,4 +24,11 @@ public class Message {
         reply.setContent(content);
         return reply;
     }
+
+    public static ACLMessage forward(ACLMessage message, AID receiver) {
+        ACLMessage forward = newMsg(message.getPerformative(), receiver, message.getContent(),
+                UUID.fromString(message.getConversationId()));
+        forward.setSender(message.getSender());
+        return forward;
+    }
 }
