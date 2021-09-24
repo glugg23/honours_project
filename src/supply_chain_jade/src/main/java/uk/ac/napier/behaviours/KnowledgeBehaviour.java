@@ -6,6 +6,8 @@ import uk.ac.napier.knowledge.Knowledge;
 
 import java.util.logging.Logger;
 
+import static jade.lang.acl.MessageTemplate.*;
+
 public abstract class KnowledgeBehaviour extends GenServerBehaviour {
     final static Logger logger = Logger.getLogger(KnowledgeBehaviour.class.getName());
     private final Knowledge knowledge;
@@ -17,11 +19,11 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
 
     @Override
     public void handle(ACLMessage message) {
-        if(message.getPerformative() == ACLMessage.QUERY_IF && message.getContent().equals("ready?")) {
+        if(and(MatchPerformative(ACLMessage.QUERY_IF), MatchContent("ready?")).match(message)) {
             ACLMessage reply = Message.reply(message, ACLMessage.INFORM, Boolean.toString(knowledge.isReady()));
             knowledge.send(reply);
 
-        } else if(message.getPerformative() == ACLMessage.NOT_UNDERSTOOD) {
+        } else if(MatchPerformative(ACLMessage.NOT_UNDERSTOOD).match(message)) {
             logger.warning(message.toString());
 
         } else {

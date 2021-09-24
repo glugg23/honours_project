@@ -13,6 +13,8 @@ import uk.ac.napier.behaviours.GenServerBehaviour;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static jade.lang.acl.MessageTemplate.*;
+
 public class Information extends Agent {
     final static Logger logger = Logger.getLogger(Information.class.getName());
 
@@ -36,11 +38,11 @@ public class Information extends Agent {
         GenServerBehaviour behaviour = new GenServerBehaviour(this) {
             @Override
             public void handle(ACLMessage message) {
-                if(message.getPerformative() == ACLMessage.QUERY_IF && message.getContent().equals("ready?")) {
+                if(and(MatchPerformative(ACLMessage.QUERY_IF), MatchContent("ready?")).match(message)) {
                     ACLMessage forward = Message.forward(message, new AID("knowledge", AID.ISLOCALNAME));
                     myAgent.send(forward);
 
-                } else if(message.getPerformative() == ACLMessage.NOT_UNDERSTOOD) {
+                } else if(MatchPerformative(ACLMessage.NOT_UNDERSTOOD).match(message)) {
                     logger.warning(message.toString());
 
                 } else {
