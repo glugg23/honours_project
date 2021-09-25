@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_292" class="java.beans.XMLDecoder">
+ <object class="java.util.HashMap">
+  <void method="put">
+   <string>producer</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer:7778/acc</string>
+    </void>
+    <void property="name">
+     <string>information</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>clock</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://clock:7778/acc</string>
+    </void>
+    <void property="name">
+     <string>information</string>
+    </void>
+    <void property="type">
+     <string>clock</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>consumer</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://consumer:7778/acc</string>
+    </void>
+    <void property="name">
+     <string>information</string>
+    </void>
+    <void property="type">
+     <string>consumer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>manufacturer</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://manufacturer:7778/acc</string>
+    </void>
+    <void property="name">
+     <string>information</string>
+    </void>
+    <void property="type">
+     <string>manufacturer</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

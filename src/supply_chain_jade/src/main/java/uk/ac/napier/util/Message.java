@@ -1,4 +1,4 @@
-package uk.ac.napier;
+package uk.ac.napier.util;
 
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;

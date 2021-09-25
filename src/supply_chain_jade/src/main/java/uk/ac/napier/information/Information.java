@@ -7,8 +7,8 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
-import uk.ac.napier.Message;
 import uk.ac.napier.behaviours.GenServerBehaviour;
+import uk.ac.napier.util.Message;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

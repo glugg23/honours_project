@@ -1,8 +1,8 @@
 package uk.ac.napier.knowledge;
 
 import jade.lang.acl.ACLMessage;
-import uk.ac.napier.Message;
 import uk.ac.napier.behaviours.KnowledgeBehaviour;
+import uk.ac.napier.util.Message;
 
 public class Manufacturer extends Knowledge {
     @Override

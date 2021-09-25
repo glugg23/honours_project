@@ -1,8 +1,8 @@
 package uk.ac.napier.behaviours;
 
 import jade.lang.acl.ACLMessage;
-import uk.ac.napier.Message;
 import uk.ac.napier.knowledge.Knowledge;
+import uk.ac.napier.util.Message;
 
 import java.util.logging.Logger;
 
