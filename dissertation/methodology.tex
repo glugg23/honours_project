@@ -1,22 +1,104 @@
 \section{Methodology}
 
-For this project, two important aspects need to be planned out.
-The first is the design of the multi-agent system that will be benchmarked and how this system will be implemented in both Elixir and JADE\@.
-The second is how this system will be benchmarked to determine which of the two implementations perform better.
+\subsection{Elixir}
 
-This section will first detail the language-agnostic design of the multi-agent system.
-Then it will describe how this has been implemented in both Java and Elixir, making note of any dependencies used as well as any particular advantages and disadvantages that were discovered for both languages.
+Introduction to Elixir system.
 
-Then this section will describe the various aspects of this system that will be benchmarked, and how this will be achieved.
+Explain GenServer and how it is applies to agents.
 
-\input{methodology/implementation.tex}
+Explain GenServer client/server API model.
+
+Required implementing own message format.
+
+Agent type loaded in via system environment.
+
+Config loaded in via Elixir script file.
+
+\subsubsection{Information Layer}
+
+Handles inter-node connections by listening for nodeup events.
+
+Library ``libcluster'' is used to automatically connect to other agents on the same network.
+
+Builds the information filter for the agent.
+
+Stores the node information in ETS, explain what ETS is.
+
+Forwards any messages that pass through the information filter to the Knowledge layer.
+
+\subsubsection{Knowledge Layer}
+
+Loads config values into knowledge base.
+Knowledge base is also stored in ETS\@.
+
+Is responsible for updating Knowledge base as messages are received.
+
+Each agent uses a separate Knowledge layer implementation.
+Common functionality is included via the use of macros.
+
+\subsubsection{Behaviour Layer}
+
+The proactive and reactive behaviour of the agent.
+
+Is implemented as a finite state machine using the library ``GenStateMachine'' which is a wrapper class for the Erlang module \verb|gen_statem|.
+
+Explain the behaviour of the different agent types.
+
+\subsection{JADE}
+
+Introduction to JADE system.
+
+Using Java 8 as this is the last long term support version where JADE can be compiled, although due to the nature of Java bytecode a later version could be used.
+
+Each layer is a separate agent instance.
+
+At start-up the specific layers are started depending on the system environment.
+
+\subsubsection{Information Layer}
+
+Passes messages to Knowledge layer.
+
+Is implemented in a similar style to a GenServer, this is done by extending the Cyclic Behaviour from JADE and implementing that in the class.
+
+\subsubsection{Knowledge Layer}
+
+Acts as the knowledge base in the system.
+
+There is an abstract Knowledge agent which the others extend.
+This agent defines common behaviour like the Elixir macros.
+
+This class loads config values from a properties file.
+
+Write about attempt to form agent federation and why this did not work.
+
+Write about de-serialising agent information from XML file and why JADE custom collections made serialising JADE objects more difficult.
+
+\subsubsection{Behaviour Layer}
+
+Implemented using JADE's finite state machine behaviour.
+
+Explain the behaviour of the different agent types.
+
+\subsection{Docker}
+
+Explain the use of Docker during development.
+
+Explain how Docker could be used for benchmarking.
 
 \subsection{Benchmarking}
 
-The issue with using Docker is that it makes benchmarking more difficult.
-Running the entire system virtualised on one machine is not representative of a real-world deployment.
+Explain the different metrics that will be used for the experiments.
 
-An alternative approach would be to run all the containers in a cloud provider such as Azure.
-From some quick experimentation, there does not seem to be a way to measure the resource usage of a single container in Azure, just the whole container group.
+Source lines of code, measured using \verb|cloc|.
 
-Running the system on individual machines is also an option, either rented in the cloud or physical machines such as Raspberry Pis, but this would likely result in a lot of time required to set these machines up.
+CPU usage.
+
+Memory usage.
+
+Time for all the rounds of the simulation?
+
+\subsection{Experiments}
+
+Describe the different experiment setups.
+
+From having 1 generic producer to the full TAC SCM setup.
