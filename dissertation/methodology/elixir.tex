@@ -2,9 +2,16 @@
 
 Introduction to Elixir system.
 
-Explain GenServer and how it is applies to agents.
+This system makes heavy use of the standard Erlang OTP behaviour\\ \verb|gen_server| (henceforth referred to as GenServer, following standard Elixir naming conventions).
+A GenServer is implemented as a Client-Server relationship where a public API is used to interact with user-defined callback functions.
+The core behaviour of a GenServer is to wait for a message to be received, then pass that message to the appropriate callback function before looping back to wait for the next message.
+This behaviour fits neatly in line with the general behaviour of agents, where the reaction to a message can be implemented as callback functions.
 
-Explain GenServer client/server API model.
+The split Client-Server relationship of a GenServer can be used to define a common interface that all server implementations need to adhere to.
+By defining all client-facing methods in a separate module and implementing separate callback functions in different modules, we can guarantee that all particular implementations of an agent can be interacted with in the same manner.
+Callback functions can also be implemented without requiring a public interface method.
+This allows the GenServer to handle arbitrary messages that have been sent to it.
+This functionality has been predominantly used in this system as many messages are being sent between different layers and different network nodes.
 
 Required implementing own message format.
 
