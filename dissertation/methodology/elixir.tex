@@ -1,0 +1,43 @@
+\subsection{Elixir}
+
+Introduction to Elixir system.
+
+Explain GenServer and how it is applies to agents.
+
+Explain GenServer client/server API model.
+
+Required implementing own message format.
+
+Agent type loaded in via system environment.
+
+Config loaded in via Elixir script file.
+
+\subsubsection{Information Layer}
+
+Handles inter-node connections by listening for nodeup events.
+
+Library ``libcluster'' is used to automatically connect to other agents on the same network.
+
+Builds the information filter for the agent.
+
+Stores the node information in ETS, explain what ETS is.
+
+Forwards any messages that pass through the information filter to the Knowledge layer.
+
+\subsubsection{Knowledge Layer}
+
+Loads config values into knowledge base.
+Knowledge base is also stored in ETS\@.
+
+Is responsible for updating Knowledge base as messages are received.
+
+Each agent uses a separate Knowledge layer implementation.
+Common functionality is included via the use of macros.
+
+\subsubsection{Behaviour Layer}
+
+The proactive and reactive behaviour of the agent.
+
+Is implemented as a finite state machine using the library ``GenStateMachine'' which is a wrapper class for the Erlang module \verb|gen_statem|.
+
+Explain the behaviour of the different agent types.
