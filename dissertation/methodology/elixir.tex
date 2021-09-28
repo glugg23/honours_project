@@ -13,7 +13,15 @@ Callback functions can also be implemented without requiring a public interface 
 This allows the GenServer to handle arbitrary messages that have been sent to it.
 This functionality has been predominantly used in this system as many messages are being sent between different layers and different network nodes.
 
-Required implementing own message format.
+While Elixir allows the sending of any data type between different processes, it lacks a defined message type such as the ACLMessage class in JADE\@.
+For this system, a message type has been defined by using the struct feature of Elixir.
+This means we can define a struct that is similar to a map where only certain keys are allowed.
+Certain keys can also be enforced meaning that attempting to initialise a struct with these keys missing would be an error.
+The message struct that was defined for this system is based on a subset of fields that are used in FIPA ACL messages.
+The message struct contains keys for the performative, message sender, message receiver, whom to reply to, the content of the message and the message ID\@.
+Helper functions for replying to, forwarding and sending the message structs have also been implemented.
+Not all the messages in this system use this message format.
+Where appropriate, such as the callback functions for GenServers use simpler messages such as tuples of primitives.
 
 Agent type loaded in via system environment.
 
