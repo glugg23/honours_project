@@ -29,7 +29,13 @@ The type of the agent is set at the start up of the application by reading the s
 This variable indicates which knowledge and behaviour layer implementations should be started.
 If this variable is not set or is set to an unrecognised value, then the agent application will exit with an error.
 
-Config loaded in via Elixir script file.
+The config for each agent type is loaded in as an Elixir script file, using the Config module in the Elixir standard library.
+An Elixir script file is a source code file that is run by being interpreted at runtime instead of being compiled to bytecode.
+By importing the Config module, macros can be used to define key-value pairs in a scoped namespace.
+This is used to store the initial knowledge for each agent type.
+Since this is just an Elixir source code file, any Elixir datatypes can be used.
+This means that complex types such as maps or lists of values can be used without having to parse them from a markup language like XML\@.
+This is useful as it unifies the language that is used for configuration with the language that is used for code.
 
 \subsubsection{Information Layer}
 
