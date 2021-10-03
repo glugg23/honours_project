@@ -23,7 +23,11 @@ Helper functions for replying to, forwarding and sending the message structs hav
 Not all the messages in this system use this message format.
 Where appropriate, such as the callback functions for GenServers use simpler messages such as tuples of primitives.
 
-Agent type loaded in via system environment.
+Instead of creating a separate project for each agent type, a single project is used for all agents.
+This is beneficial as all the agent types share a common information layer implementation and reuse common knowledge layer responses.
+The type of the agent is set at the start up of the application by reading the system environment variables and checking the value of the \verb|AGENT_TYPE| variable.
+This variable indicates which knowledge and behaviour layer implementations should be started.
+If this variable is not set or is set to an unrecognised value, then the agent application will exit with an error.
 
 Config loaded in via Elixir script file.
 
