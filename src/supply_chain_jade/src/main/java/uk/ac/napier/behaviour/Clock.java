@@ -24,7 +24,7 @@ public class Clock extends Agent {
     private static final String START_ROUND = "startRound";
     private static final String FINISH_ROUND = "finishRound";
     private static final String FINISH = "finish";
-    private final int maxRounds = 220;
+    private int maxRounds;
     private HashMap<String, AgentInfo> agents;
     private int round = 0;
 
@@ -33,15 +33,22 @@ public class Clock extends Agent {
     protected void setup() {
         FSMBehaviour fsm = new FSMBehaviour(this);
 
-        ACLMessage filterRequest = Message.newMsg(ACLMessage.REQUEST, new AID("knowledge", AID.ISLOCALNAME), "informationFilter");
+        AID knowledge = new AID("knowledge", AID.ISLOCALNAME);
+
+        ACLMessage filterRequest = Message.newMsg(ACLMessage.REQUEST, knowledge, "informationFilter");
         send(filterRequest);
-        ACLMessage reply = blockingReceive(MatchConversationId(filterRequest.getConversationId()));
+        ACLMessage filterReply = blockingReceive(MatchConversationId(filterRequest.getConversationId()));
         try {
-            agents = (HashMap<String, AgentInfo>) reply.getContentObject();
+            agents = (HashMap<String, AgentInfo>) filterReply.getContentObject();
             agents.remove("clock");
         } catch(UnreadableException | ClassCastException e) {
             logger.log(Level.WARNING, "Received invalid information filter", e);
         }
+
+        ACLMessage maxRoundsRequest = Message.newMsg(ACLMessage.REQUEST, knowledge, "maxRounds");
+        send(maxRoundsRequest);
+        ACLMessage roundsReply = blockingReceive(MatchConversationId(maxRoundsRequest.getConversationId()));
+        maxRounds = Integer.parseInt(roundsReply.getContent());
 
         fsm.registerFirstState(new AskReady(this), ASK_READY);
         fsm.registerState(new StartRound(this), START_ROUND);
