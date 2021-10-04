@@ -23,7 +23,7 @@ public class Clock extends Agent {
     private static final String ASK_READY = "askReady";
     private static final String START_ROUND = "startRound";
     private static final String FINISH_ROUND = "finishRound";
-    private static final String FINISH = "finish";
+    private static final String STOP_AGENTS = "stopAgents";
     private int maxRounds;
     private HashMap<String, AgentInfo> agents;
     private int round = 0;
@@ -53,18 +53,13 @@ public class Clock extends Agent {
         fsm.registerFirstState(new AskReady(this), ASK_READY);
         fsm.registerState(new StartRound(this), START_ROUND);
         fsm.registerState(new FinishRound(this), FINISH_ROUND);
-        fsm.registerLastState(new OneShotBehaviour() {
-            @Override
-            public void action() {
-                logger.info("FSM Done");
-            }
-        }, FINISH);
+        fsm.registerLastState(new StopAgents(this), STOP_AGENTS);
 
         fsm.registerTransition(ASK_READY, START_ROUND, 0);
         fsm.registerTransition(ASK_READY, ASK_READY, 1);
         fsm.registerDefaultTransition(START_ROUND, FINISH_ROUND, new String[]{FINISH_ROUND});
         fsm.registerTransition(FINISH_ROUND, START_ROUND, 0);
-        fsm.registerTransition(FINISH_ROUND, FINISH, 1);
+        fsm.registerTransition(FINISH_ROUND, STOP_AGENTS, 1);
 
         this.addBehaviour(fsm);
     }
@@ -161,6 +156,26 @@ public class Clock extends Agent {
         @Override
         public int onEnd() {
             return exitCode;
+        }
+    }
+
+    private static class StopAgents extends OneShotBehaviour {
+        private final Clock clock;
+
+        public StopAgents(Clock a) {
+            super(a);
+            clock = a;
+        }
+
+        @Override
+        public void action() {
+            for(AgentInfo info : clock.agents.values()) {
+                ACLMessage message = Message.newMsg(ACLMessage.REQUEST, info.toAID(), "stop");
+                clock.send(message);
+            }
+
+            ACLMessage message = Message.newMsg(ACLMessage.REQUEST, new AID("information", AID.ISLOCALNAME), "stop");
+            clock.send(message);
         }
     }
 }

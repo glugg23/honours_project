@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import jade.wrapper.StaleProxyException;
 import uk.ac.napier.behaviours.GenServerBehaviour;
 import uk.ac.napier.util.AgentInfo;
 import uk.ac.napier.util.Message;
@@ -47,6 +48,17 @@ public class Information extends Agent {
                     } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
                         ACLMessage reply = Message.reply(message, ACLMessage.INFORM, "finished");
                         myAgent.send(reply);
+
+                    } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("stop")).match(message)) {
+                        //https://jade.tilab.com/pipermail/jade-develop/2013q2/019133.html
+                        Thread thread = new Thread(() -> {
+                            try {
+                                myAgent.getContainerController().kill();
+                            } catch(StaleProxyException e) {
+                                logger.log(Level.WARNING, "Failed to kill container", e);
+                            }
+                        });
+                        thread.start();
 
                     } else if(MatchPerformative(ACLMessage.NOT_UNDERSTOOD).match(message)) {
                         logger.warning(message.toString());
