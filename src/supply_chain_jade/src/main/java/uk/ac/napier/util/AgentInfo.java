@@ -2,15 +2,19 @@ package uk.ac.napier.util;
 
 import jade.core.AID;
 
+import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class AgentInfo implements Serializable {
+    private static final String filepath = "src/main/resources/agents.xml";
+
     private String name;
     private String type;
     private String address;
@@ -46,9 +50,19 @@ public class AgentInfo implements Serializable {
             agentInfo.put(a, new AgentInfo("information", a, String.format("http://%s:7778/acc", a), null));
         }
 
-        try(FileOutputStream stream = new FileOutputStream("src/main/resources/agents.xml")) {
+        try(FileOutputStream stream = new FileOutputStream(filepath)) {
             try(XMLEncoder encoder = new XMLEncoder(stream)) {
                 encoder.writeObject(agentInfo);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked cast")
+    public static Map<String, AgentInfo> load() throws IOException {
+        try(FileInputStream stream = new FileInputStream(filepath)) {
+            try(XMLDecoder decoder = new XMLDecoder(stream)) {
+                Object result = decoder.readObject();
+                return (Map<String, AgentInfo>) result;
             }
         }
     }

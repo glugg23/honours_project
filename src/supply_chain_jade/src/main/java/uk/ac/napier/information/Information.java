@@ -2,15 +2,10 @@ package uk.ac.napier.information;
 
 import jade.core.AID;
 import jade.core.Agent;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import uk.ac.napier.behaviours.GenServerBehaviour;
 import uk.ac.napier.util.Message;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static jade.lang.acl.MessageTemplate.*;
@@ -22,18 +17,6 @@ public class Information extends Agent {
     protected void setup() {
         Object[] args = this.getArguments();
         String type = (String) args[0];
-
-        DFAgentDescription description = new DFAgentDescription();
-        description.setName(this.getAID());
-        ServiceDescription service = new ServiceDescription();
-        service.setName("information");
-        service.setType(type);
-        description.addServices(service);
-        try {
-            DFService.register(this, description);
-        } catch(FIPAException e) {
-            logger.log(Level.WARNING, "Failed to register information layer", e);
-        }
 
         GenServerBehaviour behaviour = new GenServerBehaviour(this) {
             @Override

@@ -1,17 +1,11 @@
 package uk.ac.napier.knowledge;
 
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.TickerBehaviour;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
-import jade.domain.FIPANames;
+import uk.ac.napier.util.AgentInfo;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,8 +13,7 @@ import java.util.logging.Logger;
 public abstract class Knowledge extends Agent {
     final static Logger logger = Logger.getLogger(Knowledge.class.getName());
     protected Properties properties = new Properties();
-    protected int agentCount;
-    protected ArrayList<String> agents = new ArrayList<>();
+    protected Map<String, AgentInfo> agents;
     private boolean isReady = false;
 
     @Override
@@ -31,63 +24,20 @@ public abstract class Knowledge extends Agent {
         try(FileInputStream stream = new FileInputStream("src/main/resources/application.properties")) {
             properties.load(stream);
 
-        } catch(Exception e) {
+        } catch(IOException e) {
             logger.log(Level.SEVERE, "Failed to load application properties", e);
             throw new IllegalArgumentException("Failed to load application properties", e);
         }
 
-        agentCount = Integer.parseInt(properties.getProperty("agentCount"));
-        String[] agentArray = properties.getProperty("agents").split(",");
-        Collections.addAll(agents, agentArray);
-        agents.remove(type);
+        try {
+            agents = AgentInfo.load();
 
-        TickerBehaviour behaviour = new TickerBehaviour(this, 1000) {
-            private final ArrayList<AID> failedDfs = new ArrayList<>();
-            private final DFAgentDescription ownDF = new DFAgentDescription();
-            private ArrayList<AID> dfs = new ArrayList<>();
+        } catch(IOException e) {
+            logger.log(Level.SEVERE, "Failed to load agent info", e);
+            throw new IllegalArgumentException("Failed to load agent info", e);
+        }
 
-            @Override
-            public void onStart() {
-                for(String a : agents) {
-                    AID aid = new AID(AID.createGUID("df", a), AID.ISGUID);
-                    aid.addAddresses(String.format("http://%s:7778/acc", a));
-                    dfs.add(aid);
-                }
-
-                ownDF.setName(myAgent.getDefaultDF());
-                ServiceDescription service = new ServiceDescription();
-                service.setName(myAgent.getDefaultDF().getLocalName());
-                service.setType("fipa-df");
-                service.addProtocols(FIPANames.InteractionProtocol.FIPA_REQUEST);
-                service.addOntologies("fipa-agent-management");
-                service.setOwnership("JADE");
-                ownDF.addServices(service);
-            }
-
-            @Override
-            protected void onTick() {
-                for(AID df : dfs) {
-                    try {
-                        DFService.register(myAgent, df, ownDF);
-
-                    } catch(FIPAException e) {
-                        logger.log(Level.FINE, "Failed to register with " + df.getName(), e);
-                        failedDfs.add(df);
-                    }
-                }
-
-                dfs = new ArrayList<>(failedDfs);
-                if(dfs.isEmpty()) {
-                    isReady = true;
-                    this.stop();
-
-                } else {
-                    failedDfs.clear();
-                }
-            }
-        };
-
-        this.addBehaviour(behaviour);
+        this.isReady = true;
     }
 
     public boolean isReady() {
