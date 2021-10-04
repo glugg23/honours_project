@@ -7,6 +7,9 @@
     <void property="address">
      <string>http://producer:7778/acc</string>
     </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
     <void property="name">
      <string>information</string>
     </void>
@@ -20,6 +23,9 @@
    <object class="uk.ac.napier.util.AgentInfo">
     <void property="address">
      <string>http://clock:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
     </void>
     <void property="name">
      <string>information</string>
@@ -35,6 +41,9 @@
     <void property="address">
      <string>http://consumer:7778/acc</string>
     </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
     <void property="name">
      <string>information</string>
     </void>
@@ -48,6 +57,9 @@
    <object class="uk.ac.napier.util.AgentInfo">
     <void property="address">
      <string>http://manufacturer:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
     </void>
     <void property="name">
      <string>information</string>

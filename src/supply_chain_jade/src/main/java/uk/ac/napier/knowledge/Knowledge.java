@@ -37,6 +37,17 @@ public abstract class Knowledge extends Agent {
             throw new IllegalArgumentException("Failed to load agent info", e);
         }
 
+        String filter = properties.getProperty(type + ".informationFilter");
+        String[] informationFilter = filter.split(",");
+
+        for(String f : informationFilter) {
+            if(agents.containsKey(f)) {
+                AgentInfo info = agents.get(f);
+                info.setIgnored(true);
+                agents.put(f, info);
+            }
+        }
+
         this.isReady = true;
     }
 

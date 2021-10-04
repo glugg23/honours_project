@@ -18,16 +18,16 @@ public class AgentInfo implements Serializable {
     private String name;
     private String type;
     private String address;
-    private Boolean isIgnored;
+    private Boolean ignored;
 
     public AgentInfo() {
     }
 
-    public AgentInfo(String name, String type, String address, Boolean isIgnored) {
+    public AgentInfo(String name, String type, String address, Boolean ignored) {
         this.name = name;
         this.type = type;
         this.address = address;
-        this.isIgnored = isIgnored;
+        this.ignored = ignored;
     }
 
     /**
@@ -47,7 +47,7 @@ public class AgentInfo implements Serializable {
         String[] agents = properties.getProperty("agents").split(",");
 
         for(String a : agents) {
-            agentInfo.put(a, new AgentInfo("information", a, String.format("http://%s:7778/acc", a), null));
+            agentInfo.put(a, new AgentInfo("information", a, String.format("http://%s:7778/acc", a), false));
         }
 
         try(FileOutputStream stream = new FileOutputStream(filepath)) {
@@ -97,11 +97,11 @@ public class AgentInfo implements Serializable {
         this.address = address;
     }
 
-    public Boolean isIgnored() {
-        return isIgnored;
+    public Boolean getIgnored() {
+        return ignored;
     }
 
     public void setIgnored(Boolean ignored) {
-        this.isIgnored = ignored;
+        this.ignored = ignored;
     }
 }
