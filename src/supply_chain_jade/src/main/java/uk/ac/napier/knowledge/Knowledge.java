@@ -5,7 +5,7 @@ import uk.ac.napier.util.AgentInfo;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public abstract class Knowledge extends Agent {
     final static Logger logger = Logger.getLogger(Knowledge.class.getName());
     protected Properties properties = new Properties();
-    protected Map<String, AgentInfo> agents;
+    protected HashMap<String, AgentInfo> agents;
     private boolean isReady = false;
 
     @Override
@@ -53,5 +53,9 @@ public abstract class Knowledge extends Agent {
 
     public boolean isReady() {
         return isReady;
+    }
+
+    public HashMap<String, AgentInfo> getInformationFilter() {
+        return agents;
     }
 }

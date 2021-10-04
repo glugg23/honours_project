@@ -4,6 +4,8 @@ import jade.lang.acl.ACLMessage;
 import uk.ac.napier.knowledge.Knowledge;
 import uk.ac.napier.util.Message;
 
+import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static jade.lang.acl.MessageTemplate.*;
@@ -21,6 +23,16 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
     public void handle(ACLMessage message) {
         if(and(MatchPerformative(ACLMessage.QUERY_IF), MatchContent("ready?")).match(message)) {
             ACLMessage reply = Message.reply(message, ACLMessage.INFORM, Boolean.toString(knowledge.isReady()));
+            knowledge.send(reply);
+
+        } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("informationFilter")).match(message)) {
+            ACLMessage reply = message.createReply();
+            try {
+                reply.setContentObject(knowledge.getInformationFilter());
+            } catch(IOException e) {
+                logger.log(Level.WARNING, "Could not serialise information filter", e);
+                return;
+            }
             knowledge.send(reply);
 
         } else if(MatchPerformative(ACLMessage.NOT_UNDERSTOOD).match(message)) {

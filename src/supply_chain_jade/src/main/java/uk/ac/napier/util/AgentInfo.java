@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 public class AgentInfo implements Serializable {
@@ -58,11 +57,11 @@ public class AgentInfo implements Serializable {
     }
 
     @SuppressWarnings("unchecked cast")
-    public static Map<String, AgentInfo> load() throws IOException {
+    public static HashMap<String, AgentInfo> load() throws IOException {
         try(FileInputStream stream = new FileInputStream(filepath)) {
             try(XMLDecoder decoder = new XMLDecoder(stream)) {
                 Object result = decoder.readObject();
-                return (Map<String, AgentInfo>) result;
+                return (HashMap<String, AgentInfo>) result;
             }
         }
     }
