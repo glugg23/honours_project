@@ -44,6 +44,10 @@ public class Information extends Agent {
                         ACLMessage forward = Message.forward(message, new AID("knowledge", AID.ISLOCALNAME));
                         myAgent.send(forward);
 
+                    } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
+                        ACLMessage reply = Message.reply(message, ACLMessage.INFORM, "finished");
+                        myAgent.send(reply);
+
                     } else if(MatchPerformative(ACLMessage.NOT_UNDERSTOOD).match(message)) {
                         logger.warning(message.toString());
 
