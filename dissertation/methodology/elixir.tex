@@ -39,9 +39,15 @@ This is useful as it unifies the language that is used for configuration with th
 
 \subsubsection{Information Layer}
 
-Handles inter-node connections by listening for nodeup events.
+The Information layer in the Elixir system is used to handle the discovery and connection between all the different nodes in the distributed system.
+The library \verb|libcluster|\footnote{\url{https://github.com/bitwalker/libcluster}} is used to handle the automatic discovery of any nodes in the local network.
+This library is started in the main application supervisor tree alongside the individual supervisor trees for each layer.
+It is configured to use the \verb|Gossip| clustering strategy.
+This strategy uses multicast UDP (User Datagram Protocol) to send information packets across the network and forms connections with any nodes that are listening for it.
 
-Library ``libcluster'' is used to automatically connect to other agents on the same network.
+The Information layer uses the Erlang module \verb|net_kernel| function\\ \verb|monitor_nodes/1| to received messages when a new connection is formed between nodes.
+This message takes the form \verb|{:nodeup, node}| where node is the name of the node that was connected to.
+Once the Information layer has received this message that a node has connected, it can use the name of the node in order to request information about it.
 
 Builds the information filter for the agent.
 
