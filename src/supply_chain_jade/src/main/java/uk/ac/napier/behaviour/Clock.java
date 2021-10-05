@@ -169,6 +169,8 @@ public class Clock extends Agent {
 
         @Override
         public void action() {
+            logger.info("Stopping all nodes");
+
             for(AgentInfo info : clock.agents.values()) {
                 ACLMessage message = Message.newMsg(ACLMessage.REQUEST, info.toAID(), "stop");
                 clock.send(message);

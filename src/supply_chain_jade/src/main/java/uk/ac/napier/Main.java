@@ -7,11 +7,25 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Main {
-    final static Logger logger = Logger.getLogger(Main.class.getName());
+    static Logger logger;
+
+    static {
+        InputStream stream = Main.class.getClassLoader().getResourceAsStream("logging.properties");
+        try {
+            LogManager.getLogManager().readConfiguration(stream);
+            logger = Logger.getLogger(Main.class.getName());
+
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         Runtime runtime = Runtime.instance();
