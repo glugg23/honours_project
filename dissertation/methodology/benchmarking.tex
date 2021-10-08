@@ -2,7 +2,46 @@
 
 Explain the different metrics that will be used for the experiments.
 
-Source lines of code, measured using \verb|cloc|.
+The first metric that will be measured for this benchmark is the total number of source lines of code.
+This will be used to see whether an agent system implemented in Elixir is more concise than a system implemented using JADE\@.
+If Elixir is indeed more concise than JADE it would throw into question whether using a framework for implementing multi-agent systems is worth it.
+Having a more concise project is beneficial as the less lines of code there are, the more maintainable it is and the easier it is to find bugs.
+
+The command line application cloc (Count Lines of Code)\footnote{\url{https://github.com/AlDanial/cloc}} will be used to count the number of source code lines in each project.
+An external application will be used to count the number of lines due to the possibility of human error when counting lines in potentially dozens of files.
+The version of cloc that will be used is \verb|1.82|.
+
+\Cref{lst:cloc} shows the output of cloc when run against the directory containing the example projects for \cref{sec:comparison}.
+The arguments passed to cloc are \verb|--vcs=git| which tells it to use git to list the files in a directory, \verb|--hide-rate| which makes the output of cloc deterministic, and the directory name containing the source code files that need to be counted.
+The benefit of indicating that git is the version control system that is being used is that it prevents cloc from counted the lines of non-versioned files.
+This prevents build artefacts from being included in the line count.
+
+\begin{lstlisting}[numbers=none,float=h,label=lst:cloc,caption=Output of cloc when run on the example projects]
+cloc --vcs=git --hide-rate dissertation/examples
+      34 text files.
+      34 unique files.
+      14 files ignored.
+
+github.com/AlDanial/cloc v 1.82
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+Java                             2             26              0             96
+Maven                            2             10              0             92
+Elixir                           4             19              0             92
+Erlang                           4             31              0             81
+Python                           3             17              0             79
+Markdown                         5             19              0             51
+-------------------------------------------------------------------------------
+SUM:                            20            122              0            491
+-------------------------------------------------------------------------------
+\end{lstlisting}
+
+The output of cloc is a table containing columns for each language that is used in the directory, along with the number files of that language, how many blank lines there are, how many comments there are and the actual lines of source code.
+For the purpose of this benchmark only the ``code'' column is relevant as this is the number of lines that contain program code.
+
+The directories that will be measured for the two projects will be \verb|src/|\\ \verb|supply_chain_elixir/lib| and \verb|src/supply_chain_jade/src/main/java|.
+These directories have been chosen as they only contain the source code for the application instead of also holding configuration files which would unfairly increase the line count.
 
 CPU usage.
 
