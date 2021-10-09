@@ -77,4 +77,15 @@ It would be possible to get nanosecond precision for the Elixir system by callin
 Unfortunately, nanosecond precision would not be possible for the JADE system.
 This feature was only made available in JDK 9 onwards, while this project is using JDK 8.
 
-Memory usage.
+The final way that the effectiveness of the two implementations will be measured is via their memory consumption.
+Lower memory consumption is important as it means that less expensive hardware would be required in order to run a system.
+By measuring the increase in memory usage over the rounds in the simulation we can see if there are any issues with how much information the agents remember between rounds.
+If the memory usage increase between each round is substantial, the agents could be tuned to forget stale information faster.
+
+Elixir.
+Use Erlang module \verb|memsup|.
+Maybe look into how Erlang GC works?
+
+JADE\@.
+Unsure how to measure memory usage in Java.
+Look at Java GC in JDK 8?
