@@ -45,6 +45,19 @@ These directories have been chosen as they only contain the source code for the 
 
 CPU usage.
 
-Memory usage.
+One of the ways to measure the speed of the system is to measure the time it takes in order to complete all 220 rounds of the simulation.
+This would show the actual speed of the multi-agent system instead of just how much CPU usage it uses.
 
-Time for all the rounds of the simulation?
+Both the Elixir and JADE implementation print log messages each time a new simulation round starts.
+By looking at when the final round message is printed and subtracting the time when the first round message was printed, we get the total runtime for the simulation.
+
+As a message is printed for each round, it is also possible to work out the time between each round.
+This would allow us to calculate the average round time as well as the minimum and maximum round times.
+This would be useful to see if each round completes in roughly the same amount of time or whether there are rounds that take significantly longer.
+
+The log messages are printed with millisecond precision time which should be enough precision for this benchmark.
+It would be possible to get nanosecond precision for the Elixir system by calling the Erlang standard library time functions and printing that separately.
+Unfortunately, nanosecond precision would not be possible for the JADE system.
+This feature was only made available in JDK 9 onwards, while this project is using JDK 8.
+
+Memory usage.
