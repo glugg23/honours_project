@@ -1,5 +1,69 @@
 \subsection{Experiments}
 
-Describe the different experiment setups.
+In order to able to compare the two systems, a set of experiments need to be defined so that it is possible to see how the systems perform in different scenarios.
+It is important to use multiple scenarios as this would find potential bottlenecks that might not be visible in only a simple experiment.
+This is also relevant as in the real world a multi-agent system, especially one for supply chains would need to be able to handle varied and dynamic environments.
+For simplicity, all the experiments run will be static.
+This means that no new agents will intentionally join or leave the simulation while it is running.
 
-From having 1 generic producer to the full TAC SCM setup.
+The variables that will be adjusted in each experiment are, the number of producer agents that are available, the base goods that are available to be produced and the recipes for what PCs can be manufactured.
+Notably, none of the experiments will involve multiple consumer agents or multiple manufacturer agents.
+The reasoning behind this is that adding more consumer agents will not increase the complexity of the experiment as a single manufacturer agent would be unlikely to meet their demand.
+The manufacturer agent has been written without the assumption of competition so adding multiple manufacturer agents would require a significant rewrite of their behaviour.
+
+The first experiment is a simple experiment where there is only one producer agent which produces a single good type.
+This good type can be directly converted into a manufactured PC at a one to one rate.
+This is a very simple experiment as there are no decisions that need to be made about what goods should be purchased and what types of PCs need to be manufactured.
+The performance in this experiment would should a best case scenario.
+
+Describe other experiments.
+Multiple producers for one good, goods being needed for multiple recipes, limited supply of one good, multiple goods per producer.
+
+The final experiment is the full setup that was used in the TAC SCM competition.
+\Cref{tab:tac_scm_producers} has been taken from \citeA{arunachalam2005supply} and shows the different producer types that are available in TAC SCM\@.
+
+\begin{table}[ht]
+    \centering
+    \caption{Producer types and goods in TAC SCM}\label{tab:tac_scm_producers}
+    \begin{tabular}{lll}
+        \toprule
+        Components & Suppliers & Component specification\\
+        \midrule
+        \multirow{5}{*}[-2pt]{CPU} &
+            \multirow{2}{*}[-3pt]{Pintel} &
+                2 GHz\\ \cmidrule{3-3} &&
+                5 GHz\\ \cmidrule{2-3} &
+            \multirow{2}{*}[-3pt]{IMD} &
+                2 GHz\\ \cmidrule{3-3} &&
+                5 GHz\\
+        \midrule
+        \multirow{5}{*}[-2pt]{Motherboard} &
+            \multirow{2}{*}[-3pt]{Basus} &
+                For Pintel CPUs\\ \cmidrule{3-3} &&
+                For IMD CPUs\\ \cmidrule{2-3} &
+            \multirow{2}{*}[-3pt]{Macrostar} &
+                For Pintel CPUs\\ \cmidrule{3-3} &&
+                For IMD CPUs\\
+        \midrule
+        \multirow{5}{*}[-2pt]{Memory} &
+            \multirow{2}{*}[-3pt]{MEC} &
+                1 GB\\ \cmidrule{3-3} &&
+                2 GB\\ \cmidrule{2-3} &
+            \multirow{2}{*}[-3pt]{Queenmax} &
+                1 GB\\ \cmidrule{3-3} &&
+                2 GB\\
+        \midrule       
+        \multirow{5}{*}[-2pt]{Hard Drive} &
+            \multirow{2}{*}[-3pt]{Watergate} &
+                300 GB\\ \cmidrule{3-3} &&
+                500 GB\\ \cmidrule{2-3} &
+            \multirow{2}{*}[-3pt]{Mintor} &
+                300 GB\\ \cmidrule{3-3} &&
+                500 GB\\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+As we can see in \cref{tab:tac_scm_producers} there are multiple producers for both memory chips and hard drives, each of which can produce the same components.
+However, Pintel CPUs can only be used with a matching motherboard and the same applies to IMD CPUs.
+TAC SCM defines 16 different recipes that use these components.
