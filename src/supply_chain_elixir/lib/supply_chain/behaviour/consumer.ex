@@ -45,7 +45,6 @@ defmodule SupplyChain.Behaviour.Consumer do
     # TODO: Select recipe that should be ordered
     computer = hd(computers)
 
-    # TODO: Remove :start_round once manufacturer is updated
     # TODO: Select a quantity that should be ordered
     nodes
     |> Enum.map(
@@ -53,7 +52,7 @@ defmodule SupplyChain.Behaviour.Consumer do
         :inform,
         {Behaviour, Node.self()},
         {Information, &1},
-        {:start_round, :buying, %{type: computer.name, price: computer.price, quantity: 1}}
+        {:buying, %{type: computer.name, price: computer.price, quantity: 1}}
       )
     )
     |> Enum.each(&Message.send/1)
