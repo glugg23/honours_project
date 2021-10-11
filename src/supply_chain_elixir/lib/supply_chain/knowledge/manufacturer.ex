@@ -12,7 +12,7 @@ defmodule SupplyChain.Knowledge.Manufacturer do
     ETS.insert(KnowledgeBase, {:used_storage, 0})
     Knowledge.insert_config(KnowledgeBase, state.config)
 
-    ETS.new(Inbox, [:set, :protected, :named_table])
+    ETS.new(Inbox, [:set, :public, :named_table])
 
     {:ok, state}
   end
