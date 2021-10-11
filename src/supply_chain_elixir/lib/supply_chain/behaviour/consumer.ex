@@ -43,7 +43,7 @@ defmodule SupplyChain.Behaviour.Consumer do
     computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
 
     # TODO: Select recipe that should be ordered
-    computer = hd(computers)
+    {type, price} = hd(computers)
 
     # TODO: Select a quantity that should be ordered
     nodes
@@ -52,7 +52,7 @@ defmodule SupplyChain.Behaviour.Consumer do
         :inform,
         {Behaviour, Node.self()},
         {Information, &1},
-        {:buying, %{type: computer.name, price: computer.price, quantity: 1}}
+        {:buying, %{type: type, price: price, quantity: 1}}
       )
     )
     |> Enum.each(&Message.send/1)

@@ -17,7 +17,48 @@ defmodule SupplyChain.Behaviour.Producer do
     {:ok, :start, %{round_msg: nil}}
   end
 
-  def handle_event(:internal, :main, :run, data) do
+  def handle_event(
+        :info,
+        msg = %Message{
+          performative: :inform,
+          sender: {Knowledge, _},
+          content: {:start_round, round}
+        },
+        :start,
+        data
+      ) do
+    Logger.info("Round #{round}")
+
+    data = %{data | round_msg: msg}
+
+    {:next_state, :run, data, {:next_event, :internal, :check_orders}}
+  end
+
+  def handle_event(:internal, :check_orders, :run, data) do
+    # TODO: Implement this
+    {:keep_state, data, {:next_event, :internal, :send_new_figures}}
+  end
+
+  def handle_event(:internal, :send_new_figures, :run, data) do
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
+    produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
+    components = ETS.lookup_element(KnowledgeBase, :components, 2)
+
+    # TODO: Annouce this based on storage
+    product = hd(produces)
+    price = components[product]
+
+    nodes
+    |> Enum.map(
+      &Message.new(
+        :inform,
+        {Behaviour, Node.self()},
+        {Information, &1},
+        {:selling, %{type: product, price: price, quantity: 0}}
+      )
+    )
+    |> Enum.each(&Message.send/1)
+
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end
 
@@ -33,37 +74,5 @@ defmodule SupplyChain.Behaviour.Producer do
   def handle_event(:cast, :stop, _state, _data) do
     System.stop(0)
     {:stop, :shutdown}
-  end
-
-  def handle_event(
-        :info,
-        msg = %Message{
-          performative: :inform,
-          sender: {Knowledge, _},
-          content: {:start_round, round}
-        },
-        :start,
-        data
-      ) do
-    Logger.info("Round #{round}")
-
-    data = %{data | round_msg: msg}
-
-    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
-    amount = ETS.lookup_element(KnowledgeBase, :used_storage, 2)
-    price = ETS.lookup_element(KnowledgeBase, :price_per_unit, 2)
-
-    nodes
-    |> Enum.map(
-      &Message.new(
-        :inform,
-        {Behaviour, Node.self()},
-        {Information, &1},
-        {:start_round, :selling, %{amount: amount, price: price}}
-      )
-    )
-    |> Enum.each(&Message.send/1)
-
-    {:next_state, :run, data, {:next_event, :internal, :main}}
   end
 end
