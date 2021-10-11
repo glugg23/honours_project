@@ -100,6 +100,12 @@ defmodule SupplyChain.Knowledge do
   end
 
   def insert_config(table, config) do
+    common = Application.get_env(:supply_chain, :common)
+
+    for {k, v} <- common do
+      ETS.insert(table, {k, v})
+    end
+
     for {k, v} <- config do
       ETS.insert(table, {k, v})
     end

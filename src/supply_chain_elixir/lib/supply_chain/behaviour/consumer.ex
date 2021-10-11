@@ -17,7 +17,47 @@ defmodule SupplyChain.Behaviour.Consumer do
     {:ok, :start, %{round_msg: nil}}
   end
 
-  def handle_event(:internal, :main, :run, data) do
+  def handle_event(
+        :info,
+        msg = %Message{
+          performative: :inform,
+          sender: {Knowledge, _},
+          content: {:start_round, round}
+        },
+        :start,
+        data
+      ) do
+    Logger.info("Round #{round}")
+    data = %{data | round_msg: msg}
+
+    {:next_state, :run, data, {:next_event, :internal, :check_orders}}
+  end
+
+  def handle_event(:internal, :check_orders, :run, data) do
+    # TODO: Implement this
+    {:keep_state, data, {:next_event, :internal, :send_new_orders}}
+  end
+
+  def handle_event(:internal, :send_new_orders, :run, data) do
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
+    computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
+
+    # TODO: Select recipe that should be ordered
+    computer = hd(computers)
+
+    # TODO: Remove :start_round once manufacturer is updated
+    # TODO: Select a quantity that should be ordered
+    nodes
+    |> Enum.map(
+      &Message.new(
+        :inform,
+        {Behaviour, Node.self()},
+        {Information, &1},
+        {:start_round, :buying, %{type: computer.name, price: computer.price, quantity: 1}}
+      )
+    )
+    |> Enum.each(&Message.send/1)
+
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end
 
@@ -33,36 +73,5 @@ defmodule SupplyChain.Behaviour.Consumer do
   def handle_event(:cast, :stop, _state, _data) do
     System.stop(0)
     {:stop, :shutdown}
-  end
-
-  def handle_event(
-        :info,
-        msg = %Message{
-          performative: :inform,
-          sender: {Knowledge, _},
-          content: {:start_round, round}
-        },
-        :start,
-        data
-      ) do
-    Logger.info("Round #{round}")
-    data = %{data | round_msg: msg}
-
-    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
-    amount = ETS.lookup_element(KnowledgeBase, :demand, 2)
-    price = ETS.lookup_element(KnowledgeBase, :price_per_unit, 2)
-
-    nodes
-    |> Enum.map(
-      &Message.new(
-        :inform,
-        {Behaviour, Node.self()},
-        {Information, &1},
-        {:start_round, :buying, %{amount: amount, price: price}}
-      )
-    )
-    |> Enum.each(&Message.send/1)
-
-    {:next_state, :run, data, {:next_event, :internal, :main}}
   end
 end

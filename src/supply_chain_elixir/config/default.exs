@@ -1,5 +1,10 @@
 import Config
 
+config :supply_chain, :common,
+  components: [%{name: :good, price: 1650}],
+  computers: [%{name: :computer, price: 1650}],
+  recipes: [%{requires: [good: 1], produces: :computer}]
+
 config :supply_chain, :clock,
   type: :clock,
   information_filter: [],
