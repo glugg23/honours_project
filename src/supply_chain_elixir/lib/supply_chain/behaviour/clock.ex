@@ -29,6 +29,27 @@ defmodule SupplyChain.Behaviour.Clock do
     GenStateMachine.cast({Behaviour, node}, :new_round)
   end
 
+  def handle_event(
+        :info,
+        msg = %Message{performative: :inform, content: {:nodeup, _}, sender: Knowledge},
+        :setup,
+        data
+      ) do
+    current = ETS.match(Nodes, :"$1") |> length()
+
+    if current === data.agent_count do
+      msg
+      |> Message.reply(:request, %{send_nodeup: false})
+      |> Message.send()
+
+      Logger.info("All nodes connected to clock agent")
+
+      {:next_state, :is_ready?, data, {:next_event, :internal, :ask_ready}}
+    else
+      {:keep_state, data}
+    end
+  end
+
   def handle_event(:internal, :ask_ready, :is_ready?, data) do
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
 
@@ -71,6 +92,24 @@ defmodule SupplyChain.Behaviour.Clock do
     {:next_state, :end_round, data}
   end
 
+  def handle_event(
+        :info,
+        %Message{performative: :inform, content: :finished, reply_to: {_, node}},
+        :end_round,
+        data
+      ) do
+    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}]) |> Enum.sort()
+    data = %{data | finished_agents: [node | data.finished_agents] |> Enum.sort()}
+
+    Logger.info("[#{length(data.finished_agents)}/#{length(nodes)}] agents finished")
+
+    if data.finished_agents === nodes do
+      {:keep_state, data, {:next_event, :internal, :continue?}}
+    else
+      {:keep_state, data}
+    end
+  end
+
   def handle_event(:internal, :continue?, :end_round, data) do
     data = %{data | finished_agents: []}
 
@@ -78,6 +117,14 @@ defmodule SupplyChain.Behaviour.Clock do
       {:keep_state, data, {:next_event, :cast, :new_round}}
     else
       {:keep_state, data}
+    end
+  end
+
+  def handle_event(:cast, :new_round, :end_round, data) do
+    if data.round === data.max_rounds do
+      {:next_state, :finish, data, {:next_event, :internal, :stop_nodes}}
+    else
+      {:next_state, :start_round, data, {:next_event, :internal, :announce}}
     end
   end
 
@@ -95,55 +142,8 @@ defmodule SupplyChain.Behaviour.Clock do
     {:keep_state, data, {:reply, from, true}}
   end
 
-  def handle_event(:cast, :new_round, :end_round, data) do
-    if data.round === data.max_rounds do
-      {:next_state, :finish, data, {:next_event, :internal, :stop_nodes}}
-    else
-      {:next_state, :start_round, data, {:next_event, :internal, :announce}}
-    end
-  end
-
   def handle_event(:cast, :stop, :finish, _data) do
     System.stop(0)
     {:stop, :shutdown}
-  end
-
-  def handle_event(
-        :info,
-        msg = %Message{performative: :inform, content: {:nodeup, _}, sender: Knowledge},
-        :setup,
-        data
-      ) do
-    current = ETS.match(Nodes, :"$1") |> length()
-
-    if current === data.agent_count do
-      msg
-      |> Message.reply(:request, %{send_nodeup: false})
-      |> Message.send()
-
-      Logger.info("All nodes connected to clock agent")
-
-      {:next_state, :is_ready?, data, {:next_event, :internal, :ask_ready}}
-    else
-      {:keep_state, data}
-    end
-  end
-
-  def handle_event(
-        :info,
-        %Message{performative: :inform, content: :finished, reply_to: {_, node}},
-        :end_round,
-        data
-      ) do
-    nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}]) |> Enum.sort()
-    data = %{data | finished_agents: [node | data.finished_agents] |> Enum.sort()}
-
-    Logger.info("[#{length(data.finished_agents)}/#{length(nodes)}] agents finished")
-
-    if data.finished_agents === nodes do
-      {:keep_state, data, {:next_event, :internal, :continue?}}
-    else
-      {:keep_state, data}
-    end
   end
 end
