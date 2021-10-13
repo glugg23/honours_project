@@ -1,4 +1,4 @@
-FROM maven:3.8.2-adoptopenjdk-8
+FROM maven:3.8.3-openjdk-8
 
 WORKDIR /supply_chain
 
