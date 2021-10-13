@@ -23,6 +23,7 @@ config :supply_chain, :consumer,
 config :supply_chain, :producer,
   type: :producer,
   produces: [:good],
+  production_capacity: 550,
   information_filter: [:consumer, :producer]
 
 config :supply_chain, :agent_types, [:clock, :manufacturer, :consumer, :producer]

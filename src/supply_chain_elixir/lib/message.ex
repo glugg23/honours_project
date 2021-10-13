@@ -4,7 +4,7 @@ defmodule Message do
   It is loosely based on FIPA ACL.
   """
 
-  @type performative :: :inform | :request
+  @type performative :: :inform | :request | :accept | :reject | :not_understood
   # Do not use pids for agents
   @type agent :: atom() | {atom(), node()}
   @type t :: %Message{

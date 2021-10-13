@@ -7,7 +7,11 @@ defmodule SupplyChain.Behaviour do
 
   require Logger
 
+  alias :ets, as: ETS
+
   alias SupplyChain.{Information, Knowledge}
+  alias SupplyChain.Knowledge.Inbox, as: Inbox
+  alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def child_spec(args) do
     %{
@@ -38,6 +42,11 @@ defmodule SupplyChain.Behaviour do
 
         System.stop(1)
     end
+  end
+
+  def delete_old_messages() do
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+    ETS.select_delete(Inbox, [{{:_, :_, :"$1"}, [{:"=:=", :"$1", round - 1}], [true]}])
   end
 
   def ready?(node \\ Node.self(), other_nodes) do

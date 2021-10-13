@@ -7,11 +7,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
   require Logger
 
-  alias :ets, as: ETS
-
   alias SupplyChain.Knowledge
-  alias SupplyChain.Knowledge.Inbox, as: Inbox
-  alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def init(_args) do
     {:ok, :start, %{round_msg: nil}}
@@ -37,9 +33,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
   end
 
   def handle_event(:internal, :send_finish_msg, :finish, data) do
-    # Delete previous round's inbox
-    round = ETS.lookup_element(KnowledgeBase, :round, 2)
-    ETS.select_delete(Inbox, [{{:_, :_, :"$1"}, [{:"=:=", :"$1", round - 1}], [true]}])
+    SupplyChain.Behaviour.delete_old_messages()
     data.round_msg |> Message.reply(:inform, :finished) |> Message.send()
     {:next_state, :start, data}
   end
