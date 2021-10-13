@@ -59,22 +59,24 @@ defmodule SupplyChain.Behaviour.Producer do
   def handle_event(:internal, :send_new_figures, :run, data) do
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
+    storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
     components = ETS.lookup_element(KnowledgeBase, :components, 2)
 
-    # TODO: Annouce this based on storage
-    product = hd(produces)
-    price = components[product]
+    for product <- produces do
+      price = components[product]
+      quantity = Keyword.get(storage, product, 0)
 
-    nodes
-    |> Enum.map(
-      &Message.new(
-        :inform,
-        {Behaviour, Node.self()},
-        {Information, &1},
-        {:selling, %{type: product, price: price, quantity: 0}}
+      nodes
+      |> Enum.map(
+        &Message.new(
+          :inform,
+          {Behaviour, Node.self()},
+          {Information, &1},
+          {:selling, %{type: product, price: price, quantity: quantity}}
+        )
       )
-    )
-    |> Enum.each(&Message.send/1)
+      |> Enum.each(&Message.send/1)
+    end
 
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end
@@ -106,10 +108,8 @@ defmodule SupplyChain.Behaviour.Producer do
   end
 
   defp have_enough?(storage, type, quantity) do
-    case Keyword.fetch(storage, type) do
-      {:ok, have} -> quantity <= have
-      :error -> false
-    end
+    have = Keyword.get(storage, type, 0)
+    quantity <= have
   end
 
   defp can_produce?(type, quantity, used_production) do
