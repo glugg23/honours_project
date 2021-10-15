@@ -4,13 +4,34 @@ Write what the system does each round of the simulation.
 
 \subsubsection{Agent Types}
 
-Clock.
+There are 4 agent types that have been implemented for both of the multi-agent systems.
+These are the minimum number of agents types to allow the benchmarks to be run.
 
-Producer.
+The first agent type is the Clock agent.
+This agent is not apart of the supply chain simulation, but instead keeps track of the simulation itself.
+It makes sure all the agents are ready before starting the simulation.
+While the simulation is running, the Clock agent keeps track of what round the simulation is currently on and which agents are already finished.
+TODO\@: Mention how the Clock agent is used to measure the benchmarks.
 
-Manufacturer.
+The second type of agent is the Producer agent.
+This agent produces the raw goods or components that can be manufactured into finished PCs.
+The Producer agent ignores any messages it receives from the consumer agent as messages from it are not relevant to the Producer agent.
+It also ignores messages from other Producer agents as they would not be relevant to it.
+This agent responds to messages from the Manufacturer agent about requests to buy components.
+If the request is for a reasonable amount of components and the price per component is acceptable, then the Producer agent will accept the request.
+There can be more than one Producer agent per experiment.
 
-Consumer.
+The next type of agent is the Manufacturer agent.
+This agent takes requests for finished PCs from the Consumer agent and attempts to fulfill them buy ordering components from Producer agents.
+It will reject requests from the Consumer agent if they are at a too low price or request too many finished PCs in too short of a time frame.
+This is the most complex agent type as it has to interact with both the Consumer agent and potentially multiple Producer agents.
+As such there will only be one Manufacturer agent in the simulation.
+
+The final agent type is the Consumer agent.
+This agent makes a number of requests to buy finished PCs from the Manufacturer agent each round.
+It will offer to buy a certain number of PCs at a given price and any offers that are not accept during the next round will be regarded as being rejected.
+The Consumer agent ignores all messages from the Producer agent as it does not care about raw goods.
+There will only ever be one Consumer agent as adding multiple agents would just result in there being too many orders for the Manufacturer agent to fulfill.
 
 \subsubsection{Simulation Rounds}
 
