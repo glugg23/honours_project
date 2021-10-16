@@ -22,7 +22,7 @@ If the request is for a reasonable amount of components and the price per compon
 There can be more than one Producer agent per experiment.
 
 The next type of agent is the Manufacturer agent.
-This agent takes requests for finished PCs from the Consumer agent and attempts to fulfill them buy ordering components from Producer agents.
+This agent takes requests for finished PCs from the Consumer agent and attempts to fulfil them buy ordering components from Producer agents.
 It will reject requests from the Consumer agent if they are at a too low price or request too many finished PCs in too short of a time frame.
 This is the most complex agent type as it has to interact with both the Consumer agent and potentially multiple Producer agents.
 As such there will only be one Manufacturer agent in the simulation.
@@ -31,7 +31,7 @@ The final agent type is the Consumer agent.
 This agent makes a number of requests to buy finished PCs from the Manufacturer agent each round.
 It will offer to buy a certain number of PCs at a given price and any offers that are not accept during the next round will be regarded as being rejected.
 The Consumer agent ignores all messages from the Producer agent as it does not care about raw goods.
-There will only ever be one Consumer agent as adding multiple agents would just result in there being too many orders for the Manufacturer agent to fulfill.
+There will only ever be one Consumer agent as adding multiple agents would just result in there being too many orders for the Manufacturer agent to fulfil.
 
 \subsubsection{Simulation Round Messages}
 
