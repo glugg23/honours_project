@@ -33,6 +33,24 @@ It will offer to buy a certain number of PCs at a given price and any offers tha
 The Consumer agent ignores all messages from the Producer agent as it does not care about raw goods.
 There will only ever be one Consumer agent as adding multiple agents would just result in there being too many orders for the Manufacturer agent to fulfill.
 
-\subsubsection{Simulation Rounds}
+\subsubsection{Simulation Round Messages}
 
-Add message sequence diagram for a typical round of the simulation.
+\Cref{fig:system_sequence_diagram} shows a sequence diagram for the messages that are exchanged during a typical simulation round.
+
+\begin{figure}[h]
+    \centering
+    \caption{TODO\@: Add system design sequence diagram}\label{fig:system_sequence_diagram}
+\end{figure}
+
+Each round is started by the Clock agent announcing the start of the round by sending a message to each of the other agents.
+This causes the other agents to begin reacting to the messages they were sent in the previous round.
+A summary of all the messages that are usually sent is given below.
+
+The Consumer agent will send messages to all other agents announcing what orders it wishes to buy.
+The Manufacturer agent will respond to order messages from the Consumer agent by accepting or rejecting them.
+It will then make offers to specific Producer agents in order to procure components.
+The Producer agents will send messages broadcasting their available stock to all other agents.
+They will also respond to messages from the Manufacturer agent to accept or reject orders to buy components.
+
+Once an agent is finished it notifies the Clock agent by sending it a message.
+When the Clock agent has received messages from all agents that indicate they are finished, it moves to start the next round of the simulation.
