@@ -29,6 +29,7 @@ The next type of agent is the Manufacturer agent.
 This agent takes requests for finished PCs from the Consumer agent and attempts to fulfil them by ordering components from Producer agents.
 It will reject requests from the Consumer agent if they are at a too low price or request too many finished PCs in too short of a time frame.
 This is the most complex agent type as it has to interact with both the Consumer agent and potentially multiple Producer agents.
+The Manufacturer agent has been written without the assumption of competition so adding multiple Manufacturer agents would require a significant rewrite of their behaviour.
 As such there will only be one Manufacturer agent in the simulation.
 
 The final agent type is the Consumer agent.
