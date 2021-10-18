@@ -27,8 +27,8 @@ defmodule SupplyChain.Information.Server do
     other_nodes = other_nodes |> Enum.filter(fn n -> n !== Node.self() end) |> Enum.sort()
     different_nodes = List.myers_difference(connected_nodes, other_nodes)
 
-    tasks = Keyword.get(different_nodes, :ins, []) |> connect_to(state.tasks)
-    state = %{state | tasks: tasks}
+    new_tasks = Keyword.get(different_nodes, :ins, []) |> Enum.map(fn n -> info_task(n) end)
+    state = %{state | tasks: state.tasks ++ new_tasks}
 
     {:reply, state.tasks === [], state}
   end
@@ -100,16 +100,6 @@ defmodule SupplyChain.Information.Server do
       _ ->
         {:noreply, state}
     end
-  end
-
-  defp connect_to([h | nodes], tasks) do
-    ref = info_task(h)
-    tasks = [ref | tasks]
-    connect_to(nodes, tasks)
-  end
-
-  defp connect_to([], tasks) do
-    tasks
   end
 
   defp info_task(node) do
