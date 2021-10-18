@@ -15,7 +15,7 @@ defmodule SupplyChain.Behaviour.Producer do
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def init(_args) do
-    {:ok, :start, %{round_msg: nil, used_production: 0}}
+    {:ok, :start, %{round_msg: nil, reserved_capacity: 0}}
   end
 
   def handle_event(
@@ -30,28 +30,32 @@ defmodule SupplyChain.Behaviour.Producer do
       ) do
     Logger.info("Round #{round}")
 
-    data = %{data | round_msg: msg, used_production: 0}
+    data = %{data | round_msg: msg, reserved_capacity: 0}
 
     {:next_state, :run, data, {:next_event, :internal, :check_orders}}
   end
 
   def handle_event(:internal, :check_orders, :run, data) do
-    messages = ETS.select(Inbox, [{{:"$1", :"$2", :"$3"}, [], [{{:"$1", :"$2", :"$3"}}]}])
+    messages = ETS.select(Inbox, [{{:_, :"$1", :_}, [], [:"$1"]}])
 
-    for {_ref, msg, _round} <- messages do
-      case msg.performative do
-        :request ->
-          # TODO: Handle logic on accepting to change internal state
-          if accept_request?(msg.content, data.used_production) do
-            Message.reply(msg, :accept, nil) |> Message.send()
-          else
-            Message.reply(msg, :reject, nil) |> Message.send()
-          end
+    {requests, production} =
+      messages
+      |> Enum.filter(fn m -> m.performative === :request end)
+      # The selection of which requests to fulfill is basically the Knapsack Problem
+      # We look at requests in descending item price order as a good enough solution
+      |> Enum.sort(fn m1, m2 -> elem(m1.content, 2) > elem(m2.content, 2) end)
+      |> Enum.map_reduce(0, fn m, acc ->
+        {_, quantity, _} = m.content
 
-        _ ->
-          Message.reply(msg, :not_understood, nil) |> Message.send()
-      end
-    end
+        if accept_request?(m.content, acc) do
+          {{m, :accept}, acc + quantity}
+        else
+          {{m, :reject}, acc}
+        end
+      end)
+
+    requests |> Enum.each(fn {m, p} -> Message.reply(m, p, nil) |> Message.send() end)
+    data = %{data | reserved_capacity: production}
 
     {:keep_state, data, {:next_event, :internal, :send_new_figures}}
   end
