@@ -22,7 +22,7 @@ config :supply_chain, :consumer,
 
 config :supply_chain, :producer,
   type: :producer,
-  produces: [:good],
+  produces: :good,
   production_capacity: 550,
   information_filter: [:consumer, :producer]
 

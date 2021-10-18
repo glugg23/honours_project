@@ -15,7 +15,7 @@ defmodule SupplyChain.Behaviour.Producer do
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
 
   def init(_args) do
-    {:ok, :start, %{round_msg: nil, reserved_capacity: 0}}
+    {:ok, :start, %{round_msg: nil}}
   end
 
   def handle_event(
@@ -30,7 +30,7 @@ defmodule SupplyChain.Behaviour.Producer do
       ) do
     Logger.info("Round #{round}")
 
-    data = %{data | round_msg: msg, reserved_capacity: 0}
+    data = %{data | round_msg: msg}
 
     {:next_state, :run, data, {:next_event, :internal, :check_orders}}
   end
@@ -55,32 +55,35 @@ defmodule SupplyChain.Behaviour.Producer do
       end)
 
     requests |> Enum.each(fn {m, p} -> Message.reply(m, p, nil) |> Message.send() end)
-    data = %{data | reserved_capacity: production}
+
+    storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
+    produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
+    storage = Keyword.update(storage, produces, 0, fn store -> store + production end)
+    ETS.insert(KnowledgeBase, {:storage, storage})
 
     {:keep_state, data, {:next_event, :internal, :send_new_figures}}
   end
 
   def handle_event(:internal, :send_new_figures, :run, data) do
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
-    produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
     storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
     components = ETS.lookup_element(KnowledgeBase, :components, 2)
 
-    for product <- produces do
-      price = components[product]
-      quantity = Keyword.get(storage, product, 0)
+    # TODO: Increase price based on storage, 1x capacity in storage = 2x price etc.
+    produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
+    price = components[produces]
+    quantity = storage[produces]
 
-      nodes
-      |> Enum.map(
-        &Message.new(
-          :inform,
-          {Behaviour, Node.self()},
-          {Information, &1},
-          {:selling, %{type: product, price: price, quantity: quantity}}
-        )
+    nodes
+    |> Enum.map(
+      &Message.new(
+        :inform,
+        {Behaviour, Node.self()},
+        {Information, &1},
+        {:selling, %{type: produces, price: price, quantity: quantity}}
       )
-      |> Enum.each(&Message.send/1)
-    end
+    )
+    |> Enum.each(&Message.send/1)
 
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end
@@ -100,27 +103,17 @@ defmodule SupplyChain.Behaviour.Producer do
     {:stop, :shutdown}
   end
 
+  # Producer agent is lean, it never stockpiles components
+  # Only accept request if we have enough production capacity
   defp accept_request?({type, quantity, price}, used_production) do
-    storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
-
-    if (have_enough?(storage, type, quantity) or
-          can_produce?(type, quantity, used_production)) and acceptable_price?(type, price) do
-      true
-    else
-      false
-    end
-  end
-
-  defp have_enough?(storage, type, quantity) do
-    have = Keyword.get(storage, type, 0)
-    quantity <= have
+    can_produce?(type, quantity, used_production) and acceptable_price?(type, price)
   end
 
   defp can_produce?(type, quantity, used_production) do
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
     production_capacity = ETS.lookup_element(KnowledgeBase, :production_capacity, 2)
 
-    type in produces and quantity <= production_capacity - used_production
+    type === produces and quantity <= production_capacity - used_production
   end
 
   defp acceptable_price?(type, price) do
