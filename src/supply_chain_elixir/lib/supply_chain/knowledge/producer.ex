@@ -13,6 +13,7 @@ defmodule SupplyChain.Knowledge.Producer do
     Knowledge.insert_config(KnowledgeBase, state.config)
 
     ETS.new(Inbox, [:set, :public, :named_table])
+    ETS.new(Orders, [:set, :public, :named_table])
 
     {:ok, state}
   end

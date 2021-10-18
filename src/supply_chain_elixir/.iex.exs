@@ -3,3 +3,4 @@ alias SupplyChain.{Information, Knowledge, Behaviour}
 alias SupplyChain.Information.Nodes, as: Nodes
 alias SupplyChain.Knowledge.Inbox, as: Inbox
 alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+alias SupplyChain.Knowledge.Orders, as: Orders

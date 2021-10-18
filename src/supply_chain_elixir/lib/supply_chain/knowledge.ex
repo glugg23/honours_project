@@ -19,6 +19,7 @@ defmodule SupplyChain.Knowledge do
       alias SupplyChain.{Information, Knowledge, Behaviour}
       alias SupplyChain.Knowledge.Inbox, as: Inbox
       alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+      alias SupplyChain.Knowledge.Orders, as: Orders
 
       @doc false
       def handle_call(:get_config, _from, state) do

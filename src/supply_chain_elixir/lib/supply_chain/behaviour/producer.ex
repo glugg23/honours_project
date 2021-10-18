@@ -13,6 +13,7 @@ defmodule SupplyChain.Behaviour.Producer do
   alias SupplyChain.Information.Nodes, as: Nodes
   alias SupplyChain.Knowledge.Inbox, as: Inbox
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+  alias SupplyChain.Knowledge.Orders, as: Orders
 
   def init(_args) do
     {:ok, :start, %{round_msg: nil}}
@@ -55,6 +56,10 @@ defmodule SupplyChain.Behaviour.Producer do
       end)
 
     requests |> Enum.each(fn {m, p} -> Message.reply(m, p, nil) |> Message.send() end)
+
+    requests
+    |> Enum.filter(fn {_, p} -> p === :accept end)
+    |> Enum.each(fn {m, _} -> ETS.insert(Orders, {m.conversation_id, m}) end)
 
     storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
