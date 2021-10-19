@@ -44,12 +44,10 @@ defmodule SupplyChain.Behaviour.Producer do
       |> Enum.filter(fn m -> m.performative === :request end)
       # The selection of which requests to fulfill is basically the Knapsack Problem
       # We look at requests in descending item price order as a good enough solution
-      |> Enum.sort(fn m1, m2 -> elem(m1.content, 2) > elem(m2.content, 2) end)
+      |> Enum.sort_by(&(&1.content), {:desc, Request})
       |> Enum.map_reduce(0, fn m, acc ->
-        {_, quantity, _} = m.content
-
         if accept_request?(m.content, acc) do
-          {{m, :accept}, acc + quantity}
+          {{m, :accept}, acc + m.content.quantity}
         else
           {{m, :reject}, acc}
         end
@@ -85,7 +83,7 @@ defmodule SupplyChain.Behaviour.Producer do
         :inform,
         {Behaviour, Node.self()},
         {Information, &1},
-        {:selling, %{type: produces, price: price, quantity: quantity}}
+        {:selling, Request.new(produces, quantity, price)}
       )
     )
     |> Enum.each(&Message.send/1)
@@ -110,7 +108,7 @@ defmodule SupplyChain.Behaviour.Producer do
 
   # Producer agent is lean, it never stockpiles components
   # Only accept request if we have enough production capacity
-  defp accept_request?({type, quantity, price}, used_production) do
+  defp accept_request?(%Request{type: type, quantity: quantity, price: price}, used_production) do
     can_produce?(type, quantity, used_production) and acceptable_price?(type, price)
   end
 
