@@ -15,7 +15,6 @@ The first agent type is the Clock agent.
 This agent is not a part of the supply chain simulation, but instead keeps track of the simulation itself.
 It makes sure all the agents are ready before starting the simulation.
 While the simulation is running, the Clock agent keeps track of what round the simulation is currently on and which agents are already finished.
-TODO\@: Mention how the Clock agent is used to measure the benchmarks.
 
 The second type of agent is the Producer agent.
 This agent produces the raw goods or components that can be manufactured into finished PCs.
@@ -41,6 +40,8 @@ There will only ever be one Consumer agent as adding multiple agents would just 
 \subsubsection{Simulation Round Messages}
 
 \Cref{fig:system_sequence_diagram} shows a sequence diagram for the messages that are exchanged during a typical simulation round.
+Agents always react to the messages they were sent in the previous round instead of reacting to the messages they are sent in the current round.
+This can be seen in \cref{fig:system_sequence_diagram} where the Manufacturer agent sends an ``accept offer'' message to the Consumer, accepting an offer made in the previous round and not the offer that the Manufacturer agent will receive later.
 
 \begin{figure}[ht]
     \centering
