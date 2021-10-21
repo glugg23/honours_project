@@ -1,16 +1,22 @@
 defmodule Request do
-  @enforce_keys [:type, :quantity, :price]
+  @moduledoc """
+  A simple struct to store the state of an order request.
+  """
+
+  @enforce_keys [:type, :quantity, :price, :round]
   defstruct [
     :type,
     :quantity,
-    :price
+    :price,
+    :round
   ]
 
-  def new(type, quantity, price) do
+  def new(type, quantity, price, round) do
     %Request{
       type: type,
       quantity: quantity,
-      price: price
+      price: price,
+      round: round
     }
   end
 

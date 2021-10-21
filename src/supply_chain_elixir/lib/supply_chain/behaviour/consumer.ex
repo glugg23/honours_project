@@ -41,18 +41,21 @@ defmodule SupplyChain.Behaviour.Consumer do
   def handle_event(:internal, :send_new_orders, :run, data) do
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
     computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
 
     # TODO: Select recipe that should be ordered
     {type, price} = hd(computers)
 
     # TODO: Select a quantity that should be ordered
+    # TODO: Select round that order should be fulfilled
+    #       Minimum is +4 rounds in the future as this is the time required to accept and receive all orders
     nodes
     |> Enum.map(
       &Message.new(
         :inform,
         {Behaviour, Node.self()},
         {Information, &1},
-        {:buying, Request.new(type, 1, price)}
+        {:buying, Request.new(type, 1, price, round + 4)}
       )
     )
     |> Enum.each(&Message.send/1)

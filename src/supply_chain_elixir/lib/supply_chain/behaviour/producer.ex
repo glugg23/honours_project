@@ -44,7 +44,7 @@ defmodule SupplyChain.Behaviour.Producer do
       |> Enum.filter(fn m -> m.performative === :request end)
       # The selection of which requests to fulfill is basically the Knapsack Problem
       # We look at requests in descending item price order as a good enough solution
-      |> Enum.sort_by(&(&1.content), {:desc, Request})
+      |> Enum.sort_by(& &1.content, {:desc, Request})
       |> Enum.map_reduce(0, fn m, acc ->
         if accept_request?(m.content, acc) do
           {{m, :accept}, acc + m.content.quantity}
@@ -71,6 +71,7 @@ defmodule SupplyChain.Behaviour.Producer do
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
     storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
     components = ETS.lookup_element(KnowledgeBase, :components, 2)
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
 
     # TODO: Increase price based on storage, 1x capacity in storage = 2x price etc.
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
@@ -83,7 +84,7 @@ defmodule SupplyChain.Behaviour.Producer do
         :inform,
         {Behaviour, Node.self()},
         {Information, &1},
-        {:selling, Request.new(produces, quantity, price)}
+        {:selling, Request.new(produces, quantity, price, round)}
       )
     )
     |> Enum.each(&Message.send/1)
