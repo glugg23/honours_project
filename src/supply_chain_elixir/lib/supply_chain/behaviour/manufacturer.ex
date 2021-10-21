@@ -12,6 +12,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
   alias SupplyChain.{Information, Knowledge}
   alias SupplyChain.Knowledge.Inbox, as: Inbox
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+  alias SupplyChain.Knowledge.Orders, as: Orders
 
   def init(_args) do
     {:ok, :start, %{round_msg: nil}}
@@ -29,10 +30,10 @@ defmodule SupplyChain.Behaviour.Manufacturer do
       ) do
     Logger.info("Round #{round}")
     data = %{data | round_msg: msg}
-    {:next_state, :run, data, {:next_event, :internal, :main}}
+    {:next_state, :run, data, {:next_event, :internal, :handle_messages}}
   end
 
-  def handle_event(:internal, :main, :run, data) do
+  def handle_event(:internal, :handle_messages, :run, data) do
     messages = ETS.select(Inbox, [{{:_, :"$1", :_}, [], [:"$1"]}])
 
     {buying_requests, _production} =
@@ -53,6 +54,38 @@ defmodule SupplyChain.Behaviour.Manufacturer do
     |> Enum.each(fn {m, p} ->
       Message.reply(m, p, nil, {Information, Node.self()}) |> Message.send()
     end)
+
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+
+    buying_requests
+    |> Enum.filter(fn {_, p} -> p === :accept end)
+    |> Enum.each(fn {m, _} -> ETS.insert(Orders, {m.conversation_id, m, round}) end)
+
+    {:keep_state, data, {:next_event, :internal, :handle_orders}}
+  end
+
+  def handle_event(:internal, :handle_orders, :run, data) do
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+    recipes = ETS.lookup_element(KnowledgeBase, :recipes, 2)
+    orders = ETS.select(Orders, [{{:_, :"$1", :"$2"}, [{:"=:=", :"$2", round}], [:"$1"]}])
+
+    # Turns list of messages into list of required finished computers
+    # Then turns that list into a list of components with duplicates
+    # Then combines duplicates to create one list of all components required
+    required_components =
+      orders
+      |> Enum.reduce([], fn m, acc ->
+        {_, content} = m.content
+        Keyword.update(acc, content.type, content.quantity, fn v -> v + content.quantity end)
+      end)
+      |> Enum.flat_map(fn {type, amount} ->
+        recipes[type] |> Enum.map(fn {good, required} -> {good, required * amount} end)
+      end)
+      |> Enum.reduce([], fn {type, amount}, acc ->
+        Keyword.update(acc, type, amount, fn orig -> orig + amount end)
+      end)
+
+    Logger.notice("#{inspect(required_components)}")
 
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end

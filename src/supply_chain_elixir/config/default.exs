@@ -3,7 +3,7 @@ import Config
 config :supply_chain, :common,
   components: [good: 1650],
   computers: [computer: 1650],
-  recipes: [%{requires: [good: 1], produces: :computer}]
+  recipes: [computer: [good: 1]]
 
 config :supply_chain, :clock,
   type: :clock,
