@@ -63,6 +63,7 @@ defmodule SupplyChain.Knowledge do
         # This will only be messages that have passed the information filter
         # Therefore store them in the inbox so that the Behaviour layer can process them
         round = ETS.lookup_element(KnowledgeBase, :round, 2)
+        msg = Message.forward(msg, {Behaviour, Node.self()})
         ETS.insert(Inbox, {ref, msg, round})
         {:noreply, state}
       end

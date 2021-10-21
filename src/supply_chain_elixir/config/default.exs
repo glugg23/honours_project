@@ -14,7 +14,8 @@ config :supply_chain, :clock,
 
 config :supply_chain, :manufacturer,
   type: :manufacturer,
-  information_filter: []
+  information_filter: [],
+  production_capacity: 2000
 
 config :supply_chain, :consumer,
   type: :consumer,
@@ -22,8 +23,8 @@ config :supply_chain, :consumer,
 
 config :supply_chain, :producer,
   type: :producer,
+  information_filter: [:consumer, :producer],
   produces: :good,
-  production_capacity: 550,
-  information_filter: [:consumer, :producer]
+  production_capacity: 550
 
 config :supply_chain, :agent_types, [:clock, :manufacturer, :consumer, :producer]

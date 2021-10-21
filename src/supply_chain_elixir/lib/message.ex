@@ -50,6 +50,18 @@ defmodule Message do
     }
   end
 
+  @spec reply(Message.t(), performative(), any(), agent()) :: Message.t()
+  def reply(msg, performative, content, reply_to) do
+    %Message{
+      msg
+      | performative: performative,
+        sender: msg.receiver,
+        receiver: msg.reply_to,
+        reply_to: reply_to,
+        content: content
+    }
+  end
+
   @spec forward(Message.t(), agent()) :: Message.t()
   def forward(msg, receiver) do
     %Message{msg | sender: msg.receiver, receiver: receiver}
