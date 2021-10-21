@@ -9,7 +9,7 @@ defmodule SupplyChain.Behaviour.Producer do
 
   alias :ets, as: ETS
 
-  alias SupplyChain.{Information, Knowledge, Behaviour}
+  alias SupplyChain.{Information, Knowledge}
   alias SupplyChain.Information.Nodes, as: Nodes
   alias SupplyChain.Knowledge.Inbox, as: Inbox
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
@@ -82,7 +82,7 @@ defmodule SupplyChain.Behaviour.Producer do
     |> Enum.map(
       &Message.new(
         :inform,
-        {Behaviour, Node.self()},
+        {Information, Node.self()},
         {Information, &1},
         {:selling, Request.new(produces, quantity, price, round)}
       )

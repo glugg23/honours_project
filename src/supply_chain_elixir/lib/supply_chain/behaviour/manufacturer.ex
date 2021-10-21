@@ -38,6 +38,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
     {buying_requests, _production} =
       messages
+      |> Enum.filter(fn m -> m.performative === :inform end)
       |> Enum.filter(fn m -> elem(m.content, 0) === :buying end)
       |> Enum.sort_by(&elem(&1.content, 1), {:desc, Request})
       |> Enum.map_reduce(0, fn m, acc ->
@@ -85,7 +86,45 @@ defmodule SupplyChain.Behaviour.Manufacturer do
         Keyword.update(acc, type, amount, fn orig -> orig + amount end)
       end)
 
-    Logger.notice("#{inspect(required_components)}")
+    producer_capacity = ETS.lookup_element(KnowledgeBase, :producer_capacity, 2)
+
+    for {type, amount} <- required_components do
+      # Select all messages that are in the form {:selling, request}
+      # And where the value of request.type is the type in the loop
+      selling_orders =
+        ETS.select(Inbox, [
+          {{:_, :"$1", :_},
+           [
+             {:andalso, {:"=:=", {:element, 1, {:map_get, :content, :"$1"}}, :selling},
+              {:"=:=", {:map_get, :type, {:element, 2, {:map_get, :content, :"$1"}}}, type}}
+           ], [:"$1"]}
+        ])
+        |> Enum.sort_by(&elem(&1.content, 1), {:asc, Request})
+
+      # Send requests in packets of at most producer capacity
+      # Send to cheapest producer first
+      # If there are more requests than producers, send to first producer and handle reject message
+      # TODO: Handle reject message
+      for i <- 0..div(amount, producer_capacity) do
+        msg =
+          case Enum.at(selling_orders, i) do
+            m = %Message{} -> m
+            :none -> Enum.at(selling_orders, 0)
+          end
+
+        {_, node} = msg.reply_to
+        {_, %Request{price: price}} = msg.content
+
+        Message.new(
+          :request,
+          {Information, Node.self()},
+          {Information, node},
+          Request.new(type, amount, price, round + 2),
+          msg.conversation_id
+        )
+        |> Message.send()
+      end
+    end
 
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end

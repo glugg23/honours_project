@@ -15,7 +15,8 @@ config :supply_chain, :clock,
 config :supply_chain, :manufacturer,
   type: :manufacturer,
   information_filter: [],
-  production_capacity: 2000
+  production_capacity: 2000,
+  producer_capacity: 550
 
 config :supply_chain, :consumer,
   type: :consumer,
