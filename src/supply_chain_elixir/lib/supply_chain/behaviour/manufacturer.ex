@@ -115,14 +115,17 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
           quantity = if acc > producer_capacity, do: producer_capacity, else: acc
 
-          Message.new(
-            :request,
-            {Information, Node.self()},
-            {Information, node},
-            Request.new(:buying, good, quantity, msg.content.price, round + 2),
-            msg.conversation_id
-          )
-          |> Message.send()
+          request =
+            Message.new(
+              :request,
+              {Information, Node.self()},
+              {Information, node},
+              Request.new(:buying, good, quantity, msg.content.price, round + 2),
+              msg.conversation_id
+            )
+            |> Message.send()
+
+          ETS.insert(Orders, {request.conversation_id, request, round})
 
           acc - producer_capacity
       end
