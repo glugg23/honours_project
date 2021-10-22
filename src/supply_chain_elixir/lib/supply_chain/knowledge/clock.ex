@@ -7,7 +7,7 @@ defmodule SupplyChain.Knowledge.Clock do
 
   use GenServer
 
-  alias SupplyChain.{Information, Knowledge, Behaviour}
+  alias SupplyChain.{Behaviour, Information, Knowledge}
 
   def init(type = :clock) do
     state = %{config: Application.get_env(:supply_chain, type), send_nodeup?: true}

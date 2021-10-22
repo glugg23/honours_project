@@ -10,9 +10,9 @@ defmodule SupplyChain.Behaviour.Clock do
 
   alias :ets, as: ETS
 
-  alias SupplyChain.{Information, Knowledge, Behaviour}
-  alias SupplyChain.Information.Nodes, as: Nodes
+  alias SupplyChain.{Behaviour, Information, Knowledge}
   alias SupplyChain.Behaviour.TaskSupervisor, as: TaskSupervisor
+  alias SupplyChain.Information.Nodes, as: Nodes
 
   def init(args) do
     {:ok, :setup,

@@ -5,7 +5,7 @@ defmodule SupplyChain do
 
   require Logger
 
-  def get_config() do
+  def get_config do
     with {:ok, string} <- System.fetch_env("AGENT_TYPE"),
          {:ok, config} <- match_config_type(string) do
       config

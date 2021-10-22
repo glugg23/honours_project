@@ -16,7 +16,7 @@ defmodule SupplyChain.Knowledge do
 
       alias :ets, as: ETS
 
-      alias SupplyChain.{Information, Knowledge, Behaviour}
+      alias SupplyChain.{Behaviour, Information, Knowledge}
       alias SupplyChain.Knowledge.Inbox, as: Inbox
       alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
       alias SupplyChain.Knowledge.Orders, as: Orders
@@ -115,7 +115,7 @@ defmodule SupplyChain.Knowledge do
     ETS.insert(table, {:money, 0})
   end
 
-  def get_config() do
+  def get_config do
     GenServer.call(__MODULE__, :get_config)
   end
 

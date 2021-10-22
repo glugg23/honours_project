@@ -44,7 +44,7 @@ defmodule SupplyChain.Behaviour do
     end
   end
 
-  def delete_old_messages() do
+  def delete_old_messages do
     round = ETS.lookup_element(KnowledgeBase, :round, 2)
     ETS.select_delete(Inbox, [{{:_, :_, :"$1"}, [{:"=:=", :"$1", round - 1}], [true]}])
   end

@@ -7,6 +7,7 @@ defmodule SupplyChain.MixProject do
       version: "0.1.0",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -24,6 +25,12 @@ defmodule SupplyChain.MixProject do
       {:gen_state_machine, "~> 3.0"},
       {:credo, "~> 1.5", only: [:dev], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      check: ["format", "credo --strict"]
     ]
   end
 end
