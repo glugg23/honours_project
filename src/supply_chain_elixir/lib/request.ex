@@ -3,17 +3,19 @@ defmodule Request do
   A simple struct to store the state of an order request.
   """
 
-  @enforce_keys [:type, :quantity, :price, :round]
+  @enforce_keys [:type, :good, :quantity, :price, :round]
   defstruct [
     :type,
+    :good,
     :quantity,
     :price,
     :round
   ]
 
-  def new(type, quantity, price, round) do
+  def new(type, good, quantity, price, round) do
     %Request{
       type: type,
+      good: good,
       quantity: quantity,
       price: price,
       round: round

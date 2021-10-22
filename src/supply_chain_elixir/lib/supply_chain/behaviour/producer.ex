@@ -84,7 +84,7 @@ defmodule SupplyChain.Behaviour.Producer do
         :inform,
         {Information, Node.self()},
         {Information, &1},
-        {:selling, Request.new(produces, quantity, price, round)}
+        Request.new(:selling, produces, quantity, price, round)
       )
     )
     |> Enum.each(&Message.send/1)
@@ -109,20 +109,20 @@ defmodule SupplyChain.Behaviour.Producer do
 
   # Producer agent is lean, it never stockpiles components
   # Only accept request if we have enough production capacity
-  defp accept_request?(%Request{type: type, quantity: quantity, price: price}, used_production) do
-    can_produce?(type, quantity, used_production) and acceptable_price?(type, price)
+  defp accept_request?(%Request{good: good, quantity: quantity, price: price}, used_production) do
+    can_produce?(good, quantity, used_production) and acceptable_price?(good, price)
   end
 
-  defp can_produce?(type, quantity, used_production) do
+  defp can_produce?(good, quantity, used_production) do
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
     production_capacity = ETS.lookup_element(KnowledgeBase, :production_capacity, 2)
 
-    type === produces and quantity <= production_capacity - used_production
+    good === produces and quantity <= production_capacity - used_production
   end
 
-  defp acceptable_price?(type, price) do
+  defp acceptable_price?(good, price) do
     components = ETS.lookup_element(KnowledgeBase, :components, 2)
-    default_price = components[type]
+    default_price = components[good]
     price >= default_price
   end
 end

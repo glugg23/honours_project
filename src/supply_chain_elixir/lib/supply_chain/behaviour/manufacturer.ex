@@ -39,13 +39,11 @@ defmodule SupplyChain.Behaviour.Manufacturer do
     {buying_requests, _production} =
       messages
       |> Enum.filter(fn m -> m.performative === :inform end)
-      |> Enum.filter(fn m -> elem(m.content, 0) === :buying end)
-      |> Enum.sort_by(&elem(&1.content, 1), {:desc, Request})
+      |> Enum.filter(fn m -> m.content.type === :buying end)
+      |> Enum.sort_by(& &1.content, {:desc, Request})
       |> Enum.map_reduce(0, fn m, acc ->
-        {_, content} = m.content
-
-        if accept_buying_request?(content, acc) do
-          {{m, :accept}, acc + content.quantity}
+        if accept_buying_request?(m.content, acc) do
+          {{m, :accept}, acc + m.content.quantity}
         else
           {{m, :reject}, acc}
         end
@@ -76,30 +74,29 @@ defmodule SupplyChain.Behaviour.Manufacturer do
     required_components =
       orders
       |> Enum.reduce([], fn m, acc ->
-        {_, content} = m.content
-        Keyword.update(acc, content.type, content.quantity, fn v -> v + content.quantity end)
+        Keyword.update(acc, m.content.good, m.content.quantity, fn v -> v + m.content.quantity end)
       end)
-      |> Enum.flat_map(fn {type, amount} ->
-        recipes[type] |> Enum.map(fn {good, required} -> {good, required * amount} end)
+      |> Enum.flat_map(fn {good, amount} ->
+        recipes[good] |> Enum.map(fn {good, required} -> {good, required * amount} end)
       end)
-      |> Enum.reduce([], fn {type, amount}, acc ->
-        Keyword.update(acc, type, amount, fn orig -> orig + amount end)
+      |> Enum.reduce([], fn {good, amount}, acc ->
+        Keyword.update(acc, good, amount, fn orig -> orig + amount end)
       end)
 
     producer_capacity = ETS.lookup_element(KnowledgeBase, :producer_capacity, 2)
 
-    for {type, amount} <- required_components do
-      # Select all messages that are in the form {:selling, request}
-      # And where the value of request.type is the type in the loop
+    for {good, amount} <- required_components do
+      # Select all messages where request.type === :selling
+      # And where the value of request.good is the good in the loop
       selling_orders =
         ETS.select(Inbox, [
           {{:_, :"$1", :_},
            [
-             {:andalso, {:"=:=", {:element, 1, {:map_get, :content, :"$1"}}, :selling},
-              {:"=:=", {:map_get, :type, {:element, 2, {:map_get, :content, :"$1"}}}, type}}
+             {:andalso, {:"=:=", {:map_get, :type, {:map_get, :content, :"$1"}}, :selling},
+              {:"=:=", {:map_get, :good, {:map_get, :content, :"$1"}}, good}}
            ], [:"$1"]}
         ])
-        |> Enum.sort_by(&elem(&1.content, 1), {:asc, Request})
+        |> Enum.sort_by(& &1.content, {:asc, Request})
 
       # Send requests in packets of at most producer capacity
       # Send to cheapest producer first
@@ -115,7 +112,6 @@ defmodule SupplyChain.Behaviour.Manufacturer do
             end
 
           {_, node} = msg.reply_to
-          {_, %Request{price: price}} = msg.content
 
           quantity = if acc > producer_capacity, do: producer_capacity, else: acc
 
@@ -123,7 +119,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
             :request,
             {Information, Node.self()},
             {Information, node},
-            Request.new(type, quantity, price, round + 2),
+            Request.new(:buying, good, quantity, msg.content.price, round + 2),
             msg.conversation_id
           )
           |> Message.send()
@@ -151,22 +147,22 @@ defmodule SupplyChain.Behaviour.Manufacturer do
   end
 
   defp accept_buying_request?(
-         %Request{type: type, quantity: quantity, price: price},
+         %Request{good: good, quantity: quantity, price: price},
          used_production
        ) do
-    can_produce?(type, quantity, used_production) and acceptable_price?(type, price)
+    can_produce?(good, quantity, used_production) and acceptable_price?(good, price)
   end
 
-  defp can_produce?(type, quantity, used_production) do
+  defp can_produce?(good, quantity, used_production) do
     computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
     production_capacity = ETS.lookup_element(KnowledgeBase, :production_capacity, 2)
 
-    Keyword.has_key?(computers, type) and quantity <= production_capacity - used_production
+    Keyword.has_key?(computers, good) and quantity <= production_capacity - used_production
   end
 
-  defp acceptable_price?(type, price) do
+  defp acceptable_price?(good, price) do
     computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
-    default_price = computers[type]
+    default_price = computers[good]
     price >= default_price
   end
 end
