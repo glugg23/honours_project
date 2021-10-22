@@ -105,24 +105,30 @@ defmodule SupplyChain.Behaviour.Manufacturer do
       # Send to cheapest producer first
       # If there are more requests than producers, send to first producer and handle reject message
       # TODO: Handle reject message
-      for i <- 0..div(amount, producer_capacity) do
-        msg =
-          case Enum.at(selling_orders, i) do
-            m = %Message{} -> m
-            :none -> Enum.at(selling_orders, 0)
-          end
+      for i <- 0..div(amount, producer_capacity), reduce: amount do
+        # TODO: Race condition, this crashes if seling_orders === []
+        acc ->
+          msg =
+            case Enum.at(selling_orders, i) do
+              m = %Message{} -> m
+              nil -> Enum.at(selling_orders, 0)
+            end
 
-        {_, node} = msg.reply_to
-        {_, %Request{price: price}} = msg.content
+          {_, node} = msg.reply_to
+          {_, %Request{price: price}} = msg.content
 
-        Message.new(
-          :request,
-          {Information, Node.self()},
-          {Information, node},
-          Request.new(type, amount, price, round + 2),
-          msg.conversation_id
-        )
-        |> Message.send()
+          quantity = if acc > producer_capacity, do: producer_capacity, else: acc
+
+          Message.new(
+            :request,
+            {Information, Node.self()},
+            {Information, node},
+            Request.new(type, quantity, price, round + 2),
+            msg.conversation_id
+          )
+          |> Message.send()
+
+          acc - producer_capacity
       end
     end
 
