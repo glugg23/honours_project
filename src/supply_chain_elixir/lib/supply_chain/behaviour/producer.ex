@@ -38,6 +38,7 @@ defmodule SupplyChain.Behaviour.Producer do
 
   def handle_event(:internal, :check_orders, :run, data) do
     messages = ETS.select(Inbox, [{{:_, :"$1", :_}, [], [:"$1"]}])
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
 
     {requests, production} =
       messages
@@ -53,11 +54,38 @@ defmodule SupplyChain.Behaviour.Producer do
         end
       end)
 
-    requests |> Enum.each(fn {m, p} -> Message.reply(m, p, nil) |> Message.send() end)
-
     requests
-    |> Enum.filter(fn {_, p} -> p === :accept end)
-    |> Enum.each(fn {m, _} -> ETS.insert(Orders, {m.conversation_id, m}) end)
+    |> Enum.map(fn {m, p} ->
+      case p do
+        :accept when m.content.round === round + 1 ->
+          storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
+
+          storage =
+            Keyword.update(
+              storage,
+              m.content.good,
+              m.content.quantity,
+              &(&1 - m.content.quantity)
+            )
+
+          ETS.insert(KnowledgeBase, {:storage, storage})
+
+          Message.reply(
+            m,
+            :accept,
+            Request.new(:selling, m.content.good, m.content.quantity, m.content.price, round)
+          )
+
+        :accept ->
+          ETS.insert(Orders, {m.conversation_id, m, round})
+
+          Message.reply(m, :accept, nil)
+
+        :reject ->
+          Message.reply(m, :reject, nil)
+      end
+    end)
+    |> Enum.each(&Message.send/1)
 
     storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
