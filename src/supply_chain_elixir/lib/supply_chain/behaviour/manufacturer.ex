@@ -34,12 +34,17 @@ defmodule SupplyChain.Behaviour.Manufacturer do
   end
 
   def handle_event(:internal, :handle_messages, :run, data) do
-    messages = ETS.select(Inbox, [{{:_, :"$1", :_}, [], [:"$1"]}])
+    messages =
+      ETS.select(Inbox, [
+        {{:_, :"$1", :_},
+         [
+           {:andalso, {:"=:=", {:map_get, :performative, :"$1"}, :inform},
+            {:"=:=", {:map_get, :type, {:map_get, :content, :"$1"}}, :buying}}
+         ], [:"$1"]}
+      ])
 
-    {buying_requests, _production} =
+    {buying_requests, _} =
       messages
-      |> Enum.filter(fn m -> m.performative === :inform end)
-      |> Enum.filter(fn m -> m.content.type === :buying end)
       |> Enum.sort_by(& &1.content, {:desc, Request})
       |> Enum.map_reduce(0, fn m, acc ->
         if accept_buying_request?(m.content, acc) do
@@ -74,13 +79,13 @@ defmodule SupplyChain.Behaviour.Manufacturer do
     required_components =
       orders
       |> Enum.reduce([], fn m, acc ->
-        Keyword.update(acc, m.content.good, m.content.quantity, fn v -> v + m.content.quantity end)
+        Keyword.update(acc, m.content.good, m.content.quantity, &(&1 + m.content.quantity))
       end)
       |> Enum.flat_map(fn {good, amount} ->
         recipes[good] |> Enum.map(fn {good, required} -> {good, required * amount} end)
       end)
       |> Enum.reduce([], fn {good, amount}, acc ->
-        Keyword.update(acc, good, amount, fn orig -> orig + amount end)
+        Keyword.update(acc, good, amount, &(&1 + amount))
       end)
 
     producer_capacity = ETS.lookup_element(KnowledgeBase, :producer_capacity, 2)

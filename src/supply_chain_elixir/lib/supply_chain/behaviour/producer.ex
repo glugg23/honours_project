@@ -37,12 +37,15 @@ defmodule SupplyChain.Behaviour.Producer do
   end
 
   def handle_event(:internal, :check_orders, :run, data) do
-    messages = ETS.select(Inbox, [{{:_, :"$1", :_}, [], [:"$1"]}])
+    messages =
+      ETS.select(Inbox, [
+        {{:_, :"$1", :_}, [{:"=:=", {:map_get, :performative, :"$1"}, :request}], [:"$1"]}
+      ])
+
     round = ETS.lookup_element(KnowledgeBase, :round, 2)
 
     {requests, production} =
       messages
-      |> Enum.filter(fn m -> m.performative === :request end)
       # The selection of which requests to fulfill is basically the Knapsack Problem
       # We look at requests in descending item price order as a good enough solution
       |> Enum.sort_by(& &1.content, {:desc, Request})
@@ -89,7 +92,7 @@ defmodule SupplyChain.Behaviour.Producer do
 
     storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
-    storage = Keyword.update(storage, produces, 0, fn store -> store + production end)
+    storage = Keyword.update(storage, produces, 0, &(&1 + production))
     ETS.insert(KnowledgeBase, {:storage, storage})
 
     {:keep_state, data, {:next_event, :internal, :send_new_figures}}

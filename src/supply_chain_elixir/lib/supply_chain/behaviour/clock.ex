@@ -63,7 +63,7 @@ defmodule SupplyChain.Behaviour.Clock do
       )
       |> Enum.to_list()
 
-    if Enum.all?(ready, fn x -> x === {:ok, true} end) do
+    if Enum.all?(ready, &(&1 === {:ok, true})) do
       Logger.info("All nodes ready")
       {:next_state, :start_round, data, {:next_event, :internal, :announce}}
     else

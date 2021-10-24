@@ -24,10 +24,10 @@ defmodule SupplyChain.Information.Server do
 
   def handle_call({:ready?, other_nodes}, _from, state) do
     connected_nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}]) |> Enum.sort()
-    other_nodes = other_nodes |> Enum.filter(fn n -> n !== Node.self() end) |> Enum.sort()
+    other_nodes = other_nodes |> Enum.filter(&(&1 !== Node.self())) |> Enum.sort()
     different_nodes = List.myers_difference(connected_nodes, other_nodes)
 
-    new_tasks = Keyword.get(different_nodes, :ins, []) |> Enum.map(fn n -> info_task(n) end)
+    new_tasks = Keyword.get(different_nodes, :ins, []) |> Enum.map(&info_task/1)
     state = %{state | tasks: state.tasks ++ new_tasks}
 
     {:reply, state.tasks === [], state}
