@@ -11,7 +11,9 @@ defmodule SupplyChain.Behaviour.Consumer do
 
   alias SupplyChain.{Information, Knowledge}
   alias SupplyChain.Information.Nodes, as: Nodes
+  alias SupplyChain.Knowledge.Inbox, as: Inbox
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
+  alias SupplyChain.Knowledge.Orders, as: Orders
 
   def init(_args) do
     {:ok, :start, %{round_msg: nil}}
@@ -30,11 +32,26 @@ defmodule SupplyChain.Behaviour.Consumer do
     Logger.info("Round #{round}")
     data = %{data | round_msg: msg}
 
-    {:next_state, :run, data, {:next_event, :internal, :check_orders}}
+    {:next_state, :run, data, {:next_event, :internal, :mark_orders}}
   end
 
-  def handle_event(:internal, :check_orders, :run, data) do
-    # TODO: Implement this
+  def handle_event(:internal, :mark_orders, :run, data) do
+    messages =
+      ETS.select(Inbox, [
+        {{:"$1", :"$2", :_},
+         [
+           {:orelse, {:"=:=", {:map_get, :performative, :"$2"}, :accept},
+            {:"=:=", {:map_get, :performative, :"$2"}, :reject}}
+         ], [{{:"$1", :"$2"}}]}
+      ])
+
+    for {ref, msg} <- messages do
+      case msg.performative do
+        :accept -> ETS.update_element(Orders, ref, {4, true})
+        :reject -> ETS.delete(Orders, ref)
+      end
+    end
+
     {:keep_state, data, {:next_event, :internal, :send_new_orders}}
   end
 
@@ -43,27 +60,31 @@ defmodule SupplyChain.Behaviour.Consumer do
     computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
     round = ETS.lookup_element(KnowledgeBase, :round, 2)
 
-    # TODO: Select recipe that should be ordered
-    {computer, price} = hd(computers)
+    for {computer, price} <- computers do
+      # TODO: Select a quantity that should be ordered
+      # TODO: Select round that order should be fulfilled
+      #       Minimum is +4 rounds in the future as this is the time required to accept and receive all orders
+      message =
+        Message.new(
+          :inform,
+          {Information, Node.self()},
+          Information,
+          Request.new(:buying, computer, 1, price, round + 4)
+        )
 
-    # TODO: Select a quantity that should be ordered
-    # TODO: Select round that order should be fulfilled
-    #       Minimum is +4 rounds in the future as this is the time required to accept and receive all orders
-    nodes
-    |> Enum.map(
-      &Message.new(
-        :inform,
-        {Information, Node.self()},
-        {Information, &1},
-        Request.new(:buying, computer, 1, price, round + 4)
-      )
-    )
-    |> Enum.each(&Message.send/1)
+      nodes
+      |> Enum.map(&%Message{message | receiver: {Information, &1}})
+      |> Enum.each(&Message.send/1)
+
+      # Columns: ID, message, round sent, accepted?
+      ETS.insert(Orders, {message.conversation_id, message, round, false})
+    end
 
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end
 
   def handle_event(:internal, :send_finish_msg, :finish, data) do
+    SupplyChain.Behaviour.delete_old_messages()
     data.round_msg |> Message.reply(:inform, :finished) |> Message.send()
     {:next_state, :start, data}
   end

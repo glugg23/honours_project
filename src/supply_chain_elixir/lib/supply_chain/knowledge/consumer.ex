@@ -11,7 +11,8 @@ defmodule SupplyChain.Knowledge.Consumer do
     ETS.new(KnowledgeBase, [:set, :protected, :named_table])
     Knowledge.insert_config(KnowledgeBase, state.config)
 
-    ETS.new(Inbox, [:set, :protected, :named_table])
+    ETS.new(Inbox, [:set, :public, :named_table])
+    ETS.new(Orders, [:set, :public, :named_table])
 
     {:ok, state}
   end
