@@ -153,7 +153,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
         {:accept, nil} ->
           ETS.update_element(Orders, ref, {4, true})
 
-        {:accept, %Request{good: good, quantity: quantity}} ->
+        {:accept, %Request{type: :delivery, good: good, quantity: quantity}} ->
           storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
           storage = Keyword.update(storage, good, quantity, &(&1 + quantity))
           ETS.insert(KnowledgeBase, {:storage, storage})
@@ -162,6 +162,54 @@ defmodule SupplyChain.Behaviour.Manufacturer do
           ETS.delete(Orders, ref)
       end
     end
+
+    {:keep_state, data, {:next_event, :internal, :handle_finished_orders}}
+  end
+
+  def handle_event(:internal, :handle_finished_orders, :run, data) do
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+    recipes = ETS.lookup_element(KnowledgeBase, :recipes, 2)
+    storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
+
+    orders =
+      ETS.select(Orders, [
+        {{:"$1", :"$2", :_},
+         [{:"=:=", {:map_get, :round, {:map_get, :content, :"$2"}}, round + 1}],
+         [{{:"$1", :"$2"}}]}
+      ])
+
+    storage =
+      for {ref, msg} <- orders, reduce: storage do
+        acc ->
+          components =
+            recipes[msg.content.good]
+            |> Enum.map(fn {good, required} -> {good, required * msg.content.quantity} end)
+
+          # If the storage for all components is larger than the quantity
+          if Enum.all?(components, fn {c, q} -> acc[c] >= q end) do
+            Message.reply(
+              msg,
+              :inform,
+              Request.new(
+                :delivery,
+                msg.content.good,
+                msg.content.quantity,
+                msg.content.price,
+                round
+              )
+            )
+            |> Message.send()
+
+            ETS.delete(Orders, ref)
+
+            Enum.reduce(components, acc, fn {c, q}, acc -> Keyword.update!(acc, c, &(&1 - q)) end)
+          else
+            # TODO: Handle not having enough components in storage
+            acc
+          end
+      end
+
+    ETS.insert(KnowledgeBase, {:storage, storage})
 
     {:next_state, :finish, data, {:next_event, :internal, :send_finish_msg}}
   end

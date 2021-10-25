@@ -76,7 +76,7 @@ defmodule SupplyChain.Behaviour.Producer do
           Message.reply(
             m,
             :accept,
-            Request.new(:selling, m.content.good, m.content.quantity, m.content.price, round)
+            Request.new(:delivery, m.content.good, m.content.quantity, m.content.price, round)
           )
 
         :accept ->
