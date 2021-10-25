@@ -30,10 +30,10 @@ defmodule SupplyChain.Behaviour.Manufacturer do
       ) do
     Logger.info("Round #{round}")
     data = %{data | round_msg: msg}
-    {:next_state, :run, data, {:next_event, :internal, :handle_messages}}
+    {:next_state, :run, data, {:next_event, :internal, :handle_new_orders}}
   end
 
-  def handle_event(:internal, :handle_messages, :run, data) do
+  def handle_event(:internal, :handle_new_orders, :run, data) do
     messages =
       ETS.select(Inbox, [
         {{:_, :"$1", :_},
@@ -65,10 +65,10 @@ defmodule SupplyChain.Behaviour.Manufacturer do
     |> Enum.filter(fn {_, p} -> p === :accept end)
     |> Enum.each(fn {m, _} -> ETS.insert(Orders, {m.conversation_id, m, round}) end)
 
-    {:keep_state, data, {:next_event, :internal, :handle_orders}}
+    {:keep_state, data, {:next_event, :internal, :handle_new_components}}
   end
 
-  def handle_event(:internal, :handle_orders, :run, data) do
+  def handle_event(:internal, :handle_new_components, :run, data) do
     round = ETS.lookup_element(KnowledgeBase, :round, 2)
     recipes = ETS.lookup_element(KnowledgeBase, :recipes, 2)
     orders = ETS.select(Orders, [{{:_, :"$1", :"$2"}, [{:"=:=", :"$2", round}], [:"$1"]}])
@@ -105,8 +105,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
       # Send requests in packets of at most producer capacity
       # Send to cheapest producer first
-      # If there are more requests than producers, send to first producer and handle reject message
-      # TODO: Handle reject message
+      # If there are more requests than producers, send to first producer
       for i <- 0..div(amount, producer_capacity), reduce: amount do
         # TODO: Race condition, this crashes if seling_orders === []
         acc ->
@@ -130,9 +129,37 @@ defmodule SupplyChain.Behaviour.Manufacturer do
             )
             |> Message.send()
 
-          ETS.insert(Orders, {request.conversation_id, request, round})
+          ETS.insert(Orders, {request.conversation_id, request, round, false})
 
           acc - producer_capacity
+      end
+    end
+
+    {:keep_state, data, {:next_event, :internal, :handle_component_orders}}
+  end
+
+  def handle_event(:internal, :handle_component_orders, :run, data) do
+    messages =
+      ETS.select(Inbox, [
+        {{:"$1", :"$2", :_},
+         [
+           {:orelse, {:"=:=", {:map_get, :performative, :"$2"}, :accept},
+            {:"=:=", {:map_get, :performative, :"$2"}, :reject}}
+         ], [{{:"$1", :"$2"}}]}
+      ])
+
+    for {ref, msg} <- messages do
+      case {msg.performative, msg.content} do
+        {:accept, nil} ->
+          ETS.update_element(Orders, ref, {4, true})
+
+        {:accept, %Request{good: good, quantity: quantity}} ->
+          storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
+          storage = Keyword.update(storage, good, quantity, &(&1 + quantity))
+          ETS.insert(KnowledgeBase, {:storage, storage})
+
+        {:reject, _} ->
+          ETS.delete(Orders, ref)
       end
     end
 

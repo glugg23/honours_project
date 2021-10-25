@@ -92,7 +92,7 @@ defmodule SupplyChain.Behaviour.Producer do
 
     storage = ETS.lookup_element(KnowledgeBase, :storage, 2)
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
-    storage = Keyword.update(storage, produces, 0, &(&1 + production))
+    storage = Keyword.update(storage, produces, production, &(&1 + production))
     ETS.insert(KnowledgeBase, {:storage, storage})
 
     {:keep_state, data, {:next_event, :internal, :send_new_figures}}
