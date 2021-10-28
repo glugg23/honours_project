@@ -14,6 +14,8 @@ RUN mix deps.compile
 
 COPY . .
 
+ARG EXPERIMENT
+
 RUN mix release
 
 ENTRYPOINT ["_build/prod/rel/supply_chain/bin/supply_chain"]
