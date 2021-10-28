@@ -52,6 +52,49 @@ defmodule SupplyChain.Behaviour.Consumer do
       end
     end
 
+    {:keep_state, data, {:next_event, :internal, :handle_delivered_orders}}
+  end
+
+  def handle_event(:internal, :handle_delivered_orders, :run, data) do
+    delivered_orders =
+      ETS.select(Inbox, [
+        {{:"$1", :"$2", :_},
+         [{:"=:=", {:map_get, :type, {:map_get, :content, :"$2"}}, :delivery}],
+         [{{:"$1", :"$2"}}]}
+      ])
+
+    for {ref, msg} <- delivered_orders do
+      order = ETS.lookup_element(Orders, ref, 2)
+
+      if msg.content.good === order.content.good and
+           msg.content.quantity === order.content.quantity do
+        Logger.info("Delivery for order: #{inspect(order.content)}")
+        money = ETS.lookup_element(KnowledgeBase, :money, 2)
+        ETS.insert(KnowledgeBase, {:money, money - msg.content.price * msg.content.quantity})
+      else
+        Logger.warning("Incorrect delivery for order: #{inspect(order.content)}")
+      end
+
+      ETS.delete(Orders, ref)
+    end
+
+    {:keep_state, data, {:next_event, :internal, :handle_late_orders}}
+  end
+
+  def handle_event(:internal, :handle_late_orders, :run, data) do
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+
+    late_orders =
+      ETS.select(Orders, [
+        {{:_, :"$1", :_, :"$2"},
+         [{:andalso, :"$2", {:<, {:map_get, :round, {:map_get, :content, :"$1"}}, round}}],
+         [:"$1"]}
+      ])
+
+    for msg <- late_orders do
+      Logger.warning("Order #{inspect(msg.content)} is late!")
+    end
+
     {:keep_state, data, {:next_event, :internal, :send_new_orders}}
   end
 
