@@ -9,6 +9,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
   alias :ets, as: ETS
 
+  alias SupplyChain.Behaviour.TaskSupervisor, as: TaskSupervisor
   alias SupplyChain.{Information, Knowledge}
   alias SupplyChain.Knowledge.Inbox, as: Inbox
   alias SupplyChain.Knowledge.KnowledgeBase, as: KnowledgeBase
@@ -88,52 +89,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
         Keyword.update(acc, good, amount, &(&1 + amount))
       end)
 
-    producer_capacity = ETS.lookup_element(KnowledgeBase, :producer_capacity, 2)
-
-    for {good, amount} <- required_components do
-      # Select all messages where request.type === :selling
-      # And where the value of request.good is the good in the loop
-      selling_orders =
-        ETS.select(Inbox, [
-          {{:_, :"$1", :_},
-           [
-             {:andalso, {:"=:=", {:map_get, :type, {:map_get, :content, :"$1"}}, :selling},
-              {:"=:=", {:map_get, :good, {:map_get, :content, :"$1"}}, good}}
-           ], [:"$1"]}
-        ])
-        |> Enum.sort_by(& &1.content, {:asc, Request})
-
-      # Send requests in packets of at most producer capacity
-      # Send to cheapest producer first
-      # If there are more requests than producers, send to first producer
-      for i <- 0..div(amount, producer_capacity), reduce: amount do
-        # TODO: Race condition, this crashes if seling_orders === []
-        acc ->
-          msg =
-            case Enum.at(selling_orders, i) do
-              m = %Message{} -> m
-              nil -> Enum.at(selling_orders, 0)
-            end
-
-          {_, node} = msg.reply_to
-
-          quantity = if acc > producer_capacity, do: producer_capacity, else: acc
-
-          request =
-            Message.new(
-              :request,
-              {Information, Node.self()},
-              {Information, node},
-              Request.new(:buying, good, quantity, msg.content.price, round + 2),
-              msg.conversation_id
-            )
-            |> Message.send()
-
-          ETS.insert(Orders, {request.conversation_id, request, round, false})
-
-          acc - producer_capacity
-      end
-    end
+    new_components_check(required_components)
 
     {:keep_state, data, {:next_event, :internal, :handle_component_orders}}
   end
@@ -247,5 +203,67 @@ defmodule SupplyChain.Behaviour.Manufacturer do
     computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
     default_price = computers[good]
     price >= default_price
+  end
+
+  defp new_components_check([]) do
+    :ok
+  end
+
+  defp new_components_check(required_components) do
+    producer_capacity = ETS.lookup_element(KnowledgeBase, :producer_capacity, 2)
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+
+    tasks =
+      Task.Supervisor.async_stream_nolink(TaskSupervisor, required_components, fn {good, amount} ->
+        # Select all messages where request.type === :selling
+        # And where the value of request.good is the good in the loop
+        selling_orders =
+          ETS.select(Inbox, [
+            {{:_, :"$1", :_},
+             [
+               {:andalso, {:"=:=", {:map_get, :type, {:map_get, :content, :"$1"}}, :selling},
+                {:"=:=", {:map_get, :good, {:map_get, :content, :"$1"}}, good}}
+             ], [:"$1"]}
+          ])
+          |> Enum.sort_by(& &1.content, {:asc, Request})
+
+        # Send requests in packets of at most producer capacity
+        # Send to cheapest producer first
+        # If there are more requests than producers, send to first producer
+        for i <- 0..div(amount, producer_capacity), reduce: amount do
+          acc ->
+            msg =
+              case Enum.at(selling_orders, i) do
+                m = %Message{} -> m
+                nil -> Enum.at(selling_orders, 0)
+              end
+
+            {_, node} = msg.reply_to
+
+            quantity = if acc > producer_capacity, do: producer_capacity, else: acc
+
+            request =
+              Message.new(
+                :request,
+                {Information, Node.self()},
+                {Information, node},
+                Request.new(:buying, good, quantity, msg.content.price, round + 2),
+                msg.conversation_id
+              )
+              |> Message.send()
+
+            ETS.insert(Orders, {request.conversation_id, request, round, false})
+
+            acc - producer_capacity
+        end
+      end)
+      |> Enum.to_list()
+      |> Enum.with_index()
+      |> Enum.filter(fn {{status, _}, _} -> status === :exit end)
+
+    required_components =
+      Enum.reduce(tasks, [], fn {_, i}, acc -> acc ++ [Enum.at(required_components, i)] end)
+
+    new_components_check(required_components)
   end
 end

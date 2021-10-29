@@ -64,18 +64,24 @@ defmodule SupplyChain.Behaviour.Consumer do
       ])
 
     for {ref, msg} <- delivered_orders do
-      order = ETS.lookup_element(Orders, ref, 2)
+      # I have no idea why an order sometimes does not exist
+      # In order to avoid a crash we just log it and move on
+      try do
+        order = ETS.lookup_element(Orders, ref, 2)
 
-      if msg.content.good === order.content.good and
-           msg.content.quantity === order.content.quantity do
-        Logger.info("Delivery for order: #{inspect(order.content)}")
-        money = ETS.lookup_element(KnowledgeBase, :money, 2)
-        ETS.insert(KnowledgeBase, {:money, money - msg.content.price * msg.content.quantity})
-      else
-        Logger.warning("Incorrect delivery for order: #{inspect(order.content)}")
+        if msg.content.good === order.content.good and
+             msg.content.quantity === order.content.quantity do
+          Logger.info("Delivery for order: #{inspect(order.content)}")
+          money = ETS.lookup_element(KnowledgeBase, :money, 2)
+          ETS.insert(KnowledgeBase, {:money, money - msg.content.price * msg.content.quantity})
+        else
+          Logger.warning("Incorrect delivery for order: #{inspect(order.content)}")
+        end
+
+        ETS.delete(Orders, ref)
+      rescue
+        e -> Logger.warning(Exception.format(:error, e, __STACKTRACE__))
       end
-
-      ETS.delete(Orders, ref)
     end
 
     {:keep_state, data, {:next_event, :internal, :handle_late_orders}}
@@ -92,7 +98,7 @@ defmodule SupplyChain.Behaviour.Consumer do
       ])
 
     for msg <- late_orders do
-      Logger.warning("Order #{inspect(msg.content)} is late!")
+      Logger.info("Order #{inspect(msg.content)} is late!")
     end
 
     {:keep_state, data, {:next_event, :internal, :send_new_orders}}
