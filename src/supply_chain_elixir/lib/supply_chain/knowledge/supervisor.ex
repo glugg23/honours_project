@@ -9,9 +9,10 @@ defmodule SupplyChain.Knowledge.Supervisor do
 
   def init(_args) do
     type = SupplyChain.get_config()
+    sub_type = SupplyChain.get_subtype()
 
     children = [
-      {SupplyChain.Knowledge, type}
+      {SupplyChain.Knowledge, [type, sub_type]}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

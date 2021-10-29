@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+  clock:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment2
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=clock
+
+  manufacturer:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment2
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=manufacturer
+
+  consumer:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment2
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=consumer
+
+  producer_cpu:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment2
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=cpu
+
+  producer_motherboard:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment2
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=motherboard

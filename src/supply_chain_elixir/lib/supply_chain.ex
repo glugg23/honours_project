@@ -7,7 +7,7 @@ defmodule SupplyChain do
 
   def get_config do
     with {:ok, string} <- System.fetch_env("AGENT_TYPE"),
-         {:ok, config} <- match_config_type(string) do
+         {:ok, config} <- match_config_type(string, :agent_types) do
       config
     else
       :error ->
@@ -19,9 +19,18 @@ defmodule SupplyChain do
     end
   end
 
-  defp match_config_type(string) do
+  def get_subtype do
+    with {:ok, string} <- System.fetch_env("SUB_TYPE"),
+         {:ok, config} <- match_config_type(string, :sub_types) do
+      config
+    else
+      :error -> nil
+    end
+  end
+
+  defp match_config_type(string, valid) do
     type = String.to_atom(string)
-    valid_types = Application.get_env(:supply_chain, :agent_types)
+    valid_types = Application.get_env(:supply_chain, valid)
 
     if type in valid_types do
       {:ok, type}
