@@ -1,0 +1,108 @@
+version: "3.9"
+services:
+  clock:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=clock
+
+  manufacturer:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=manufacturer
+
+  consumer:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=consumer
+
+  producer_cpu_slow:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=cpu_slow
+
+  producer_cpu_fast:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=cpu_fast
+
+  producer_memory_small:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=memory_small
+
+  producer_memory_large:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=memory_large
+
+  producer_motherboard_one:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=motherboard
+
+  producer_motherboard_two:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=motherboard
+
+  producer_hard_drive_one:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=hard_drive
+
+  producer_hard_drive_two:
+    build:
+      context: .
+      args:
+        EXPERIMENT: experiment4
+    image: ghcr.io/glugg23/honours_project:elixir
+    environment:
+      - AGENT_TYPE=producer
+      - SUB_TYPE=hard_drive

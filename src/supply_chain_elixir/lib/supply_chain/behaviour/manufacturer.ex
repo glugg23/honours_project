@@ -186,7 +186,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
             |> Enum.map(fn {good, required} -> {good, required * msg.content.quantity} end)
 
           # If the storage for all components is larger than the quantity
-          if Enum.all?(components, fn {c, q} -> acc[c] >= q end) do
+          if Enum.all?(components, fn {c, q} -> Keyword.get(acc, c, 0) >= q end) do
             Message.reply(
               msg,
               :inform,
