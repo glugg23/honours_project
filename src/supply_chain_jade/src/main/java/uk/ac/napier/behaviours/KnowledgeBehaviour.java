@@ -36,6 +36,17 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
             }
             knowledge.send(reply);
 
+        } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("state")).match(message)) {
+            ACLMessage reply = message.createReply();
+            try {
+                reply.setContentObject(knowledge.getStateObject());
+            } catch(IOException e) {
+                logger.log(Level.WARNING, "Could not serialise state", e);
+                return;
+            }
+
+            knowledge.send(reply);
+
         } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
             ACLMessage forward = Message.forward(message, new AID("behaviour", AID.ISLOCALNAME));
             myAgent.send(forward);

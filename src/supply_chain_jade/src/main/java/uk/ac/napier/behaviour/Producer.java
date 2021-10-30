@@ -5,14 +5,20 @@ import jade.core.Agent;
 import jade.core.behaviours.FSMBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import uk.ac.napier.util.Message;
+import uk.ac.napier.util.State;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static jade.lang.acl.MessageTemplate.*;
 
 public class Producer extends Agent {
+    final static Logger logger = Logger.getLogger(Producer.class.getName());
     private static final String START_ROUND = "startRound";
     private static final String SEND_FINISH_MSG = "sendFinishMsg";
-
+    private State state;
     private ACLMessage roundMsg;
 
     @Override
@@ -40,6 +46,16 @@ public class Producer extends Agent {
         public void action() {
             producer.roundMsg = producer.blockingReceive(and(MatchPerformative(ACLMessage.INFORM),
                     MatchSender(new AID("behaviour@clock", AID.ISGUID))));
+
+            ACLMessage stateRequest = Message.newMsg(ACLMessage.REQUEST, new AID("knowledge", AID.ISLOCALNAME), "state");
+            producer.send(stateRequest);
+            ACLMessage reply = producer.blockingReceive(MatchConversationId(stateRequest.getConversationId()));
+
+            try {
+                producer.state = (State) reply.getContentObject();
+            } catch(UnreadableException e) {
+                logger.log(Level.WARNING, "Received invalid state", e);
+            }
         }
     }
 
