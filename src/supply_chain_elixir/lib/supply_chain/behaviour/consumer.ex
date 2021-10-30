@@ -16,6 +16,8 @@ defmodule SupplyChain.Behaviour.Consumer do
   alias SupplyChain.Knowledge.Orders, as: Orders
 
   def init(_args) do
+    # TODO: Load seed from config file?
+    :rand.seed(:exsss)
     {:ok, :start, %{round_msg: nil}}
   end
 
@@ -107,10 +109,13 @@ defmodule SupplyChain.Behaviour.Consumer do
   def handle_event(:internal, :send_new_orders, :run, data) do
     nodes = ETS.select(Nodes, [{{:"$1", :_, :_}, [], [:"$1"]}])
     computers = ETS.lookup_element(KnowledgeBase, :computers, 2)
+    maximum_quantity = ETS.lookup_element(KnowledgeBase, :maximum_quantity, 2)
     round = ETS.lookup_element(KnowledgeBase, :round, 2)
 
     for {computer, price} <- computers do
-      # TODO: Select a quantity that should be ordered
+      quantity = :rand.uniform(maximum_quantity)
+      price = (price * :rand.normal(2, 0.5)) |> Float.round(2)
+
       # TODO: Select round that order should be fulfilled
       #       Minimum is +4 rounds in the future as this is the time required to accept and receive all orders
       message =
@@ -118,7 +123,7 @@ defmodule SupplyChain.Behaviour.Consumer do
           :inform,
           {Information, Node.self()},
           Information,
-          Request.new(:buying, computer, 1, price, round + 4)
+          Request.new(:buying, computer, quantity, price, round + 4)
         )
 
       nodes

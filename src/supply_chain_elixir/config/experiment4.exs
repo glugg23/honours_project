@@ -30,7 +30,8 @@ config :supply_chain, :manufacturer,
 
 config :supply_chain, :consumer,
   type: :consumer,
-  information_filter: [:producer]
+  information_filter: [:producer],
+  maximum_quantity: 550
 
 config :supply_chain, :producer,
   type: :producer,
