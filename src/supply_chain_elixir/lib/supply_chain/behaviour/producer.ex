@@ -73,6 +73,9 @@ defmodule SupplyChain.Behaviour.Producer do
 
           ETS.insert(KnowledgeBase, {:storage, storage})
 
+          money = ETS.lookup_element(KnowledgeBase, :money, 2)
+          ETS.insert(KnowledgeBase, {:money, money + m.content.price * m.content.quantity})
+
           Message.reply(
             m,
             :accept,

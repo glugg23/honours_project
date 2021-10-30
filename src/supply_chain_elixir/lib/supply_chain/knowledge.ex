@@ -14,6 +14,8 @@ defmodule SupplyChain.Knowledge do
     quote do
       use GenServer
 
+      require Logger
+
       alias :ets, as: ETS
 
       alias SupplyChain.{Behaviour, Information, Knowledge}
@@ -33,6 +35,13 @@ defmodule SupplyChain.Knowledge do
 
       @doc false
       def handle_call(:stop, _from, state) do
+        type = ETS.lookup_element(KnowledgeBase, :type, 2)
+        money = ETS.lookup_element(KnowledgeBase, :money, 2)
+
+        Logger.notice(
+          "#{type} made a total of £#{:erlang.float_to_binary(money / 1, [{:decimals, 2}])}"
+        )
+
         {:stop, :shutdown, :ok, state}
       end
 

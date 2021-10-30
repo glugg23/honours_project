@@ -114,6 +114,9 @@ defmodule SupplyChain.Behaviour.Manufacturer do
           storage = Keyword.update(storage, good, quantity, &(&1 + quantity))
           ETS.insert(KnowledgeBase, {:storage, storage})
 
+          money = ETS.lookup_element(KnowledgeBase, :money, 2)
+          ETS.insert(KnowledgeBase, {:money, money - msg.content.price * msg.content.quantity})
+
         {:reject, _} ->
           ETS.delete(Orders, ref)
       end
@@ -155,6 +158,9 @@ defmodule SupplyChain.Behaviour.Manufacturer do
               )
             )
             |> Message.send()
+
+            money = ETS.lookup_element(KnowledgeBase, :money, 2)
+            ETS.insert(KnowledgeBase, {:money, money + msg.content.price * msg.content.quantity})
 
             ETS.delete(Orders, ref)
 
