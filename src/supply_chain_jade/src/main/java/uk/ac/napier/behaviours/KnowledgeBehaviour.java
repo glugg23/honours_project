@@ -1,5 +1,6 @@
 package uk.ac.napier.behaviours;
 
+import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import uk.ac.napier.knowledge.Knowledge;
 import uk.ac.napier.util.Message;
@@ -34,6 +35,10 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
                 return;
             }
             knowledge.send(reply);
+
+        } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
+            ACLMessage forward = Message.forward(message, new AID("behaviour", AID.ISLOCALNAME));
+            myAgent.send(forward);
 
         } else if(MatchPerformative(ACLMessage.NOT_UNDERSTOOD).match(message)) {
             logger.warning(message.toString());

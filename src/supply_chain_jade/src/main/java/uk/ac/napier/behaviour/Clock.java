@@ -31,8 +31,6 @@ public class Clock extends Agent {
     @SuppressWarnings("unchecked cast")
     @Override
     protected void setup() {
-        FSMBehaviour fsm = new FSMBehaviour(this);
-
         AID knowledge = new AID("knowledge", AID.ISLOCALNAME);
 
         ACLMessage filterRequest = Message.newMsg(ACLMessage.REQUEST, knowledge, "informationFilter");
@@ -49,6 +47,8 @@ public class Clock extends Agent {
         send(maxRoundsRequest);
         ACLMessage roundsReply = blockingReceive(MatchConversationId(maxRoundsRequest.getConversationId()));
         maxRounds = Integer.parseInt(roundsReply.getContent());
+
+        FSMBehaviour fsm = new FSMBehaviour(this);
 
         fsm.registerFirstState(new AskReady(this), ASK_READY);
         fsm.registerState(new StartRound(this), START_ROUND);

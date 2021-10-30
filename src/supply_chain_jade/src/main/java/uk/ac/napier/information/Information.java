@@ -46,8 +46,8 @@ public class Information extends Agent {
                         myAgent.send(forward);
 
                     } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
-                        ACLMessage reply = Message.reply(message, ACLMessage.INFORM, "finished");
-                        myAgent.send(reply);
+                        ACLMessage forward = Message.forward(message, new AID("knowledge", AID.ISLOCALNAME));
+                        myAgent.send(forward);
 
                     } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("stop")).match(message)) {
                         //https://jade.tilab.com/pipermail/jade-develop/2013q2/019133.html
