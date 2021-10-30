@@ -104,10 +104,12 @@ defmodule SupplyChain.Behaviour.Producer do
     components = ETS.lookup_element(KnowledgeBase, :components, 2)
     round = ETS.lookup_element(KnowledgeBase, :round, 2)
 
-    # TODO: Increase price based on storage, 1x capacity in storage = 2x price etc.
+    production_capacity = ETS.lookup_element(KnowledgeBase, :production_capacity, 2)
     produces = ETS.lookup_element(KnowledgeBase, :produces, 2)
-    price = components[produces]
     quantity = storage[produces]
+
+    price = components[produces]
+    price = (price * (quantity / production_capacity + 1)) |> Float.round(2)
 
     nodes
     |> Enum.map(
