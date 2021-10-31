@@ -64,6 +64,10 @@ public abstract class Knowledge extends Agent {
         return state;
     }
 
+    public void setStateObject(State state) {
+        this.state = state;
+    }
+
     public HashMap<String, AgentInfo> getInformationFilter() {
         return agents;
     }

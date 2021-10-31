@@ -2,8 +2,10 @@ package uk.ac.napier.behaviours;
 
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.UnreadableException;
 import uk.ac.napier.knowledge.Knowledge;
 import uk.ac.napier.util.Message;
+import uk.ac.napier.util.State;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -27,25 +29,28 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
             knowledge.send(reply);
 
         } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("informationFilter")).match(message)) {
-            ACLMessage reply = message.createReply();
             try {
-                reply.setContentObject(knowledge.getInformationFilter());
+                ACLMessage reply = Message.reply(message, ACLMessage.INFORM, knowledge.getInformationFilter());
+                knowledge.send(reply);
             } catch(IOException e) {
                 logger.log(Level.WARNING, "Could not serialise information filter", e);
-                return;
             }
-            knowledge.send(reply);
 
         } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("state")).match(message)) {
-            ACLMessage reply = message.createReply();
             try {
-                reply.setContentObject(knowledge.getStateObject());
+                ACLMessage reply = Message.reply(message, ACLMessage.INFORM, knowledge.getStateObject());
+                knowledge.send(reply);
             } catch(IOException e) {
                 logger.log(Level.WARNING, "Could not serialise state", e);
-                return;
             }
 
-            knowledge.send(reply);
+        } else if(and(MatchPerformative(ACLMessage.INFORM), MatchSender(new AID("behaviour", AID.ISLOCALNAME))).match(message)) {
+            try {
+                State newState = (State) message.getContentObject();
+                knowledge.setStateObject(newState);
+            } catch(UnreadableException e) {
+                logger.log(Level.WARNING, "Could not deserialise state", e);
+            }
 
         } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
             ACLMessage forward = Message.forward(message, new AID("behaviour", AID.ISLOCALNAME));

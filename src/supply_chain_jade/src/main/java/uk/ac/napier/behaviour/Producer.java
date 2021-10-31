@@ -9,6 +9,7 @@ import jade.lang.acl.UnreadableException;
 import uk.ac.napier.util.Message;
 import uk.ac.napier.util.State;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -69,6 +70,13 @@ public class Producer extends Agent {
 
         @Override
         public void action() {
+            try {
+                ACLMessage stateMsg = Message.newMsg(ACLMessage.INFORM, new AID("knowledge", AID.ISLOCALNAME), producer.state);
+                producer.send(stateMsg);
+            } catch(IOException e) {
+                logger.log(Level.WARNING, "Could not serialise state", e);
+            }
+
             ACLMessage reply = Message.reply(producer.roundMsg, ACLMessage.INFORM, "finished");
             producer.send(reply);
         }
