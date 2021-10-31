@@ -6,10 +6,7 @@ import jade.core.behaviours.FSMBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import uk.ac.napier.util.AgentInfo;
-import uk.ac.napier.util.Message;
-import uk.ac.napier.util.Request;
-import uk.ac.napier.util.State;
+import uk.ac.napier.util.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -115,7 +112,9 @@ public class Consumer extends Agent {
                     consumer.send(message);
                 }
 
-                // TODO: Insert into orders
+                HashMap<String, Order> orders = consumer.state.getOrders();
+                orders.put(message.getConversationId(), new Order(message, consumer.state.getRound(), false));
+                consumer.state.setOrders(orders);
             }
         }
     }

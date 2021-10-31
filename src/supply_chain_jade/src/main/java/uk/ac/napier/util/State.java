@@ -7,10 +7,11 @@ import java.util.Properties;
 public class State implements Serializable {
     private final String type;
     private final HashMap<String, Integer> storage = new HashMap<>();
-    private int round = 0;
     private final HashMap<String, Integer> components = new HashMap<>();
     private final HashMap<String, Integer> computers = new HashMap<>();
     private final HashMap<String, HashMap<String, Integer>> recipes = new HashMap<>();
+    private int round = 0;
+    private HashMap<String, Order> orders = new HashMap<>();
     private int productionCapacity;
     private int producerCapacity;
     private int maximumQuantity;
@@ -74,6 +75,14 @@ public class State implements Serializable {
 
     public HashMap<String, Integer> getStorage() {
         return storage;
+    }
+
+    public HashMap<String, Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(HashMap<String, Order> orders) {
+        this.orders = orders;
     }
 
     public HashMap<String, Integer> getComponents() {
