@@ -41,15 +41,7 @@ public class Information extends Agent {
                 AgentInfo info = agents.get(agentType);
 
                 if(!info.getIgnored()) {
-                    if(and(MatchPerformative(ACLMessage.QUERY_IF), MatchContent("ready?")).match(message)) {
-                        ACLMessage forward = Message.forward(message, new AID("knowledge", AID.ISLOCALNAME));
-                        myAgent.send(forward);
-
-                    } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
-                        ACLMessage forward = Message.forward(message, new AID("knowledge", AID.ISLOCALNAME));
-                        myAgent.send(forward);
-
-                    } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("stop")).match(message)) {
+                    if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("stop")).match(message)) {
                         //https://jade.tilab.com/pipermail/jade-develop/2013q2/019133.html
                         Thread thread = new Thread(() -> {
                             try {
@@ -64,8 +56,8 @@ public class Information extends Agent {
                         logger.warning(message.toString());
 
                     } else {
-                        ACLMessage reply = Message.reply(message, ACLMessage.NOT_UNDERSTOOD, null);
-                        myAgent.send(reply);
+                        ACLMessage forward = Message.forward(message, new AID("knowledge", AID.ISLOCALNAME));
+                        myAgent.send(forward);
                     }
                 }
             }

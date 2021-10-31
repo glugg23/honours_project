@@ -2,7 +2,7 @@ package uk.ac.napier.knowledge;
 
 import jade.lang.acl.ACLMessage;
 import uk.ac.napier.behaviours.KnowledgeBehaviour;
-import uk.ac.napier.util.Message;
+import uk.ac.napier.util.Mail;
 
 public class Producer extends Knowledge {
     @Override
@@ -11,8 +11,7 @@ public class Producer extends Knowledge {
         KnowledgeBehaviour behaviour = new KnowledgeBehaviour(this) {
             @Override
             public void handleOther(ACLMessage message) {
-                ACLMessage reply = Message.reply(message, ACLMessage.NOT_UNDERSTOOD, null);
-                myAgent.send(reply);
+                state.addToInbox(message.getConversationId(), new Mail(message, state.getRound()));
             }
         };
 

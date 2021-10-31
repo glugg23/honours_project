@@ -16,10 +16,6 @@ public class Clock extends Knowledge {
                 if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("maxRounds")).match(message)) {
                     ACLMessage reply = Message.reply(message, ACLMessage.INFORM, properties.getProperty("clock.maxRounds"));
                     myAgent.send(reply);
-
-                } else {
-                    ACLMessage reply = Message.reply(message, ACLMessage.NOT_UNDERSTOOD, null);
-                    myAgent.send(reply);
                 }
             }
         };

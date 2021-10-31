@@ -2,7 +2,9 @@ package uk.ac.napier.util;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class State implements Serializable {
     private final String type;
@@ -10,8 +12,9 @@ public class State implements Serializable {
     private final HashMap<String, Integer> components = new HashMap<>();
     private final HashMap<String, Integer> computers = new HashMap<>();
     private final HashMap<String, HashMap<String, Integer>> recipes = new HashMap<>();
+    private final HashMap<String, Order> orders = new HashMap<>();
+    private HashMap<String, Mail> inbox = new HashMap<>();
     private int round = 0;
-    private HashMap<String, Order> orders = new HashMap<>();
     private int productionCapacity;
     private int producerCapacity;
     private int maximumQuantity;
@@ -77,12 +80,27 @@ public class State implements Serializable {
         return storage;
     }
 
+    public HashMap<String, Mail> getInbox() {
+        return inbox;
+    }
+
+    public void addToInbox(String key, Mail value) {
+        inbox.put(key, value);
+    }
+
+    public void deleteInboxBeforeRound() {
+        inbox = (HashMap<String, Mail>) inbox.entrySet()
+                .stream()
+                .filter(e -> e.getValue().getRound() >= round)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
     public HashMap<String, Order> getOrders() {
         return orders;
     }
 
-    public void setOrders(HashMap<String, Order> orders) {
-        this.orders = orders;
+    public void addOrder(String key, Order value) {
+        orders.put(key, value);
     }
 
     public HashMap<String, Integer> getComponents() {

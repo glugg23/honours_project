@@ -39,7 +39,7 @@ public class Consumer extends Agent {
         ACLMessage agentReply = blockingReceive(MatchConversationId(agentRequest.getConversationId()));
         try {
             agents = (HashMap<String, AgentInfo>) agentReply.getContentObject();
-            agents.remove("producer");
+            agents.remove("consumer");
         } catch(UnreadableException | ClassCastException e) {
             logger.log(Level.WARNING, "Received invalid information filter", e);
         }
@@ -109,12 +109,11 @@ public class Consumer extends Agent {
 
                 for(AgentInfo agent : consumer.agents.values()) {
                     message.addReceiver(agent.toAID());
+                    message.setSender(new AID("information@consumer", AID.ISGUID));
                     consumer.send(message);
                 }
 
-                HashMap<String, Order> orders = consumer.state.getOrders();
-                orders.put(message.getConversationId(), new Order(message, consumer.state.getRound(), false));
-                consumer.state.setOrders(orders);
+                consumer.state.addOrder(message.getConversationId(), new Order(message, consumer.state.getRound(), false));
             }
         }
     }
@@ -129,6 +128,8 @@ public class Consumer extends Agent {
 
         @Override
         public void action() {
+            consumer.state.deleteInboxBeforeRound();
+
             try {
                 ACLMessage stateMsg = Message.newMsg(ACLMessage.INFORM, new AID("knowledge", AID.ISLOCALNAME), consumer.state);
                 consumer.send(stateMsg);
