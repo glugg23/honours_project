@@ -53,6 +53,7 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
             }
 
         } else if(MatchPerformative(ACLMessage.INFORM).match(message) && message.getContent().contains("startRound")) {
+            knowledge.getStateObject().incrementRound();
             ACLMessage forward = Message.forward(message, new AID("behaviour", AID.ISLOCALNAME));
             myAgent.send(forward);
 

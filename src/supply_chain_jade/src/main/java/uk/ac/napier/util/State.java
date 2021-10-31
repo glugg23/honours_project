@@ -6,12 +6,14 @@ import java.util.Properties;
 
 public class State implements Serializable {
     private final String type;
+    private final HashMap<String, Integer> storage = new HashMap<>();
+    private int round = 0;
     private final HashMap<String, Integer> components = new HashMap<>();
     private final HashMap<String, Integer> computers = new HashMap<>();
     private final HashMap<String, HashMap<String, Integer>> recipes = new HashMap<>();
-    private Integer productionCapacity;
-    private Integer producerCapacity;
-    private Integer maximumQuantity;
+    private int productionCapacity;
+    private int producerCapacity;
+    private int maximumQuantity;
     private String produces;
 
     public State(String type) {
@@ -62,6 +64,18 @@ public class State implements Serializable {
         return type;
     }
 
+    public int getRound() {
+        return round;
+    }
+
+    public void incrementRound() {
+        ++round;
+    }
+
+    public HashMap<String, Integer> getStorage() {
+        return storage;
+    }
+
     public HashMap<String, Integer> getComponents() {
         return components;
     }
@@ -74,24 +88,24 @@ public class State implements Serializable {
         return recipes;
     }
 
-    public Integer getProductionCapacity() {
-        if(productionCapacity.equals(-1)) {
+    public int getProductionCapacity() {
+        if(productionCapacity == -1) {
             throw new IllegalArgumentException("Invalid production capacity");
         }
 
         return productionCapacity;
     }
 
-    public Integer getProducerCapacity() {
-        if(producerCapacity.equals(-1)) {
+    public int getProducerCapacity() {
+        if(producerCapacity == -1) {
             throw new IllegalArgumentException("Invalid producer capacity");
         }
 
         return producerCapacity;
     }
 
-    public Integer getMaximumQuantity() {
-        if(maximumQuantity.equals(-1)) {
+    public int getMaximumQuantity() {
+        if(maximumQuantity == -1) {
             throw new IllegalArgumentException("Invalid maximum quantity");
         }
 
