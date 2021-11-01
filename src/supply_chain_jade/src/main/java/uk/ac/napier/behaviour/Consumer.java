@@ -12,16 +12,19 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static jade.lang.acl.MessageTemplate.*;
 
 public class Consumer extends Agent {
     final static Logger logger = Logger.getLogger(Consumer.class.getName());
     private static final String START_ROUND = "startRound";
+    private static final String MARK_ORDERS = "markOrders";
     private static final String SEND_NEW_ORDERS = "sendNewOrders";
     private static final String SEND_FINISH_MSG = "sendFinishMsg";
     private State state;
@@ -47,10 +50,12 @@ public class Consumer extends Agent {
         FSMBehaviour fsm = new FSMBehaviour(this);
 
         fsm.registerFirstState(new StartRound(this), START_ROUND);
+        fsm.registerState(new MarkOrders(this), MARK_ORDERS);
         fsm.registerState(new SendNewOrders(this), SEND_NEW_ORDERS);
         fsm.registerState(new SendFinishMsg(this), SEND_FINISH_MSG);
 
-        fsm.registerDefaultTransition(START_ROUND, SEND_NEW_ORDERS);
+        fsm.registerDefaultTransition(START_ROUND, MARK_ORDERS);
+        fsm.registerDefaultTransition(MARK_ORDERS, SEND_NEW_ORDERS);
         fsm.registerDefaultTransition(SEND_NEW_ORDERS, SEND_FINISH_MSG);
         fsm.registerDefaultTransition(SEND_FINISH_MSG, START_ROUND);
 
@@ -78,6 +83,31 @@ public class Consumer extends Agent {
                 consumer.state = (State) reply.getContentObject();
             } catch(UnreadableException e) {
                 logger.log(Level.WARNING, "Received invalid state", e);
+            }
+        }
+    }
+
+    private static class MarkOrders extends OneShotBehaviour {
+        private final Consumer consumer;
+
+        public MarkOrders(Consumer a) {
+            super(a);
+            consumer = a;
+        }
+
+        @Override
+        public void action() {
+            List<Mail> messages = consumer.state.getInbox().values().stream()
+                    .filter(mail -> mail.getMessage().getPerformative() == ACLMessage.ACCEPT_PROPOSAL
+                            || mail.getMessage().getPerformative() == ACLMessage.REJECT_PROPOSAL)
+                    .collect(Collectors.toList());
+
+            for(Mail mail : messages) {
+                if(mail.getMessage().getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
+                    consumer.state.setOrderStatus(mail.getMessage().getConversationId(), true);
+                } else {
+                    consumer.state.deleteOrder(mail.getMessage().getConversationId());
+                }
             }
         }
     }

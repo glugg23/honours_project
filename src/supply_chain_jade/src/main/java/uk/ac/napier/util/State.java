@@ -103,6 +103,16 @@ public class State implements Serializable {
         orders.put(key, value);
     }
 
+    public void setOrderStatus(String key, boolean status) {
+        Order order = orders.get(key);
+        order.setAccepted(status);
+        orders.put(key, order);
+    }
+
+    public void deleteOrder(String key) {
+        orders.remove(key);
+    }
+
     public HashMap<String, Integer> getComponents() {
         return components;
     }
