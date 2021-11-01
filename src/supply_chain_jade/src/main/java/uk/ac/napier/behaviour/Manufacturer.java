@@ -6,18 +6,23 @@ import jade.core.behaviours.FSMBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
-import uk.ac.napier.util.Message;
-import uk.ac.napier.util.State;
+import uk.ac.napier.util.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static jade.lang.acl.MessageTemplate.*;
 
 public class Manufacturer extends Agent {
     final static Logger logger = Logger.getLogger(Manufacturer.class.getName());
     private static final String START_ROUND = "startRound";
+    private static final String HANDLE_NEW_ORDERS = "handleNewOrders";
     private static final String SEND_FINISH_MSG = "sendFinishMsg";
     private State state;
     private ACLMessage roundMsg;
@@ -27,9 +32,11 @@ public class Manufacturer extends Agent {
         FSMBehaviour fsm = new FSMBehaviour(this);
 
         fsm.registerFirstState(new StartRound(this), START_ROUND);
+        fsm.registerState(new HandleNewOrders(this), HANDLE_NEW_ORDERS);
         fsm.registerState(new SendFinishMsg(this), SEND_FINISH_MSG);
 
-        fsm.registerDefaultTransition(START_ROUND, SEND_FINISH_MSG);
+        fsm.registerDefaultTransition(START_ROUND, HANDLE_NEW_ORDERS);
+        fsm.registerDefaultTransition(HANDLE_NEW_ORDERS, SEND_FINISH_MSG);
         fsm.registerDefaultTransition(SEND_FINISH_MSG, START_ROUND);
 
         this.addBehaviour(fsm);
@@ -57,6 +64,60 @@ public class Manufacturer extends Agent {
             } catch(UnreadableException e) {
                 logger.log(Level.WARNING, "Received invalid state", e);
             }
+        }
+    }
+
+    private static class HandleNewOrders extends OneShotBehaviour {
+        private final Manufacturer manufacturer;
+
+        public HandleNewOrders(Manufacturer a) {
+            super(a);
+            manufacturer = a;
+        }
+
+        @Override
+        public void action() {
+            List<Mail> messages = manufacturer.state.getInbox().values().stream()
+                    .filter(mail -> mail.getMessage().getPerformative() == ACLMessage.INFORM)
+                    .filter(mail -> mail.getRequest().getType().equals("buying"))
+                    .sorted(Comparator.comparing(Mail::getRequest).reversed())
+                    .collect(Collectors.toList());
+
+            int usedProduction = 0;
+            ArrayList<Order> buyingRequests = new ArrayList<>(messages.size());
+
+            for(Mail mail : messages) {
+                if(acceptBuyingRequest(manufacturer.state, mail.getRequest(), usedProduction)) {
+                    usedProduction += mail.getRequest().getQuantity();
+                    buyingRequests.add(new Order(mail.getMessage(), mail.getRequest(), manufacturer.state.getRound(), true));
+                } else {
+                    buyingRequests.add(new Order(mail.getMessage(), mail.getRequest(), manufacturer.state.getRound(), false));
+                }
+            }
+
+            buyingRequests.forEach(order -> {
+                int perf = order.isAccepted() ? ACLMessage.ACCEPT_PROPOSAL : ACLMessage.REJECT_PROPOSAL;
+                ACLMessage reply = Message.reply(order.getMessage(), perf, null);
+                manufacturer.send(reply);
+            });
+
+            buyingRequests.stream().filter(Order::isAccepted).forEach(order ->
+                    manufacturer.state.addOrder(order.getMessage().getConversationId(), order));
+        }
+
+        private boolean acceptBuyingRequest(State state, Request request, int usedProduction) {
+            return canProduce(state, request, usedProduction) && acceptablePrice(state, request);
+        }
+
+        private boolean canProduce(State state, Request request, int usedProduction) {
+            HashMap<String, Integer> computers = state.getComputers();
+            return computers.containsKey(request.getGood())
+                    && request.getQuantity() <= state.getProductionCapacity() - usedProduction;
+        }
+
+        private boolean acceptablePrice(State state, Request request) {
+            HashMap<String, Integer> computers = state.getComputers();
+            return request.getPrice() >= computers.get(request.getGood());
         }
     }
 

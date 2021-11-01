@@ -113,7 +113,7 @@ public class Consumer extends Agent {
                     consumer.send(message);
                 }
 
-                consumer.state.addOrder(message.getConversationId(), new Order(message, consumer.state.getRound(), false));
+                consumer.state.addOrder(message.getConversationId(), new Order(message, request, consumer.state.getRound(), false));
             }
         }
     }
