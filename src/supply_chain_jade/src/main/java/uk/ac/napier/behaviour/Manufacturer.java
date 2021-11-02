@@ -170,6 +170,34 @@ public class Manufacturer extends Agent {
 
             for(Map.Entry<String, Integer> component : requiredComponents.entrySet()) {
                 List<Mail> sellingOrders = waitForSellingOrders(component.getKey());
+
+                int amount = component.getValue();
+                int producerCapacity = manufacturer.state.getProducerCapacity();
+                for(int i = 0; i <= (component.getValue() / producerCapacity); ++i) {
+                    Mail mail;
+                    try {
+                        mail = sellingOrders.get(i);
+                    } catch(IndexOutOfBoundsException ignored) {
+                        mail = sellingOrders.get(0);
+                    }
+
+                    int quantity = Math.min(amount, producerCapacity);
+                    Request request = new Request("buying", component.getKey(), quantity,
+                            mail.getRequest().getPrice(), manufacturer.state.getRound() + 2);
+
+                    try {
+                        ACLMessage message = Message.reply(mail.getMessage(), ACLMessage.REQUEST, request.intoString());
+                        message.setSender(new AID("information@manufacturer", AID.ISGUID));
+                        manufacturer.send(message);
+                        manufacturer.state.addOrder(message.getConversationId(),
+                                new Order(message, request, manufacturer.state.getRound(), false));
+
+                        amount -= producerCapacity;
+
+                    } catch(IOException e) {
+                        logger.log(Level.WARNING, "Failed to serialise request", e);
+                    }
+                }
             }
         }
 
