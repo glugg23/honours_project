@@ -42,6 +42,26 @@ public class Manufacturer extends Agent {
         this.addBehaviour(fsm);
     }
 
+    @SuppressWarnings("unchecked cast")
+    protected void refreshInbox() {
+        ACLMessage message = Message.newMsg(ACLMessage.REQUEST, new AID("knowledge", AID.ISLOCALNAME), "refreshInbox");
+        send(message);
+        ACLMessage reply = blockingReceive(MatchConversationId(message.getConversationId()));
+        HashMap<String, Mail> newMessages = new HashMap<>();
+
+        try {
+            newMessages = (HashMap<String, Mail>) reply.getContentObject();
+        } catch(UnreadableException | ClassCastException e) {
+            logger.log(Level.WARNING, "Failed to deserialise inbox", e);
+        }
+
+        for(Map.Entry<String, Mail> msg : newMessages.entrySet()) {
+            if(!state.getInbox().containsKey(msg.getKey())) {
+                state.addToInbox(msg.getKey(), msg.getValue());
+            }
+        }
+    }
+
     private static class StartRound extends OneShotBehaviour {
         private final Manufacturer manufacturer;
 
@@ -82,8 +102,6 @@ public class Manufacturer extends Agent {
                     .filter(mail -> mail.getRequest().getType().equals("buying"))
                     .sorted(Comparator.comparing(Mail::getRequest).reversed())
                     .collect(Collectors.toList());
-
-            // TODO: Race condition, inbox is a snapshot of messages and buying orders may not have arrived
 
             int usedProduction = 0;
             ArrayList<Order> buyingRequests = new ArrayList<>(messages.size());
@@ -151,14 +169,28 @@ public class Manufacturer extends Agent {
             }
 
             for(Map.Entry<String, Integer> component : requiredComponents.entrySet()) {
-                List<Mail> sellingOrders = manufacturer.state.getInbox().values().stream()
+                List<Mail> sellingOrders = waitForSellingOrders(component.getKey());
+            }
+        }
+
+        private List<Mail> waitForSellingOrders(String good) {
+            List<Mail> sellingOrders;
+            do {
+                sellingOrders = manufacturer.state.getInbox().values().stream()
                         .filter(m -> m.getRequest().getType().equals("selling"))
-                        .filter(m -> m.getRequest().getGood().equals(component.getKey()))
+                        .filter(m -> m.getRequest().getGood().equals(good))
                         .sorted(Comparator.comparing(Mail::getRequest).reversed())
                         .collect(Collectors.toList());
 
-                // TODO: Race condition, inbox is a snapshot of messages and selling orders may not have arrived
-            }
+                if(sellingOrders.isEmpty()) {
+                    // Log this to indicate when race condition was met
+                    logger.info("Selling orders was empty for: " + good);
+                    manufacturer.refreshInbox();
+                }
+
+            } while(sellingOrders.isEmpty());
+
+            return sellingOrders;
         }
     }
 
@@ -172,8 +204,6 @@ public class Manufacturer extends Agent {
 
         @Override
         public void action() {
-            manufacturer.state.deleteInboxBeforeRound();
-
             try {
                 ACLMessage stateMsg = Message.newMsg(ACLMessage.INFORM, new AID("knowledge", AID.ISLOCALNAME), manufacturer.state);
                 manufacturer.send(stateMsg);

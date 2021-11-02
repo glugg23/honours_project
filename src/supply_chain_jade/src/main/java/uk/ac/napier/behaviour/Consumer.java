@@ -158,8 +158,6 @@ public class Consumer extends Agent {
 
         @Override
         public void action() {
-            consumer.state.deleteInboxBeforeRound();
-
             try {
                 ACLMessage stateMsg = Message.newMsg(ACLMessage.INFORM, new AID("knowledge", AID.ISLOCALNAME), consumer.state);
                 consumer.send(stateMsg);

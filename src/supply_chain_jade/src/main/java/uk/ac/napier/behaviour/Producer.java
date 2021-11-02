@@ -128,8 +128,6 @@ public class Producer extends Agent {
 
         @Override
         public void action() {
-            producer.state.deleteInboxBeforeRound();
-
             try {
                 ACLMessage stateMsg = Message.newMsg(ACLMessage.INFORM, new AID("knowledge", AID.ISLOCALNAME), producer.state);
                 producer.send(stateMsg);

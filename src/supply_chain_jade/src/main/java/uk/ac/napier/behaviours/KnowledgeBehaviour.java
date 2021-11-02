@@ -4,10 +4,12 @@ import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import uk.ac.napier.knowledge.Knowledge;
+import uk.ac.napier.util.Mail;
 import uk.ac.napier.util.Message;
 import uk.ac.napier.util.State;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +49,11 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
         } else if(and(MatchPerformative(ACLMessage.INFORM), MatchSender(new AID("behaviour", AID.ISLOCALNAME))).match(message)) {
             try {
                 State newState = (State) message.getContentObject();
+                HashMap<String, Mail> inbox = knowledge.getStateObject().getInbox();
                 knowledge.setStateObject(newState);
+                knowledge.getStateObject().setInbox(inbox);
+                knowledge.getStateObject().deleteInboxBeforeRound();
+
             } catch(UnreadableException e) {
                 logger.log(Level.WARNING, "Could not deserialise state", e);
             }

@@ -99,6 +99,10 @@ public class State implements Serializable {
         return orders;
     }
 
+    public void setInbox(HashMap<String, Mail> inbox) {
+        this.inbox = inbox;
+    }
+
     public void addOrder(String key, Order value) {
         orders.put(key, value);
     }
