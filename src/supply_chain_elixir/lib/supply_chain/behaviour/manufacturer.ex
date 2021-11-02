@@ -246,7 +246,7 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
             {_, node} = msg.reply_to
 
-            quantity = if acc > producer_capacity, do: producer_capacity, else: acc
+            quantity = min(producer_capacity, acc)
 
             request =
               Message.new(
