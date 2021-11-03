@@ -112,6 +112,10 @@ public class Clock extends Agent {
 
             logger.info("Start round " + clock.round);
 
+            if(clock.round == 1) {
+                logger.info("MEASURE=round,cpu_usage,memory");
+            }
+
             for(AgentInfo info : clock.agents.values()) {
                 ACLMessage message = Message.newMsg(ACLMessage.INFORM, info.toAID(), "startRound," + clock.round);
                 clock.send(message);

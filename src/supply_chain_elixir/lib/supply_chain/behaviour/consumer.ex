@@ -16,7 +16,6 @@ defmodule SupplyChain.Behaviour.Consumer do
   alias SupplyChain.Knowledge.Orders, as: Orders
 
   def init(_args) do
-    # TODO: Load seed from config file?
     :rand.seed(:exsss)
     {:ok, :start, %{round_msg: nil}}
   end

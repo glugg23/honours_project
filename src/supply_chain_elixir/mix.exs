@@ -14,7 +14,7 @@ defmodule SupplyChain.MixProject do
 
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :os_mon],
       mod: {SupplyChain.Application, []}
     ]
   end

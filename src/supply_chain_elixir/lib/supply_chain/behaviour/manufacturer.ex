@@ -30,6 +30,12 @@ defmodule SupplyChain.Behaviour.Manufacturer do
         data
       ) do
     Logger.info("Round #{round}")
+
+    if round === 1 do
+      # See note at https://www.erlang.org/doc/man/cpu_sup.html#util-0
+      :cpu_sup.util()
+    end
+
     data = %{data | round_msg: msg}
     {:next_state, :run, data, {:next_event, :internal, :handle_new_orders}}
   end
@@ -178,6 +184,10 @@ defmodule SupplyChain.Behaviour.Manufacturer do
 
   def handle_event(:internal, :send_finish_msg, :finish, data) do
     SupplyChain.Behaviour.delete_old_messages()
+
+    round = ETS.lookup_element(KnowledgeBase, :round, 2)
+    Logger.notice("MEASURE=#{round},#{:cpu_sup.util()},#{:erlang.memory(:total)}")
+
     data.round_msg |> Message.reply(:inform, :finished) |> Message.send()
     {:next_state, :start, data}
   end

@@ -1,5 +1,6 @@
 package uk.ac.napier.behaviour;
 
+import com.sun.management.OperatingSystemMXBean;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.FSMBehaviour;
@@ -9,6 +10,8 @@ import jade.lang.acl.UnreadableException;
 import uk.ac.napier.util.*;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -238,6 +241,14 @@ public class Manufacturer extends Agent {
             } catch(IOException e) {
                 logger.log(Level.WARNING, "Could not serialise state", e);
             }
+
+            MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+            MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
+            long totalMemoryUsed = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
+
+            double cpuLoad = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class).getProcessCpuLoad();
+
+            logger.info(String.format("MEASURE=%d,%f,%d", manufacturer.state.getRound(), cpuLoad * 100, totalMemoryUsed));
 
             ACLMessage reply = Message.reply(manufacturer.roundMsg, ACLMessage.INFORM, "finished");
             manufacturer.send(reply);

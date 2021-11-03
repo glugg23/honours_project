@@ -78,6 +78,10 @@ defmodule SupplyChain.Behaviour.Clock do
 
     Logger.notice("Starting round #{data.round}")
 
+    if data.round === 1 do
+      Logger.notice("MEASURE=round,cpu_usage,memory")
+    end
+
     nodes
     |> Enum.map(
       &Message.new(
