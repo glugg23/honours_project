@@ -1,0 +1,12 @@
+library(ggplot2)
+
+elixir_1_01 <- read.csv("elixir/experiment1/01.csv")
+elixir_1_02 <- read.csv("elixir/experiment1/02.csv")
+elixir_1_03 <- read.csv("elixir/experiment1/03.csv")
+elixir_1_04 <- read.csv("elixir/experiment1/04.csv")
+elixir_1_05 <- read.csv("elixir/experiment1/05.csv")
+elixir_1_06 <- read.csv("elixir/experiment1/06.csv")
+elixir_1_07 <- read.csv("elixir/experiment1/07.csv")
+elixir_1_08 <- read.csv("elixir/experiment1/08.csv")
+elixir_1_09 <- read.csv("elixir/experiment1/09.csv")
+elixir_1_10 <- read.csv("elixir/experiment1/10.csv")
