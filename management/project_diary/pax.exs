@@ -1,3 +1,5 @@
+#!/usr/bin/env elixir
+
 # This script generates .pax files for all the pdfs in this folder
 
 tasks =
