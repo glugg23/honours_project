@@ -1,4 +1,4 @@
-FROM elixir:latest
+FROM elixir:1.12.3
 
 WORKDIR /supply_chain
 
