@@ -1,3 +1,30 @@
 \subsection{Lines of Code}
 
-Display results for lines of code in Elixir and JADE systems.
+The final metric that was measured was the total numbers of lines of code required in order to implement the multi-agent system.
+This can be seen as a measure of how maintainable the code base of such a system would be.
+As the fewer lines of code that are required, means that there are less lines of code that need to be checked for bugs.
+
+This is an interesting comparison as Elixir and Java use different programming paradigms.
+Java is an object-oriented programming language while Elixir is a functional programming language.
+It is expected that Elixir would require less lines of code, however, potentially more functionality may need to be implemented as Elixir lacks a multi-agent framework like JADE\@.
+
+\Cref{tab:elixir_loc} shows the total lines of code that was used to implement the Elixir system, as reported by cloc.
+We can see that a total of 1107 lines of source code were used to implement the entire Elixir system.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lrrrr}
+        \toprule
+        Language & files & blank & comment & code\\
+        \midrule
+        Elixir & 19 & 279 & 73 & 1107\\
+        \midrule
+        SUM\@: & 19 & 279 & 73 & 1107\\
+        \bottomrule
+    \end{tabular}
+    \caption{Lines of code for Elixir system, reported by cloc}\label{tab:elixir_loc}
+\end{table}
+
+Table X shows the total lines of code for JADE\@.
+
+Add Table X here.
