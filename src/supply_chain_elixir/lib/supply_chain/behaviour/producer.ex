@@ -67,7 +67,7 @@ defmodule SupplyChain.Behaviour.Producer do
             Keyword.update(
               storage,
               m.content.good,
-              m.content.quantity,
+              -m.content.quantity,
               &(&1 - m.content.quantity)
             )
 

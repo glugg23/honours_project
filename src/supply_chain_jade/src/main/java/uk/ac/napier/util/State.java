@@ -81,7 +81,7 @@ public class State implements Serializable {
         return storage;
     }
 
-    public void addToStorage(String good, Integer quantity) {
+    public void putInStorage(String good, Integer quantity) {
         storage.put(good, quantity);
     }
 

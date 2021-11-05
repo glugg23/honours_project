@@ -114,8 +114,8 @@ public class Producer extends Agent {
             for(Order o : requests) {
                 if(o.isAccepted() && o.getRequest().getRound() == (producer.state.getRound() + 1)) {
                     Integer quantity = producer.state.getStorage().getOrDefault(o.getRequest().getGood(), 0);
-                    quantity += o.getRequest().getQuantity();
-                    producer.state.addToStorage(o.getRequest().getGood(), quantity);
+                    quantity -= o.getRequest().getQuantity();
+                    producer.state.putInStorage(o.getRequest().getGood(), quantity);
 
                     producer.state.addMoney(o.getRequest().getQuantity() * o.getRequest().getPrice());
 
@@ -139,6 +139,10 @@ public class Producer extends Agent {
                     ACLMessage reply = Message.reply(o.getMessage(), ACLMessage.REJECT_PROPOSAL, null);
                     producer.send(reply);
                 }
+
+                Integer quantity = producer.state.getStorage().getOrDefault(producer.state.getProduces(), 0);
+                quantity += production;
+                producer.state.putInStorage(producer.state.getProduces(), quantity);
             }
         }
 
