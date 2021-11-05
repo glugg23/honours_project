@@ -30,3 +30,19 @@ ggplot(cpu_df, aes(x = experiment, y = mean_cpu, fill = system)) +
     geom_col() +
     theme_bw() +
     labs(x = "Experiment", y = "Mean CPU utilisation (%)", fill = "System")
+
+mean_memory <-
+    c(
+        mean(elixir1$memory[-(1:1)]) / 1024 / 1024,
+        mean(elixir2$memory[-(1:1)]) / 1024 / 1024,
+        mean(elixir3$memory[-(1:1)]) / 1024 / 1024,
+        mean(elixir4$memory[-(1:1)]) / 1024 / 1024,
+        mean(elixir5$memory[-(1:1)]) / 1024 / 1024
+    )
+
+memory_df <- data.frame(system, experiment, mean_memory)
+
+ggplot(memory_df, aes(x = experiment, y = mean_memory, fill = system)) +
+    geom_col() +
+    theme_bw() +
+    labs(x = "Experiment", y = "Mean memory usage (MiB)", fill = "System")
