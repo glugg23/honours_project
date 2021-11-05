@@ -15,6 +15,7 @@ public class State implements Serializable {
     private final HashMap<String, Order> orders = new HashMap<>();
     private HashMap<String, Mail> inbox = new HashMap<>();
     private int round = 0;
+    private double money = 0;
     private int productionCapacity;
     private int producerCapacity;
     private int maximumQuantity;
@@ -80,8 +81,16 @@ public class State implements Serializable {
         return storage;
     }
 
+    public void addToStorage(String good, Integer quantity) {
+        storage.put(good, quantity);
+    }
+
     public HashMap<String, Mail> getInbox() {
         return inbox;
+    }
+
+    public void setInbox(HashMap<String, Mail> inbox) {
+        this.inbox = inbox;
     }
 
     public void addToInbox(String key, Mail value) {
@@ -99,10 +108,6 @@ public class State implements Serializable {
         return orders;
     }
 
-    public void setInbox(HashMap<String, Mail> inbox) {
-        this.inbox = inbox;
-    }
-
     public void addOrder(String key, Order value) {
         orders.put(key, value);
     }
@@ -115,6 +120,14 @@ public class State implements Serializable {
 
     public void deleteOrder(String key) {
         orders.remove(key);
+    }
+
+    public void addMoney(double amount) {
+        money += amount;
+    }
+
+    public void subtractMoney(double amount) {
+        money -= amount;
     }
 
     public HashMap<String, Integer> getComponents() {

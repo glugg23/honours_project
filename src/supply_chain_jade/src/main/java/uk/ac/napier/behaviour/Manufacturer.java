@@ -208,6 +208,7 @@ public class Manufacturer extends Agent {
             List<Mail> sellingOrders;
             do {
                 sellingOrders = manufacturer.state.getInbox().values().stream()
+                        .filter(m -> m.getMessage().getPerformative() == ACLMessage.INFORM)
                         .filter(m -> m.getRequest().getType().equals("selling"))
                         .filter(m -> m.getRequest().getGood().equals(good))
                         .sorted(Comparator.comparing(Mail::getRequest).reversed())
