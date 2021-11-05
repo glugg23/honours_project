@@ -24,6 +24,7 @@ public class Manufacturer extends Agent {
     private static final String START_ROUND = "startRound";
     private static final String HANDLE_NEW_ORDERS = "handleNewOrders";
     private static final String HANDLE_NEW_COMPONENTS = "handleNewComponents";
+    private static final String HANDLE_COMPONENT_ORDERS = "handleComponentOrders";
     private static final String SEND_FINISH_MSG = "sendFinishMsg";
     private State state;
     private ACLMessage roundMsg;
@@ -35,11 +36,13 @@ public class Manufacturer extends Agent {
         fsm.registerFirstState(new StartRound(this), START_ROUND);
         fsm.registerState(new HandleNewOrders(this), HANDLE_NEW_ORDERS);
         fsm.registerState(new HandleNewComponents(this), HANDLE_NEW_COMPONENTS);
+        fsm.registerState(new HandleComponentOrders(this), HANDLE_COMPONENT_ORDERS);
         fsm.registerState(new SendFinishMsg(this), SEND_FINISH_MSG);
 
         fsm.registerDefaultTransition(START_ROUND, HANDLE_NEW_ORDERS);
         fsm.registerDefaultTransition(HANDLE_NEW_ORDERS, HANDLE_NEW_COMPONENTS);
-        fsm.registerDefaultTransition(HANDLE_NEW_COMPONENTS, SEND_FINISH_MSG);
+        fsm.registerDefaultTransition(HANDLE_NEW_COMPONENTS, HANDLE_COMPONENT_ORDERS);
+        fsm.registerDefaultTransition(HANDLE_COMPONENT_ORDERS, SEND_FINISH_MSG);
         fsm.registerDefaultTransition(SEND_FINISH_MSG, START_ROUND);
 
         this.addBehaviour(fsm);
@@ -223,6 +226,39 @@ public class Manufacturer extends Agent {
             } while(sellingOrders.isEmpty());
 
             return sellingOrders;
+        }
+    }
+
+    private static class HandleComponentOrders extends OneShotBehaviour {
+        private final Manufacturer manufacturer;
+
+        public HandleComponentOrders(Manufacturer a) {
+            super(a);
+            manufacturer = a;
+        }
+
+        @Override
+        public void action() {
+            List<Mail> messages = manufacturer.state.getInbox().values().stream()
+                    .filter(mail -> mail.getMessage().getPerformative() == ACLMessage.ACCEPT_PROPOSAL
+                            || mail.getMessage().getPerformative() == ACLMessage.REJECT_PROPOSAL)
+                    .collect(Collectors.toList());
+
+            for(Mail m : messages) {
+                if(m.getMessage().getPerformative() == ACLMessage.ACCEPT_PROPOSAL && m.getRequest() == null) {
+                    manufacturer.state.setOrderStatus(m.getMessage().getConversationId(), true);
+
+                } else if(m.getMessage().getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
+                    Integer quantity = manufacturer.state.getStorage().getOrDefault(m.getRequest().getGood(), 0);
+                    quantity += m.getRequest().getQuantity();
+                    manufacturer.state.putInStorage(m.getRequest().getGood(), quantity);
+
+                    manufacturer.state.subtractMoney(m.getRequest().getPrice() * m.getRequest().getQuantity());
+
+                } else {
+                    manufacturer.state.deleteOrder(m.getMessage().getConversationId());
+                }
+            }
         }
     }
 
