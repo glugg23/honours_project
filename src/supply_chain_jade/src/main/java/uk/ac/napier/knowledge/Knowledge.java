@@ -22,8 +22,9 @@ public abstract class Knowledge extends Agent {
     protected void setup() {
         Object[] args = this.getArguments();
         String type = (String) args[0];
+        String experiment = System.getenv("EXPERIMENT");
 
-        try(FileInputStream stream = new FileInputStream("src/main/resources/application.properties")) {
+        try(FileInputStream stream = new FileInputStream(String.format("src/main/resources/%s.properties", experiment))) {
             properties.load(stream);
 
         } catch(IOException e) {

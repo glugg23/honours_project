@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Properties;
 
 public class AgentInfo implements Serializable {
-    private static final String filepath = "src/main/resources/agents.xml";
-
     private String name;
     private String type;
     private String address;
@@ -37,8 +35,11 @@ public class AgentInfo implements Serializable {
      * @throws IOException Does not handle any exceptions
      */
     public static void main(String[] args) throws IOException {
+        String experiment = System.getenv("EXPERIMENT");
+        String filepath = String.format("src/main/resources/%s.xml", experiment);
+
         Properties properties = new Properties();
-        try(FileInputStream stream = new FileInputStream("src/main/resources/application.properties")) {
+        try(FileInputStream stream = new FileInputStream(String.format("src/main/resources/%s.properties", experiment))) {
             properties.load(stream);
         }
 
@@ -58,6 +59,9 @@ public class AgentInfo implements Serializable {
 
     @SuppressWarnings("unchecked cast")
     public static HashMap<String, AgentInfo> load() throws IOException {
+        String experiment = System.getenv("EXPERIMENT");
+        String filepath = String.format("src/main/resources/%s.xml", experiment);
+
         try(FileInputStream stream = new FileInputStream(filepath)) {
             try(XMLDecoder decoder = new XMLDecoder(stream)) {
                 Object result = decoder.readObject();

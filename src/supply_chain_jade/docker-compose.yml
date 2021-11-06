@@ -5,6 +5,7 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=clock
+      - EXPERIMENT=experiment1
     hostname: clock
 
   manufacturer:
@@ -12,6 +13,7 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=manufacturer
+      - EXPERIMENT=experiment1
     hostname: manufacturer
 
   consumer:
@@ -19,6 +21,7 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=consumer
+      - EXPERIMENT=experiment1
     hostname: consumer
 
   producer:
@@ -26,4 +29,5 @@ services:
     image: ghcr.io/glugg23/honours_project:jade
     environment:
       - AGENT_TYPE=producer
+      - EXPERIMENT=experiment1
     hostname: producer
