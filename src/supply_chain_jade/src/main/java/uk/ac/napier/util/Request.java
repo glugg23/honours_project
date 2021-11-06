@@ -58,4 +58,15 @@ public class Request implements Serializable, Comparable<Request> {
     public int compareTo(Request o) {
         return Double.compare(price, o.price);
     }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "type='" + type + '\'' +
+                ", good='" + good + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", round=" + round +
+                '}';
+    }
 }

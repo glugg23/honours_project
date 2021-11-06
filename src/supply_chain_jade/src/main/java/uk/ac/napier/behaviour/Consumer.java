@@ -25,6 +25,7 @@ public class Consumer extends Agent {
     final static Logger logger = Logger.getLogger(Consumer.class.getName());
     private static final String START_ROUND = "startRound";
     private static final String MARK_ORDERS = "markOrders";
+    private static final String HANDLE_DELIVERED_ORDERS = "handleDeliveredOrders";
     private static final String SEND_NEW_ORDERS = "sendNewOrders";
     private static final String SEND_FINISH_MSG = "sendFinishMsg";
     private State state;
@@ -51,11 +52,13 @@ public class Consumer extends Agent {
 
         fsm.registerFirstState(new StartRound(this), START_ROUND);
         fsm.registerState(new MarkOrders(this), MARK_ORDERS);
+        fsm.registerState(new HandleDeliveredOrders(this), HANDLE_DELIVERED_ORDERS);
         fsm.registerState(new SendNewOrders(this), SEND_NEW_ORDERS);
         fsm.registerState(new SendFinishMsg(this), SEND_FINISH_MSG);
 
         fsm.registerDefaultTransition(START_ROUND, MARK_ORDERS);
-        fsm.registerDefaultTransition(MARK_ORDERS, SEND_NEW_ORDERS);
+        fsm.registerDefaultTransition(MARK_ORDERS, HANDLE_DELIVERED_ORDERS);
+        fsm.registerDefaultTransition(HANDLE_DELIVERED_ORDERS, SEND_NEW_ORDERS);
         fsm.registerDefaultTransition(SEND_NEW_ORDERS, SEND_FINISH_MSG);
         fsm.registerDefaultTransition(SEND_FINISH_MSG, START_ROUND);
 
@@ -108,6 +111,45 @@ public class Consumer extends Agent {
                 } else {
                     consumer.state.deleteOrder(mail.getMessage().getConversationId());
                 }
+            }
+        }
+    }
+
+    private static class HandleDeliveredOrders extends OneShotBehaviour {
+        private final Consumer consumer;
+
+        public HandleDeliveredOrders(Consumer a) {
+            super(a);
+            consumer = a;
+        }
+
+        @Override
+        public void action() {
+            List<Mail> deliveredOrders = consumer.state.getInbox().values().stream()
+                    .filter(m -> m.getMessage().getPerformative() == ACLMessage.INFORM)
+                    .filter(m -> m.getRequest().getType().equals("delivery"))
+                    .collect(Collectors.toList());
+
+            HashMap<String, Order> orders = consumer.state.getOrders();
+
+            for(Mail m : deliveredOrders) {
+                Order order = orders.get(m.getMessage().getConversationId());
+
+                if(order == null) {
+                    logger.warning("Order does not exist: " + m.getRequest());
+                    return;
+                }
+
+                if(m.getRequest().getGood().equals(order.getRequest().getGood())
+                        && m.getRequest().getQuantity() == order.getRequest().getQuantity()) {
+                    logger.fine("Delivery for order: " + order.getRequest());
+                    consumer.state.subtractMoney(m.getRequest().getPrice() * m.getRequest().getQuantity());
+
+                } else {
+                    logger.warning("Incorrect delivery for order: " + order.getRequest());
+                }
+
+                consumer.state.deleteOrder(order.getMessage().getConversationId());
             }
         }
     }
