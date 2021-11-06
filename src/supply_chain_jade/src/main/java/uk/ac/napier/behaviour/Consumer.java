@@ -26,6 +26,7 @@ public class Consumer extends Agent {
     private static final String START_ROUND = "startRound";
     private static final String MARK_ORDERS = "markOrders";
     private static final String HANDLE_DELIVERED_ORDERS = "handleDeliveredOrders";
+    private static final String HANDLE_LATE_ORDERS = "handleLateOrders";
     private static final String SEND_NEW_ORDERS = "sendNewOrders";
     private static final String SEND_FINISH_MSG = "sendFinishMsg";
     private State state;
@@ -53,12 +54,14 @@ public class Consumer extends Agent {
         fsm.registerFirstState(new StartRound(this), START_ROUND);
         fsm.registerState(new MarkOrders(this), MARK_ORDERS);
         fsm.registerState(new HandleDeliveredOrders(this), HANDLE_DELIVERED_ORDERS);
+        fsm.registerState(new HandleLateOrders(this), HANDLE_LATE_ORDERS);
         fsm.registerState(new SendNewOrders(this), SEND_NEW_ORDERS);
         fsm.registerState(new SendFinishMsg(this), SEND_FINISH_MSG);
 
         fsm.registerDefaultTransition(START_ROUND, MARK_ORDERS);
         fsm.registerDefaultTransition(MARK_ORDERS, HANDLE_DELIVERED_ORDERS);
-        fsm.registerDefaultTransition(HANDLE_DELIVERED_ORDERS, SEND_NEW_ORDERS);
+        fsm.registerDefaultTransition(HANDLE_DELIVERED_ORDERS, HANDLE_LATE_ORDERS);
+        fsm.registerDefaultTransition(HANDLE_LATE_ORDERS, SEND_NEW_ORDERS);
         fsm.registerDefaultTransition(SEND_NEW_ORDERS, SEND_FINISH_MSG);
         fsm.registerDefaultTransition(SEND_FINISH_MSG, START_ROUND);
 
@@ -151,6 +154,23 @@ public class Consumer extends Agent {
 
                 consumer.state.deleteOrder(order.getMessage().getConversationId());
             }
+        }
+    }
+
+    private static class HandleLateOrders extends OneShotBehaviour {
+        private final Consumer consumer;
+
+        public HandleLateOrders(Consumer a) {
+            super(a);
+            consumer = a;
+        }
+
+        @Override
+        public void action() {
+            consumer.state.getOrders().values().stream()
+                    .filter(Order::isAccepted)
+                    .filter(o -> o.getRequest().getRound() < consumer.state.getRound())
+                    .forEach(o -> logger.fine("Order is late: " + o.getRequest()));
         }
     }
 
