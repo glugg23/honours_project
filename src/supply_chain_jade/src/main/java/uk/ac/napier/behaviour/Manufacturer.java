@@ -25,6 +25,7 @@ public class Manufacturer extends Agent {
     private static final String HANDLE_NEW_ORDERS = "handleNewOrders";
     private static final String HANDLE_NEW_COMPONENTS = "handleNewComponents";
     private static final String HANDLE_COMPONENT_ORDERS = "handleComponentOrders";
+    private static final String HANDLE_FINISHED_ORDERS = "handleFinishedOrders";
     private static final String SEND_FINISH_MSG = "sendFinishMsg";
     private State state;
     private ACLMessage roundMsg;
@@ -37,12 +38,14 @@ public class Manufacturer extends Agent {
         fsm.registerState(new HandleNewOrders(this), HANDLE_NEW_ORDERS);
         fsm.registerState(new HandleNewComponents(this), HANDLE_NEW_COMPONENTS);
         fsm.registerState(new HandleComponentOrders(this), HANDLE_COMPONENT_ORDERS);
+        fsm.registerState(new HandleFinishedOrders(this), HANDLE_FINISHED_ORDERS);
         fsm.registerState(new SendFinishMsg(this), SEND_FINISH_MSG);
 
         fsm.registerDefaultTransition(START_ROUND, HANDLE_NEW_ORDERS);
         fsm.registerDefaultTransition(HANDLE_NEW_ORDERS, HANDLE_NEW_COMPONENTS);
         fsm.registerDefaultTransition(HANDLE_NEW_COMPONENTS, HANDLE_COMPONENT_ORDERS);
-        fsm.registerDefaultTransition(HANDLE_COMPONENT_ORDERS, SEND_FINISH_MSG);
+        fsm.registerDefaultTransition(HANDLE_COMPONENT_ORDERS, HANDLE_FINISHED_ORDERS);
+        fsm.registerDefaultTransition(HANDLE_FINISHED_ORDERS, SEND_FINISH_MSG);
         fsm.registerDefaultTransition(SEND_FINISH_MSG, START_ROUND);
 
         this.addBehaviour(fsm);
@@ -257,6 +260,60 @@ public class Manufacturer extends Agent {
 
                 } else {
                     manufacturer.state.deleteOrder(m.getMessage().getConversationId());
+                }
+            }
+        }
+    }
+
+    private static class HandleFinishedOrders extends OneShotBehaviour {
+        private final Manufacturer manufacturer;
+
+        public HandleFinishedOrders(Manufacturer a) {
+            super(a);
+            manufacturer = a;
+        }
+
+        @Override
+        public void action() {
+            List<Order> orders = manufacturer.state.getOrders().values().stream()
+                    .filter(o -> o.getRequest().getType().equals("buying"))
+                    .filter(o -> !o.getMessage().getSender().equals(new AID("information@manufacturer", AID.ISGUID)))
+                    .filter(o -> o.getRequest().getRound() == manufacturer.state.getRound() + 1)
+                    .collect(Collectors.toList());
+
+            HashMap<String, HashMap<String, Integer>> recipes = manufacturer.state.getRecipes();
+
+            for(Order o : orders) {
+                HashMap<String, Integer> components = recipes.get(o.getRequest().getGood());
+                HashMap<String, Integer> requiredComponents = new HashMap<>();
+
+                for(Map.Entry<String, Integer> kv : components.entrySet()) {
+                    Integer quantity = kv.getValue() * o.getRequest().getQuantity();
+                    requiredComponents.put(kv.getKey(), quantity);
+                }
+
+                boolean haveEnough = requiredComponents.entrySet().stream().allMatch(kv -> {
+                    Integer inStorage = manufacturer.state.getStorage().getOrDefault(kv.getKey(), 0);
+                    return inStorage >= kv.getValue();
+                });
+
+                if(haveEnough) {
+                    Request request = new Request("delivery", o.getRequest().getGood(), o.getRequest().getQuantity(),
+                            o.getRequest().getPrice(), manufacturer.state.getRound());
+                    try {
+                        ACLMessage message = Message.reply(o.getMessage(), ACLMessage.INFORM, request.intoString());
+                        manufacturer.send(message);
+
+                        manufacturer.state.addMoney(o.getRequest().getPrice() * o.getRequest().getQuantity());
+                        manufacturer.state.deleteOrder(o.getMessage().getConversationId());
+
+                        for(Map.Entry<String, Integer> kv : requiredComponents.entrySet()) {
+                            manufacturer.state.putInStorage(kv.getKey(), -kv.getValue());
+                        }
+
+                    } catch(IOException e) {
+                        logger.log(Level.WARNING, "Failed to serialise request", e);
+                    }
                 }
             }
         }
