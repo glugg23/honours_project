@@ -128,6 +128,10 @@ public class State implements Serializable {
         orders.remove(key);
     }
 
+    public double getMoney() {
+        return money;
+    }
+
     public void addMoney(double amount) {
         money += amount;
     }

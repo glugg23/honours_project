@@ -3,6 +3,7 @@ package uk.ac.napier.behaviours;
 import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
+import jade.wrapper.StaleProxyException;
 import uk.ac.napier.knowledge.Knowledge;
 import uk.ac.napier.util.Mail;
 import uk.ac.napier.util.Message;
@@ -63,8 +64,19 @@ public abstract class KnowledgeBehaviour extends GenServerBehaviour {
             ACLMessage forward = Message.forward(message, new AID("behaviour", AID.ISLOCALNAME));
             myAgent.send(forward);
 
-        } else if(MatchPerformative(ACLMessage.NOT_UNDERSTOOD).match(message)) {
-            logger.warning(message.toString());
+        } else if(and(MatchPerformative(ACLMessage.REQUEST), MatchContent("stop")).match(message)) {
+            logger.info(String.format("%s made a total of £%.2f",
+                    knowledge.getStateObject().getType(), knowledge.getStateObject().getMoney()));
+
+            //https://jade.tilab.com/pipermail/jade-develop/2013q2/019133.html
+            Thread thread = new Thread(() -> {
+                try {
+                    myAgent.getContainerController().kill();
+                } catch(StaleProxyException e) {
+                    logger.log(Level.WARNING, "Failed to kill container", e);
+                }
+            });
+            thread.start();
 
         } else {
             handleOther(message);

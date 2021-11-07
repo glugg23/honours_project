@@ -176,7 +176,7 @@ public class Producer extends Agent {
             HashMap<String, Integer> components = producer.state.getComponents();
             String produces = producer.state.getProduces();
 
-            int quantity = storage.getOrDefault(produces, 0) + 1;
+            int quantity = storage.getOrDefault(produces, 0);
             double price = components.get(produces).doubleValue();
             price = price * ((double) quantity / producer.state.getProductionCapacity() + 1);
             BigDecimal bd = new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
