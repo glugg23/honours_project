@@ -1,0 +1,65 @@
+version: "3.9"
+services:
+  clock:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=clock
+      - EXPERIMENT=experiment4
+    hostname: clock
+
+  manufacturer:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=manufacturer
+      - EXPERIMENT=experiment4
+    hostname: manufacturer
+
+  consumer:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=consumer
+      - EXPERIMENT=experiment4
+    hostname: consumer
+
+  producer_cpu_one:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=producer
+      - AGENT_NAME=producer_cpu_one
+      - SUB_TYPE=cpu
+      - EXPERIMENT=experiment4
+    hostname: producer_cpu_one
+
+  producer_cpu_two:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=producer
+      - AGENT_NAME=producer_cpu_two
+      - SUB_TYPE=cpu
+      - EXPERIMENT=experiment4
+    hostname: producer_cpu_two
+
+  producer_motherboard_one:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=producer
+      - AGENT_NAME=producer_motherboard_one
+      - SUB_TYPE=motherboard
+      - EXPERIMENT=experiment4
+    hostname: producer_motherboard_one
+
+  producer_motherboard_two:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=producer
+      - AGENT_NAME=producer_motherboard_two
+      - SUB_TYPE=motherboard
+      - EXPERIMENT=experiment4
+    hostname: producer_motherboard_two
