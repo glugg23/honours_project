@@ -2,7 +2,7 @@
 target/
 .gitignore
 .dockerignore
-APDescription.txt
-MTPs-Main-Container.txt
 Dockerfile
 docker-compose.yml
+*.sh
+*.txt
