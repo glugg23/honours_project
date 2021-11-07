@@ -62,7 +62,13 @@ public class State implements Serializable {
         String maximumQuantity = properties.getProperty(this.type + ".maximumQuantity", "-1");
         this.maximumQuantity = Integer.parseInt(maximumQuantity);
 
-        this.produces = properties.getProperty(this.type + ".produces", "");
+        String subtype = System.getenv("SUB_TYPE");
+
+        if(subtype != null) {
+            this.produces = properties.getProperty(subtype + ".produces", "");
+        } else {
+            this.produces = properties.getProperty(this.type + ".produces", "");
+        }
     }
 
     public String getType() {
