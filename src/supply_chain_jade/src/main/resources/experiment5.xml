@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_292" class="java.beans.XMLDecoder">
+ <object class="java.util.HashMap">
+  <void method="put">
+   <string>producer_memory_small</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_memory_small:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_memory_small</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>producer_hard_drive_two</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_hard_drive_two:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_hard_drive_two</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>producer_cpu_fast</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_cpu_fast:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_cpu_fast</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>producer_motherboard_two</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_motherboard_two:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_motherboard_two</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>producer_memory_large</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_memory_large:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_memory_large</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>producer_hard_drive_one</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_hard_drive_one:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_hard_drive_one</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>producer_motherboard_one</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_motherboard_one:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_motherboard_one</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>clock</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://clock:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>clock</string>
+    </void>
+    <void property="type">
+     <string>clock</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>consumer</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://consumer:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>consumer</string>
+    </void>
+    <void property="type">
+     <string>consumer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>manufacturer</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://manufacturer:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>manufacturer</string>
+    </void>
+    <void property="type">
+     <string>manufacturer</string>
+    </void>
+   </object>
+  </void>
+  <void method="put">
+   <string>producer_cpu_slow</string>
+   <object class="uk.ac.napier.util.AgentInfo">
+    <void property="address">
+     <string>http://producer_cpu_slow:7778/acc</string>
+    </void>
+    <void property="ignored">
+     <boolean>false</boolean>
+    </void>
+    <void property="layer">
+     <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer_cpu_slow</string>
+    </void>
+    <void property="type">
+     <string>producer</string>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>
