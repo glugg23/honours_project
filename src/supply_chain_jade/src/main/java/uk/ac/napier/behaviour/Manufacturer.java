@@ -196,7 +196,7 @@ public class Manufacturer extends Agent {
 
                     try {
                         ACLMessage message = Message.reply(mail.getMessage(), ACLMessage.REQUEST, request.intoString());
-                        message.setSender(new AID("information@manufacturer", AID.ISGUID));
+                        message.setSender(manufacturer.getAID("information"));
                         manufacturer.send(message);
                         manufacturer.state.addOrder(message.getConversationId(),
                                 new Order(message, request, manufacturer.state.getRound(), false));
@@ -277,7 +277,7 @@ public class Manufacturer extends Agent {
         public void action() {
             List<Order> orders = manufacturer.state.getOrders().values().stream()
                     .filter(o -> o.getRequest().getType().equals("buying"))
-                    .filter(o -> !o.getMessage().getSender().equals(new AID("information@manufacturer", AID.ISGUID)))
+                    .filter(o -> !o.getMessage().getSender().equals(manufacturer.getAID("information")))
                     .filter(o -> o.getRequest().getRound() == manufacturer.state.getRound() + 1)
                     .collect(Collectors.toList());
 

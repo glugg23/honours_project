@@ -201,7 +201,7 @@ public class Consumer extends Agent {
 
                 for(AgentInfo agent : consumer.agents.values()) {
                     message.addReceiver(agent.toAID());
-                    message.setSender(new AID("information@consumer", AID.ISGUID));
+                    message.setSender(consumer.getAID("information"));
                     consumer.send(message);
                 }
 

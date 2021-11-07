@@ -29,13 +29,19 @@ public class Main {
 
     public static void main(String[] args) {
         Runtime runtime = Runtime.instance();
-
         Profile profile = new ProfileImpl();
+
         String type = System.getenv("AGENT_TYPE");
         if(type == null) {
             type = "";
         }
-        profile.setParameter(Profile.PLATFORM_ID, type);
+
+        String name = System.getenv("AGENT_NAME");
+        if(name == null) {
+            name = type;
+        }
+
+        profile.setParameter(Profile.PLATFORM_ID, name);
 
         runtime.setCloseVM(true);
         AgentContainer container = runtime.createMainContainer(profile);

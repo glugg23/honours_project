@@ -194,7 +194,7 @@ public class Producer extends Agent {
 
             for(AgentInfo agent : producer.agents.values()) {
                 ACLMessage message = Message.newMsg(ACLMessage.INFORM, agent.toAID(), requestString);
-                message.setSender(new AID("information@" + producer.state.getType(), AID.ISGUID));
+                message.setSender(producer.getAID("information"));
                 producer.send(message);
             }
         }

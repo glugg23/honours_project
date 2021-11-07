@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  clock:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=clock
+      - EXPERIMENT=experiment2
+    hostname: clock
+
+  manufacturer:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=manufacturer
+      - EXPERIMENT=experiment2
+    hostname: manufacturer
+
+  consumer:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=consumer
+      - EXPERIMENT=experiment2
+    hostname: consumer
+
+  producer_one:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=producer
+      - AGENT_NAME=producer_one
+      - EXPERIMENT=experiment2
+    hostname: producer_one
+
+  producer_two:
+    build: .
+    image: ghcr.io/glugg23/honours_project:jade
+    environment:
+      - AGENT_TYPE=producer
+      - AGENT_NAME=producer_two
+      - EXPERIMENT=experiment2
+    hostname: producer_two

@@ -31,9 +31,7 @@ public class Clock extends Agent {
     @SuppressWarnings("unchecked cast")
     @Override
     protected void setup() {
-        AID knowledge = new AID("knowledge", AID.ISLOCALNAME);
-
-        ACLMessage filterRequest = Message.newMsg(ACLMessage.REQUEST, knowledge, "informationFilter");
+        ACLMessage filterRequest = Message.newMsg(ACLMessage.REQUEST, new AID("knowledge", AID.ISLOCALNAME), "informationFilter");
         send(filterRequest);
         ACLMessage filterReply = blockingReceive(MatchConversationId(filterRequest.getConversationId()));
         try {
@@ -43,7 +41,7 @@ public class Clock extends Agent {
             logger.log(Level.WARNING, "Received invalid information filter", e);
         }
 
-        ACLMessage maxRoundsRequest = Message.newMsg(ACLMessage.REQUEST, knowledge, "maxRounds");
+        ACLMessage maxRoundsRequest = Message.newMsg(ACLMessage.REQUEST, new AID("knowledge", AID.ISLOCALNAME), "maxRounds");
         send(maxRoundsRequest);
         ACLMessage roundsReply = blockingReceive(MatchConversationId(maxRoundsRequest.getConversationId()));
         maxRounds = Integer.parseInt(roundsReply.getContent());
