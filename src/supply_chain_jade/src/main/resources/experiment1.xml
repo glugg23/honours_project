@@ -10,8 +10,11 @@
     <void property="ignored">
      <boolean>false</boolean>
     </void>
-    <void property="name">
+    <void property="layer">
      <string>information</string>
+    </void>
+    <void property="name">
+     <string>producer</string>
     </void>
     <void property="type">
      <string>producer</string>
@@ -27,8 +30,11 @@
     <void property="ignored">
      <boolean>false</boolean>
     </void>
-    <void property="name">
+    <void property="layer">
      <string>information</string>
+    </void>
+    <void property="name">
+     <string>clock</string>
     </void>
     <void property="type">
      <string>clock</string>
@@ -44,8 +50,11 @@
     <void property="ignored">
      <boolean>false</boolean>
     </void>
-    <void property="name">
+    <void property="layer">
      <string>information</string>
+    </void>
+    <void property="name">
+     <string>consumer</string>
     </void>
     <void property="type">
      <string>consumer</string>
@@ -61,8 +70,11 @@
     <void property="ignored">
      <boolean>false</boolean>
     </void>
-    <void property="name">
+    <void property="layer">
      <string>information</string>
+    </void>
+    <void property="name">
+     <string>manufacturer</string>
     </void>
     <void property="type">
      <string>manufacturer</string>

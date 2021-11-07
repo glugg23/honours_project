@@ -6,7 +6,9 @@ import uk.ac.napier.util.State;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,14 +48,20 @@ public abstract class Knowledge extends Agent {
         String filter = properties.getProperty(type + ".informationFilter");
         String[] informationFilter = filter.split(",");
 
-        for(String f : informationFilter) {
-            if(agents.containsKey(f)) {
-                AgentInfo info = agents.get(f);
+        HashMap<String, AgentInfo> filteredAgents = new HashMap<>();
+
+        for(Map.Entry<String, AgentInfo> kv : agents.entrySet()) {
+            if(Arrays.stream(informationFilter).anyMatch(i -> kv.getValue().getType().equals(i))) {
+                AgentInfo info = kv.getValue();
                 info.setIgnored(true);
-                agents.put(f, info);
+                filteredAgents.put(kv.getKey(), info);
+
+            } else {
+                filteredAgents.put(kv.getKey(), kv.getValue());
             }
         }
 
+        agents = filteredAgents;
         this.isReady = true;
     }
 

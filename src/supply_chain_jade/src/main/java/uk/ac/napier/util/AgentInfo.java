@@ -14,15 +14,17 @@ import java.util.Properties;
 public class AgentInfo implements Serializable {
     private String name;
     private String type;
+    private String layer;
     private String address;
     private Boolean ignored;
 
     public AgentInfo() {
     }
 
-    public AgentInfo(String name, String type, String address, Boolean ignored) {
+    public AgentInfo(String name, String type, String layer, String address, Boolean ignored) {
         this.name = name;
         this.type = type;
+        this.layer = layer;
         this.address = address;
         this.ignored = ignored;
     }
@@ -47,7 +49,8 @@ public class AgentInfo implements Serializable {
         String[] agents = properties.getProperty("agents").split(",");
 
         for(String a : agents) {
-            agentInfo.put(a, new AgentInfo("information", a, String.format("http://%s:7778/acc", a), false));
+            String[] info = a.split(":");
+            agentInfo.put(info[0], new AgentInfo(info[0], info[1], "information", String.format("http://%s:7778/acc", info[0]), false));
         }
 
         try(FileOutputStream stream = new FileOutputStream(filepath)) {
@@ -71,7 +74,7 @@ public class AgentInfo implements Serializable {
     }
 
     public AID toAID() {
-        AID aid = new AID(String.format("%s@%s", name, type), AID.ISGUID);
+        AID aid = new AID(String.format("%s@%s", layer, name), AID.ISGUID);
         aid.addAddresses(address);
         return aid;
     }
@@ -90,6 +93,14 @@ public class AgentInfo implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getLayer() {
+        return layer;
+    }
+
+    public void setLayer(String layer) {
+        this.layer = layer;
     }
 
     public String getAddress() {
