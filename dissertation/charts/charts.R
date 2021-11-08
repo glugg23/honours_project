@@ -24,6 +24,78 @@ jade3$time_converted <- strptime(jade3$time, "%H:%M:%OS")
 jade4$time_converted <- strptime(jade4$time, "%H:%M:%OS")
 jade5$time_converted <- strptime(jade5$time, "%H:%M:%OS")
 
+elixir1$time_diff <-
+    ave(
+        as.numeric(elixir1$time_converted),
+        factor(elixir1$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+elixir2$time_diff <-
+    ave(
+        as.numeric(elixir2$time_converted),
+        factor(elixir2$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+elixir3$time_diff <-
+    ave(
+        as.numeric(elixir3$time_converted),
+        factor(elixir3$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+elixir4$time_diff <-
+    ave(
+        as.numeric(elixir4$time_converted),
+        factor(elixir4$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+elixir5$time_diff <-
+    ave(
+        as.numeric(elixir5$time_converted),
+        factor(elixir5$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+
+jade1$time_diff <-
+    ave(
+        as.numeric(jade1$time_converted),
+        factor(jade1$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+jade2$time_diff <-
+    ave(
+        as.numeric(jade2$time_converted),
+        factor(jade2$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+jade3$time_diff <-
+    ave(
+        as.numeric(jade3$time_converted),
+        factor(jade3$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+jade4$time_diff <-
+    ave(
+        as.numeric(jade4$time_converted),
+        factor(jade4$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+jade5$time_diff <-
+    ave(
+        as.numeric(jade5$time_converted),
+        factor(jade5$run),
+        FUN = function(x)
+            c(NA, diff(x))
+    )
+
 system <- rep(c("Elixir", "JADE"), each = 5)
 
 experiment <-
@@ -193,6 +265,28 @@ ggplot(time_diff_df,
     geom_col(position = "dodge") +
     theme_bw() +
     labs(x = "Experiment", y = "Mean total time taken (secs)", fill = "System")
+
+mean_time_rounds <-
+    c(
+        mean(na.omit(elixir1$time_diff)),
+        mean(na.omit(elixir2$time_diff)),
+        mean(na.omit(elixir3$time_diff)),
+        mean(na.omit(elixir4$time_diff)),
+        mean(na.omit(elixir5$time_diff)),
+        mean(na.omit(jade1$time_diff)),
+        mean(na.omit(jade2$time_diff)),
+        mean(na.omit(jade3$time_diff)),
+        mean(na.omit(jade4$time_diff)),
+        mean(na.omit(jade5$time_diff))
+    )
+
+time_rounds_df <- data.frame(system, experiment, mean_time_rounds)
+
+ggplot(time_rounds_df,
+       aes(x = experiment, y = mean_time_rounds * 1000, fill = system)) +
+    geom_col(position = "dodge") +
+    theme_bw() +
+    labs(x = "Experiment", y = "Mean time between rounds (ms)", fill = "System")
 
 elixir5_1 <- elixir5[elixir5$run == 1,]
 elixir5_1 <- elixir5_1[-(1:1),] # Remove round 0 row
