@@ -165,7 +165,27 @@ mean_time_diff <-
 
 time_diff_df <- data.frame(system, experiment, mean_time_diff)
 
-ggplot(time_diff_df, aes(x = experiment, y = mean_time_diff, fill = system)) +
+ggplot(time_diff_df,
+       aes(x = experiment, y = mean_time_diff, fill = system)) +
     geom_col(position = "dodge") +
     theme_bw() +
     labs(x = "Experiment", y = "Mean total time taken (secs)", fill = "System")
+
+elixir5_1 <- elixir5[elixir5$run == 1,]
+elixir5_1 <- elixir5_1[-(1:1),] # Remove round 0 row
+elixir5_1$system <- rep(c("Elixir"), 220)
+
+jade5_1 <- jade5[jade5$run == 1,]
+jade5_1 <- jade5_1[-(1:1),] # Remove round 0 row
+jade5_1$system <- rep(c("JADE"), 220)
+
+both5_1 <- rbind(elixir5_1, jade5_1)
+
+ggplot(both5_1, aes(
+    x = round,
+    y = memory / 1024 / 1024,
+    colour = system
+)) +
+    geom_line() +
+    theme_bw() +
+    labs(x = "Rounds", y = "Memory usage (MiB)", colour = "System")
