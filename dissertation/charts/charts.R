@@ -65,3 +65,107 @@ ggplot(memory_df, aes(x = experiment, y = mean_memory, fill = system)) +
     geom_col(position = "dodge") +
     theme_bw() +
     labs(x = "Experiment", y = "Mean memory usage (MiB)", fill = "System")
+
+elixir1_time_diff <- c()
+elixir2_time_diff <- c()
+elixir3_time_diff <- c()
+elixir4_time_diff <- c()
+elixir5_time_diff <- c()
+jade1_time_diff <- c()
+jade2_time_diff <- c()
+jade3_time_diff <- c()
+jade4_time_diff <- c()
+jade5_time_diff <- c()
+
+for (i in 1:10) {
+    elixir1_time_diff <-
+        c(elixir1_time_diff, as.double(difftime(
+            strptime(elixir1$time[elixir1$run == i][221], "%H:%M:%OS"),
+            strptime(elixir1$time[elixir1$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    elixir2_time_diff <-
+        c(elixir2_time_diff, as.double(difftime(
+            strptime(elixir2$time[elixir2$run == i][221], "%H:%M:%OS"),
+            strptime(elixir2$time[elixir2$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    elixir3_time_diff <-
+        c(elixir3_time_diff, as.double(difftime(
+            strptime(elixir3$time[elixir3$run == i][221], "%H:%M:%OS"),
+            strptime(elixir3$time[elixir3$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    elixir4_time_diff <-
+        c(elixir4_time_diff, as.double(difftime(
+            strptime(elixir4$time[elixir4$run == i][221], "%H:%M:%OS"),
+            strptime(elixir4$time[elixir4$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    elixir5_time_diff <-
+        c(elixir5_time_diff, as.double(difftime(
+            strptime(elixir5$time[elixir5$run == i][221], "%H:%M:%OS"),
+            strptime(elixir5$time[elixir5$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    jade1_time_diff <-
+        c(jade1_time_diff, as.double(difftime(
+            strptime(jade1$time[jade1$run == i][221], "%H:%M:%OS"),
+            strptime(jade1$time[jade1$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    jade2_time_diff <-
+        c(jade2_time_diff, as.double(difftime(
+            strptime(jade2$time[jade2$run == i][221], "%H:%M:%OS"),
+            strptime(jade2$time[jade2$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    jade3_time_diff <-
+        c(jade3_time_diff, as.double(difftime(
+            strptime(jade3$time[jade3$run == i][221], "%H:%M:%OS"),
+            strptime(jade3$time[jade3$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    jade4_time_diff <-
+        c(jade4_time_diff, as.double(difftime(
+            strptime(jade4$time[jade4$run == i][221], "%H:%M:%OS"),
+            strptime(jade4$time[jade4$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+    
+    jade5_time_diff <-
+        c(jade5_time_diff, as.double(difftime(
+            strptime(jade5$time[jade5$run == i][221], "%H:%M:%OS"),
+            strptime(jade5$time[jade5$run == i][1], "%H:%M:%OS"),
+            units = "secs"
+        )))
+}
+
+mean_time_diff <-
+    c(
+        mean(elixir1_time_diff),
+        mean(elixir2_time_diff),
+        mean(elixir3_time_diff),
+        mean(elixir4_time_diff),
+        mean(elixir5_time_diff),
+        mean(jade1_time_diff),
+        mean(jade2_time_diff),
+        mean(jade3_time_diff),
+        mean(jade4_time_diff),
+        mean(jade5_time_diff)
+    )
+
+time_diff_df <- data.frame(system, experiment, mean_time_diff)
+
+ggplot(time_diff_df, aes(x = experiment, y = mean_time_diff, fill = system)) +
+    geom_col(position = "dodge") +
+    theme_bw() +
+    labs(x = "Experiment", y = "Mean total time taken (secs)", fill = "System")
