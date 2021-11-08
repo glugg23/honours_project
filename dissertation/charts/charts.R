@@ -12,6 +12,18 @@ jade3 <- read.csv("jade/experiment3.csv")
 jade4 <- read.csv("jade/experiment4.csv")
 jade5 <- read.csv("jade/experiment5.csv")
 
+elixir1$time_converted <- strptime(elixir1$time, "%H:%M:%OS")
+elixir2$time_converted <- strptime(elixir2$time, "%H:%M:%OS")
+elixir3$time_converted <- strptime(elixir3$time, "%H:%M:%OS")
+elixir4$time_converted <- strptime(elixir4$time, "%H:%M:%OS")
+elixir5$time_converted <- strptime(elixir5$time, "%H:%M:%OS")
+
+jade1$time_converted <- strptime(jade1$time, "%H:%M:%OS")
+jade2$time_converted <- strptime(jade2$time, "%H:%M:%OS")
+jade3$time_converted <- strptime(jade3$time, "%H:%M:%OS")
+jade4$time_converted <- strptime(jade4$time, "%H:%M:%OS")
+jade5$time_converted <- strptime(jade5$time, "%H:%M:%OS")
+
 system <- rep(c("Elixir", "JADE"), each = 5)
 
 experiment <-
@@ -71,6 +83,7 @@ elixir2_time_diff <- c()
 elixir3_time_diff <- c()
 elixir4_time_diff <- c()
 elixir5_time_diff <- c()
+
 jade1_time_diff <- c()
 jade2_time_diff <- c()
 jade3_time_diff <- c()
@@ -79,74 +92,84 @@ jade5_time_diff <- c()
 
 for (i in 1:10) {
     elixir1_time_diff <-
-        c(elixir1_time_diff, as.double(difftime(
-            strptime(elixir1$time[elixir1$run == i][221], "%H:%M:%OS"),
-            strptime(elixir1$time[elixir1$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(elixir1_time_diff, as.double(
+            difftime(
+                elixir1$time_converted[elixir1$run == i][221],
+                elixir1$time_converted[elixir1$run == i][1],
+                units = "secs"
+            )
+        ))
     
     elixir2_time_diff <-
-        c(elixir2_time_diff, as.double(difftime(
-            strptime(elixir2$time[elixir2$run == i][221], "%H:%M:%OS"),
-            strptime(elixir2$time[elixir2$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(elixir2_time_diff, as.double(
+            difftime(
+                elixir2$time_converted[elixir2$run == i][221],
+                elixir2$time_converted[elixir2$run == i][1],
+                units = "secs"
+            )
+        ))
     
     elixir3_time_diff <-
-        c(elixir3_time_diff, as.double(difftime(
-            strptime(elixir3$time[elixir3$run == i][221], "%H:%M:%OS"),
-            strptime(elixir3$time[elixir3$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(elixir3_time_diff, as.double(
+            difftime(
+                elixir3$time_converted[elixir3$run == i][221],
+                elixir3$time_converted[elixir3$run == i][1],
+                units = "secs"
+            )
+        ))
     
     elixir4_time_diff <-
-        c(elixir4_time_diff, as.double(difftime(
-            strptime(elixir4$time[elixir4$run == i][221], "%H:%M:%OS"),
-            strptime(elixir4$time[elixir4$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(elixir4_time_diff, as.double(
+            difftime(
+                elixir4$time_converted[elixir4$run == i][221],
+                elixir4$time_converted[elixir4$run == i][1],
+                units = "secs"
+            )
+        ))
     
     elixir5_time_diff <-
-        c(elixir5_time_diff, as.double(difftime(
-            strptime(elixir5$time[elixir5$run == i][221], "%H:%M:%OS"),
-            strptime(elixir5$time[elixir5$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(elixir5_time_diff, as.double(
+            difftime(
+                elixir5$time_converted[elixir5$run == i][221],
+                elixir5$time_converted[elixir5$run == i][1],
+                units = "secs"
+            )
+        ))
     
     jade1_time_diff <-
-        c(jade1_time_diff, as.double(difftime(
-            strptime(jade1$time[jade1$run == i][221], "%H:%M:%OS"),
-            strptime(jade1$time[jade1$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(jade1_time_diff, as.double(
+            difftime(jade1$time_converted[jade1$run == i][221],
+                     jade1$time_converted[jade1$run == i][1],
+                     units = "secs")
+        ))
     
     jade2_time_diff <-
-        c(jade2_time_diff, as.double(difftime(
-            strptime(jade2$time[jade2$run == i][221], "%H:%M:%OS"),
-            strptime(jade2$time[jade2$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(jade2_time_diff, as.double(
+            difftime(jade2$time_converted[jade2$run == i][221],
+                     jade2$time_converted[jade2$run == i][1],
+                     units = "secs")
+        ))
     
     jade3_time_diff <-
-        c(jade3_time_diff, as.double(difftime(
-            strptime(jade3$time[jade3$run == i][221], "%H:%M:%OS"),
-            strptime(jade3$time[jade3$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(jade3_time_diff, as.double(
+            difftime(jade3$time_converted[jade3$run == i][221],
+                     jade3$time_converted[jade3$run == i][1],
+                     units = "secs")
+        ))
     
     jade4_time_diff <-
-        c(jade4_time_diff, as.double(difftime(
-            strptime(jade4$time[jade4$run == i][221], "%H:%M:%OS"),
-            strptime(jade4$time[jade4$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(jade4_time_diff, as.double(
+            difftime(jade4$time_converted[jade4$run == i][221],
+                     jade4$time_converted[jade4$run == i][1],
+                     units = "secs")
+        ))
     
     jade5_time_diff <-
-        c(jade5_time_diff, as.double(difftime(
-            strptime(jade5$time[jade5$run == i][221], "%H:%M:%OS"),
-            strptime(jade5$time[jade5$run == i][1], "%H:%M:%OS"),
-            units = "secs"
-        )))
+        c(jade5_time_diff, as.double(
+            difftime(jade5$time_converted[jade5$run == i][221],
+                     jade5$time_converted[jade5$run == i][1],
+                     units = "secs")
+        ))
 }
 
 mean_time_diff <-
