@@ -311,3 +311,9 @@ ggplot(both5_1, aes(x = round, y = cpu_usage, colour = system)) +
     geom_line() +
     theme_bw() +
     labs(x = "Rounds", y = "CPU utilisation (%)", colour = "System")
+
+ggplot(both5_1, aes(x = round, y = time_diff * 1000, colour = system)) +
+    geom_line() +
+    geom_smooth() +
+    theme_bw() +
+    labs(x = "Rounds", y = "Time between rounds (ms)", colour = "System")
