@@ -127,6 +127,7 @@ cpu_df <- data.frame(system, experiment, mean_cpu)
 ggplot(cpu_df, aes(x = experiment, y = mean_cpu, fill = system)) +
     geom_col(position = "dodge") +
     theme_bw() +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 100)) +
     labs(x = "Experiment", y = "Mean CPU utilisation (%)", fill = "System")
 
 mean_memory <-
@@ -148,6 +149,7 @@ memory_df <- data.frame(system, experiment, mean_memory)
 ggplot(memory_df, aes(x = experiment, y = mean_memory, fill = system)) +
     geom_col(position = "dodge") +
     theme_bw() +
+    scale_y_continuous(expand = c(0, 0), limit = c(0, 260)) +
     labs(x = "Experiment", y = "Mean memory usage (MiB)", fill = "System")
 
 elixir1_time_diff <- c()
@@ -264,6 +266,7 @@ ggplot(time_diff_df,
        aes(x = experiment, y = mean_time_diff, fill = system)) +
     geom_col(position = "dodge") +
     theme_bw() +
+    scale_y_continuous(expand = c(0, 0), limit = c(0, 12.5)) +
     labs(x = "Experiment", y = "Mean total time taken (secs)", fill = "System")
 
 mean_time_rounds <-
@@ -297,15 +300,21 @@ ggplot(both5_1, aes(
 )) +
     geom_line() +
     theme_bw() +
+    scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 700)) +
     labs(x = "Rounds", y = "Memory usage (MiB)", colour = "System")
 
 ggplot(both5_1, aes(x = round, y = cpu_usage, colour = system)) +
     geom_line() +
     theme_bw() +
+    scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 101)) +
     labs(x = "Rounds", y = "CPU utilisation (%)", colour = "System")
 
 ggplot(both5_1, aes(x = round, y = time_diff * 1000, colour = system)) +
     geom_line() +
     geom_smooth() +
     theme_bw() +
+    scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 200)) +
     labs(x = "Rounds", y = "Time between rounds (ms)", colour = "System")
