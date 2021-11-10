@@ -204,6 +204,8 @@ ggplot(mean_cpu, aes(x = experiment, y = mean, fill = system)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 110)) +
     labs(x = "Experiment", y = "Mean CPU utilisation (%)", fill = "System")
 
+ggsave("../img/mean_cpu.png")
+
 mean_memory <-
     rbind(
         data.frame(
@@ -276,6 +278,8 @@ ggplot(mean_memory, aes(x = experiment, y = mean, fill = system)) +
     theme_bw() +
     scale_y_continuous(expand = c(0, 0), limit = c(0, 425)) +
     labs(x = "Experiment", y = "Mean memory usage (MiB)", fill = "System")
+
+ggsave("../img/mean_memory.png")
 
 elixir1_time_diff <- c()
 elixir2_time_diff <- c()
@@ -445,6 +449,8 @@ ggplot(mean_time_diff,
     scale_y_continuous(expand = c(0, 0), limit = c(0, 12.5)) +
     labs(x = "Experiment", y = "Mean total time taken (secs)", fill = "System")
 
+ggsave("../img/mean_time_diff.png")
+
 elixir5_1 <- elixir5[elixir5$run == 1,]
 elixir5_1 <- elixir5_1[-(1:1),] # Remove round 0 row
 elixir5_1$system <- rep(c("Elixir"), 220)
@@ -464,12 +470,16 @@ ggplot(both5_1, aes(x = round,
     scale_y_continuous(expand = c(0, 0), limits = c(0, 700)) +
     labs(x = "Rounds", y = "Memory usage (MiB)", colour = "System")
 
+ggsave("../img/memory_per_round.png")
+
 ggplot(both5_1, aes(x = round, y = cpu_usage, colour = system)) +
     geom_line() +
     theme_bw() +
     scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 101)) +
     labs(x = "Rounds", y = "CPU utilisation (%)", colour = "System")
+
+ggsave("../img/cpu_per_round.png")
 
 ggplot(both5_1, aes(x = round, y = time_diff * 1000, colour = system)) +
     geom_line() +
@@ -478,3 +488,5 @@ ggplot(both5_1, aes(x = round, y = time_diff * 1000, colour = system)) +
     scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 200)) +
     labs(x = "Rounds", y = "Time between rounds (ms)", colour = "System")
+
+ggsave("../img/time_per_round.png")
