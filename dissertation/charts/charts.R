@@ -280,14 +280,6 @@ mean_time_rounds <-
         mean(na.omit(jade5$time_diff))
     )
 
-time_rounds_df <- data.frame(system, experiment, mean_time_rounds)
-
-ggplot(time_rounds_df,
-       aes(x = experiment, y = mean_time_rounds * 1000, fill = system)) +
-    geom_col(position = "dodge") +
-    theme_bw() +
-    labs(x = "Experiment", y = "Mean time between rounds (ms)", fill = "System")
-
 elixir5_1 <- elixir5[elixir5$run == 1,]
 elixir5_1 <- elixir5_1[-(1:1),] # Remove round 0 row
 elixir5_1$system <- rep(c("Elixir"), 220)
