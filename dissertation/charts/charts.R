@@ -12,6 +12,18 @@ jade3 <- read.csv("jade/experiment3.csv")
 jade4 <- read.csv("jade/experiment4.csv")
 jade5 <- read.csv("jade/experiment5.csv")
 
+elixir1$memory <- elixir1$memory / 1024 / 1024
+elixir2$memory <- elixir2$memory / 1024 / 1024
+elixir3$memory <- elixir3$memory / 1024 / 1024
+elixir4$memory <- elixir4$memory / 1024 / 1024
+elixir5$memory <- elixir5$memory / 1024 / 1024
+
+jade1$memory <- jade1$memory / 1024 / 1024
+jade2$memory <- jade2$memory / 1024 / 1024
+jade3$memory <- jade3$memory / 1024 / 1024
+jade4$memory <- jade4$memory / 1024 / 1024
+jade5$memory <- jade5$memory / 1024 / 1024
+
 elixir1$time_converted <- strptime(elixir1$time, "%H:%M:%OS")
 elixir2$time_converted <- strptime(elixir2$time, "%H:%M:%OS")
 elixir3$time_converted <- strptime(elixir3$time, "%H:%M:%OS")
@@ -96,60 +108,173 @@ jade5$time_diff <-
             c(NA, diff(x))
     )
 
-system <- rep(c("Elixir", "JADE"), each = 5)
+elixir1$system <- "Elixir"
+elixir2$system <- "Elixir"
+elixir3$system <- "Elixir"
+elixir4$system <- "Elixir"
+elixir5$system <- "Elixir"
 
-experiment <-
-    rep(c(
-        "Experiment 1",
-        "Experiment 2",
-        "Experiment 3",
-        "Experiment 4",
-        "Experiment 5"
-    ),
-    2)
+jade1$system <- "JADE"
+jade2$system <- "JADE"
+jade3$system <- "JADE"
+jade4$system <- "JADE"
+jade5$system <- "JADE"
+
+elixir1$experiment <- "Experiment 1"
+jade1$experiment <- "Experiment 1"
+elixir2$experiment <- "Experiment 2"
+jade2$experiment <- "Experiment 2"
+elixir3$experiment <- "Experiment 3"
+jade3$experiment <- "Experiment 3"
+elixir4$experiment <- "Experiment 4"
+jade4$experiment <- "Experiment 4"
+elixir5$experiment <- "Experiment 5"
+jade5$experiment <- "Experiment 5"
 
 mean_cpu <-
-    c(
-        mean(elixir1$cpu_usage[-(1:1)]),
-        mean(elixir2$cpu_usage[-(1:1)]),
-        mean(elixir3$cpu_usage[-(1:1)]),
-        mean(elixir4$cpu_usage[-(1:1)]),
-        mean(elixir5$cpu_usage[-(1:1)]),
-        mean(jade1$cpu_usage[-(1:1)]),
-        mean(jade2$cpu_usage[-(1:1)]),
-        mean(jade3$cpu_usage[-(1:1)]),
-        mean(jade4$cpu_usage[-(1:1)]),
-        mean(jade5$cpu_usage[-(1:1)])
+    rbind(
+        data.frame(
+            system = elixir1$system[1],
+            experiment = elixir1$experiment[1],
+            mean = mean(elixir1$cpu_usage[-(1:1)]),
+            sd = sd(elixir1$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = elixir2$system[1],
+            experiment = elixir2$experiment[1],
+            mean = mean(elixir2$cpu_usage[-(1:1)]),
+            sd = sd(elixir2$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = elixir3$system[1],
+            experiment = elixir3$experiment[1],
+            mean = mean(elixir3$cpu_usage[-(1:1)]),
+            sd = sd(elixir3$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = elixir4$system[1],
+            experiment = elixir4$experiment[1],
+            mean = mean(elixir4$cpu_usage[-(1:1)]),
+            sd = sd(elixir4$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = elixir5$system[1],
+            experiment = elixir5$experiment[1],
+            mean = mean(elixir5$cpu_usage[-(1:1)]),
+            sd = sd(elixir5$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = jade1$system[1],
+            experiment = jade1$experiment[1],
+            mean = mean(jade1$cpu_usage[-(1:1)]),
+            sd = sd(jade1$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = jade2$system[1],
+            experiment = jade2$experiment[1],
+            mean = mean(jade2$cpu_usage[-(1:1)]),
+            sd = sd(jade2$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = jade3$system[1],
+            experiment = jade3$experiment[1],
+            mean = mean(jade3$cpu_usage[-(1:1)]),
+            sd = sd(jade3$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = jade4$system[1],
+            experiment = jade4$experiment[1],
+            mean = mean(jade4$cpu_usage[-(1:1)]),
+            sd = sd(jade4$cpu_usage[-(1:1)])
+        ),
+        data.frame(
+            system = jade5$system[1],
+            experiment = jade5$experiment[1],
+            mean = mean(jade5$cpu_usage[-(1:1)]),
+            sd = sd(jade5$cpu_usage[-(1:1)])
+        )
     )
 
-cpu_df <- data.frame(system, experiment, mean_cpu)
-
-ggplot(cpu_df, aes(x = experiment, y = mean_cpu, fill = system)) +
+ggplot(mean_cpu, aes(x = experiment, y = mean, fill = system)) +
     geom_col(position = "dodge") +
+    geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+                  width = 0.2,
+                  position = position_dodge(.9)) +
     theme_bw() +
-    scale_y_continuous(expand = c(0, 0), limits = c(0, 100)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 110)) +
     labs(x = "Experiment", y = "Mean CPU utilisation (%)", fill = "System")
 
 mean_memory <-
-    c(
-        mean(elixir1$memory[-(1:1)]) / 1024 / 1024,
-        mean(elixir2$memory[-(1:1)]) / 1024 / 1024,
-        mean(elixir3$memory[-(1:1)]) / 1024 / 1024,
-        mean(elixir4$memory[-(1:1)]) / 1024 / 1024,
-        mean(elixir5$memory[-(1:1)]) / 1024 / 1024,
-        mean(jade1$memory[-(1:1)]) / 1024 / 1024,
-        mean(jade2$memory[-(1:1)]) / 1024 / 1024,
-        mean(jade3$memory[-(1:1)]) / 1024 / 1024,
-        mean(jade4$memory[-(1:1)]) / 1024 / 1024,
-        mean(jade5$memory[-(1:1)]) / 1024 / 1024
+    rbind(
+        data.frame(
+            system = elixir1$system[1],
+            experiment = elixir1$experiment[1],
+            mean = mean(elixir1$memory[-(1:1)]),
+            sd = sd(elixir1$memory[-(1:1)])
+        ),
+        data.frame(
+            system = elixir2$system[1],
+            experiment = elixir2$experiment[1],
+            mean = mean(elixir2$memory[-(1:1)]),
+            sd = sd(elixir2$memory[-(1:1)])
+        ),
+        data.frame(
+            system = elixir3$system[1],
+            experiment = elixir3$experiment[1],
+            mean = mean(elixir3$memory[-(1:1)]),
+            sd = sd(elixir3$memory[-(1:1)])
+        ),
+        data.frame(
+            system = elixir4$system[1],
+            experiment = elixir4$experiment[1],
+            mean = mean(elixir4$memory[-(1:1)]),
+            sd = sd(elixir4$memory[-(1:1)])
+        ),
+        data.frame(
+            system = elixir5$system[1],
+            experiment = elixir5$experiment[1],
+            mean = mean(elixir5$memory[-(1:1)]),
+            sd = sd(elixir5$memory[-(1:1)])
+        ),
+        data.frame(
+            system = jade1$system[1],
+            experiment = jade1$experiment[1],
+            mean = mean(jade1$memory[-(1:1)]),
+            sd = sd(jade1$memory[-(1:1)])
+        ),
+        data.frame(
+            system = jade2$system[1],
+            experiment = jade2$experiment[1],
+            mean = mean(jade2$memory[-(1:1)]),
+            sd = sd(jade2$memory[-(1:1)])
+        ),
+        data.frame(
+            system = jade3$system[1],
+            experiment = jade3$experiment[1],
+            mean = mean(jade3$memory[-(1:1)]),
+            sd = sd(jade3$memory[-(1:1)])
+        ),
+        data.frame(
+            system = jade4$system[1],
+            experiment = jade4$experiment[1],
+            mean = mean(jade4$memory[-(1:1)]),
+            sd = sd(jade4$memory[-(1:1)])
+        ),
+        data.frame(
+            system = jade5$system[1],
+            experiment = jade5$experiment[1],
+            mean = mean(jade5$memory[-(1:1)]),
+            sd = sd(jade5$memory[-(1:1)])
+        )
     )
 
-memory_df <- data.frame(system, experiment, mean_memory)
-
-ggplot(memory_df, aes(x = experiment, y = mean_memory, fill = system)) +
+ggplot(mean_memory, aes(x = experiment, y = mean, fill = system)) +
     geom_col(position = "dodge") +
+    geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+                  width = 0.2,
+                  position = position_dodge(.9)) +
     theme_bw() +
-    scale_y_continuous(expand = c(0, 0), limit = c(0, 260)) +
+    scale_y_continuous(expand = c(0, 0), limit = c(0, 425)) +
     labs(x = "Experiment", y = "Mean memory usage (MiB)", fill = "System")
 
 elixir1_time_diff <- c()
@@ -247,41 +372,78 @@ for (i in 1:10) {
 }
 
 mean_time_diff <-
-    c(
-        mean(elixir1_time_diff),
-        mean(elixir2_time_diff),
-        mean(elixir3_time_diff),
-        mean(elixir4_time_diff),
-        mean(elixir5_time_diff),
-        mean(jade1_time_diff),
-        mean(jade2_time_diff),
-        mean(jade3_time_diff),
-        mean(jade4_time_diff),
-        mean(jade5_time_diff)
+    rbind(
+        data.frame(
+            system = "Elixir",
+            experiment = "Experiment 1",
+            mean = mean(elixir1_time_diff),
+            sd = sd(elixir1_time_diff)
+        ),
+        data.frame(
+            system = "Elixir",
+            experiment = "Experiment 2",
+            mean = mean(elixir2_time_diff),
+            sd = sd(elixir2_time_diff)
+        ),
+        data.frame(
+            system = "Elixir",
+            experiment = "Experiment 3",
+            mean = mean(elixir3_time_diff),
+            sd = sd(elixir3_time_diff)
+        ),
+        data.frame(
+            system = "Elixir",
+            experiment = "Experiment 4",
+            mean = mean(elixir4_time_diff),
+            sd = sd(elixir4_time_diff)
+        ),
+        data.frame(
+            system = "Elixir",
+            experiment = "Experiment 5",
+            mean = mean(elixir5_time_diff),
+            sd = sd(elixir5_time_diff)
+        ),
+        data.frame(
+            system = "JADE",
+            experiment = "Experiment 1",
+            mean = mean(jade1_time_diff),
+            sd = sd(jade1_time_diff)
+        ),
+        data.frame(
+            system = "JADE",
+            experiment = "Experiment 2",
+            mean = mean(jade2_time_diff),
+            sd = sd(jade2_time_diff)
+        ),
+        data.frame(
+            system = "JADE",
+            experiment = "Experiment 3",
+            mean = mean(jade3_time_diff),
+            sd = sd(jade3_time_diff)
+        ),
+        data.frame(
+            system = "JADE",
+            experiment = "Experiment 4",
+            mean = mean(jade4_time_diff),
+            sd = sd(jade4_time_diff)
+        ),
+        data.frame(
+            system = "JADE",
+            experiment = "Experiment 5",
+            mean = mean(jade5_time_diff),
+            sd = sd(jade5_time_diff)
+        )
     )
 
-time_diff_df <- data.frame(system, experiment, mean_time_diff)
-
-ggplot(time_diff_df,
-       aes(x = experiment, y = mean_time_diff, fill = system)) +
+ggplot(mean_time_diff,
+       aes(x = experiment, y = mean, fill = system)) +
     geom_col(position = "dodge") +
+    geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+                  width = 0.2,
+                  position = position_dodge(.9)) +
     theme_bw() +
     scale_y_continuous(expand = c(0, 0), limit = c(0, 12.5)) +
     labs(x = "Experiment", y = "Mean total time taken (secs)", fill = "System")
-
-mean_time_rounds <-
-    c(
-        mean(na.omit(elixir1$time_diff)),
-        mean(na.omit(elixir2$time_diff)),
-        mean(na.omit(elixir3$time_diff)),
-        mean(na.omit(elixir4$time_diff)),
-        mean(na.omit(elixir5$time_diff)),
-        mean(na.omit(jade1$time_diff)),
-        mean(na.omit(jade2$time_diff)),
-        mean(na.omit(jade3$time_diff)),
-        mean(na.omit(jade4$time_diff)),
-        mean(na.omit(jade5$time_diff))
-    )
 
 elixir5_1 <- elixir5[elixir5$run == 1,]
 elixir5_1 <- elixir5_1[-(1:1),] # Remove round 0 row
@@ -293,11 +455,9 @@ jade5_1$system <- rep(c("JADE"), 220)
 
 both5_1 <- rbind(elixir5_1, jade5_1)
 
-ggplot(both5_1, aes(
-    x = round,
-    y = memory / 1024 / 1024,
-    colour = system
-)) +
+ggplot(both5_1, aes(x = round,
+                    y = memory,
+                    colour = system)) +
     geom_line() +
     theme_bw() +
     scale_x_continuous(expand = c(0, 0), limits = c(0, 220)) +
