@@ -1,3 +1,48 @@
 \subsection{CPU Usage}
 
-Display results for average CPU usage per experiment.
+The first benchmark taken was the CPU utilisation of the Manufacturer agent for each experiment.
+A higher CPU utilisation means that the CPU is spending less time being idle and shows what the proportion of execution time the system takes.
+The measurements shown here are the average CPU utilisation over 10 runs of each experiment.
+
+\Cref{fig:mean_cpu} shows the average CPU utilisation for the Elixir and JADE systems in each experiment.
+The error bars display the standard deviation from the mean value.
+These results show two interesting characteristics.
+The first is that Elixir uses close to 100\% CPU utilisation on average for most experiments, while JADE uses less than 20\% for all experiments.
+The second is that as the complexity of the experiments increases, both systems use less CPU utilisation.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{mean_cpu.png}
+    \caption{The mean CPU utilisation for each experiment}\label{fig:mean_cpu}
+\end{figure}
+
+As all the experiments are running under Docker it can be difficult to exactly work out why the systems are behaving in a certain way.
+However, educated conjectures can be made as to the cause of these behaviours.
+
+The first interesting characteristic could potentially be caused by the difference in threading models between Elixir and JADE\@.
+Elixir by default uses as many scheduler threads as available CPU cores, for these experiments that would be 16 scheduler threads.
+Any process that exists in the Elixir system can be scheduled on any of the available scheduler threads.
+By contrast, JADE allocates a single dedicated thread to each agent and that agent will only ever execute on that thread.
+While the JVM (Java Virtual Machine) allocates some threads for itself, the majority of work being done is happening on three threads in the JADE system.
+If we assume that three threads are continuously running on a 16 machine, we can expect the CPU utilisation to be \(\frac{3}{16} \times 100 = 18.75\% \).
+This is close to the actual average CPU utilisation of the JADE system.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{cpu_per_round.png}
+    \caption{The CPU utilisation per round for run 1 of experiment 5}\label{fig:cpu_per_round}
+\end{figure}
+
+\Cref{fig:cpu_per_round} shows the CPU utilisation per round in the first run of the fifth experiment.
+We can see that the Elixir system spends almost the entire time at a high CPU utilisation of over 75\% with only a few spikes that are lower.
+The JADE system starts off with a higher than average CPU utilisation, peaking at 31.25\% utilisation.
+If we assume that during the start of the benchmark there will be more load on the general JVM threads, this would explain why the system never comes close to this value of utilisation later on.
+
+The second characteristic where the CPU utilisation decreases with complexity seems likely to be caused by more cross-machine messages being sent.
+While this is difficult to verify without looking at the low-level implementation details of how messages are sent in JADE and Elixir, it seems likely that at some point when sending a message to another machine they would need to ask the OS kernel to send a network message.
+As the more complex experiments increase the number of agent machines in the network, more messages between machines will be sent.
+Since the systems are running in sparse Ubuntu Docker images, this context switching to kernel space in order to make network requests can have a measurable impact on the CPU utilisation of the system itself.
+
+Looking at only the metric of CPU utilisation in isolation, it would seem as though JADE is better than Elixir as JADE uses few system resources.
+However, it can also be interpreted that a low CPU utilisation indicates that the runtime is not using all of the system resources as effectively as it could be.
+This result will need to be considered with the other runtime metrics to form a full opinion.
