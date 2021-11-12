@@ -1,13 +1,24 @@
 \section{Results}
 
-Introduce Results section.
+This section contains the results and analysis of the 5 experiments that were described in the previous section.
+The aim of this section is to answer the research questions that were proposed in the introduction of this dissertation.
+The results from running the 5 experiments will be used to determine whether the multi-agent system implemented in Elixir performs better than an identical system written used JADE\@.
+The source code for both systems will then be compared to see whether the Elixir system is short and potentially easier to maintain that the JADE version.
 
-Mention hardware that benchmarks were performed on.
+The hardware that these benchmarks were run on was an AMD Ryzen 7 3700X processor, running at a base clock speed of 3.6 Ghz and 16 logical processors.
+The hardware had 32 GB of DDR4 memory, running at 3533 Mhz.
+As the experiments were run under Docker, the results may differ if the experiments were to be run directly on equivalent hardware.
+Docker was configured to use all the available CPU cores and to use a maximum of 25 GB of memory.
 
-Mention software versions that benchmarks were performed on.
+The host machine for these experiments was running Windows 10 version 21H1 build 19043.1348.
+The version of Docker used to run these experiments was Docker Desktop 4.1.1.
+The Elixir system was built using the Elixir version 1.12.3 Docker image.
+The JADE system was built using the Maven version 3.8.3 OpenJDK 8 image.
+Both of these images use Ubuntu as the base operating system.
 
-Mention how the benchmarks were done.
-One warmup round to build images followed by 10 measured rounds.
+Each experiment was run 10 times to ensure results were reproducible.
+Before each experiment was run, a warmup run was conducted.
+This was to ensure that the Docker image was built and that any containers that were required had been instantiated.
 
 \input{results/cpu_usage.tex}
 
