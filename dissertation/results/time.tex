@@ -1,5 +1,35 @@
 \subsection{Time}
 
-Display results for average time taken to run the entire experiment.
+The third benchmark was the mean total time for all of the 220 rounds to finish for each of the experiments.
+This measurement shows how quickly the system is able to make decisions and execute other steps such as sending messages.
 
-Display results for average time between rounds if applicable.
+\Cref{fig:mean_time_diff} shows the average time that was required for all the experiments to finish.
+The error bars show the standard deviation from the mean value.
+It is immediately apparent that the JADE system is significantly slower than the Elixir system.
+All of the experiments run in under 1 second for the Elixir system with most running under half a second.
+The simplest experiment took on average 3 seconds for the JADE system and the most complex experiment took over 12 seconds on average to complete.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{mean_time_diff.png}
+    \caption{The mean time taken for each experiment}\label{fig:mean_time_diff}
+\end{figure}
+
+Not plotted is the average time between each round.
+As each experiment uses the same number of rounds, the average time per round can be found by dividing the total time by 220.
+
+\Cref{fig:time_per_round} shows the time taken between each round for a specific run of experiment 5.
+In this chart we can see from the trendline that the Elixir system has a fairly consistent time per round.
+Interestingly, we can see that the JADE system starts off slow but speeds up towards the middle of the experiment, before slowing down a bit again near the end.
+This is likely caused by Java's JIT compiler which is still optimising the program for the first rounds of the experiment.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{time_per_round.png}
+    \caption{The time taken between each round for the first run of experiment 5}\label{fig:time_per_round}
+\end{figure}
+
+From these results we can easily see that Elixir is faster than a system implemented in JADE\@.
+This is an unexpected result as it was expected that the maturity of the Java platform would give JADE an advantage in terms of execution time.
+Further investigation would be required to work out what is causing the JADE system to perform so slowly.
+Whether it is caused by a potential bad design in the multi-agent system or whether the JADE framework code is unoptimised.
