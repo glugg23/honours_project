@@ -1,6 +1,7 @@
 \subsection{Benchmarking}
 
-Explain the different metrics that will be used for the experiments.
+The metrics that have been chosen to compare the performance of Elixir versus JADE are: CPU utilisation, memory usage and the total time for the experiment to complete.
+In order to compare to what extent it is easier to write a system in Elixir compared to JADE in a way that is empirical, the lines of source code for both systems will be compared.
 
 The first benchmark that will be taken is the CPU utilisation.
 If the CPU utilisation of the system is low then it means that less pressure is being put on the hardware.
@@ -12,13 +13,14 @@ This is a limitation of choosing Docker as the way to run these benchmarks, howe
 The CPU utilisation will be measured for each round of the simulation.
 Due to the system being non-deterministic because of random consumer demand and the possibility of losing messages, the CPU utilisation benchmark will be run multiple times and an average will be taken for all the runs in an experiment.
 
-Elixir.
-Use Erlang module \verb|cpu_sup|.
-Runtime uses one scheduler thread per CPU core, these handle all the processes that are running.
+The CPU utilisation in the Elixir system will be measured by uses the Erlang process \verb|cpu_sup|.
+This is a process from the standard library application ``OS\_Mon'' which is responsible for monitoring operating system data.
+By calling the \verb|util/0| function it returns the CPU utilisation since the last time this function was called.
+By calling this function at the end of every round we can see how much CPU utilisation each round takes.
 
-JADE\@.
-Unsure what to use at the moment in order to measure the CPU usage.
-Each agent runs on a separate OS thread.
+The CPU utilisation in the JADE system will be measured by the Java class \verb|OperatingSystemMXBean|.
+This bean can be retrieved from the ``ManagementFactory'' factory class and provides the function \verb|getProcessCpuLoad| which returns the CPU utilisation of the current Java process.
+This function will be called at the end of every round to measure the CPU utilisation of that round.
 
 Another way to measure the speed of the system is to measure the time it takes in order to complete all 220 rounds of the simulation.
 This would show the actual speed of the multi-agent system instead of just how much CPU utilisation it uses.
@@ -40,13 +42,15 @@ Lower memory consumption is important as it means that less expensive hardware w
 By measuring the increase in memory usage over the rounds in the simulation we can see if there are any issues with how much information the agents remember between rounds.
 If the memory usage increase between each round is substantial, the agents could be tuned to forget stale information faster.
 
-Elixir.
-Use Erlang module \verb|memsup|.
-Maybe look into how Erlang GC works?
+The memory that the Elixir system is using will be measured by the Erlang module function \verb|memory/1|.
+This function takes in an atom describing the type of memory that should be measured.
+As only the total amount of memory used is of interest, it will always be called with the argument \verb|:total|.
+This will be executed at the end of each round to see if the memory is use has increased or not.
 
-JADE\@.
-Unsure how to measure memory usage in Java.
-Look at Java GC in JDK 8?
+The memory in the JADE system will be measured by the Java class \\ \verb|MemoryMXBean|.
+This bean is also accessed from the ``ManagementFactory'' class and provides methods to measure the current heap and non-heap memory.
+Both of these will be called at the end of every round and summed together.
+This will provide a measured for the total amount of memory in use during that round.
 
 The final metric that will be measured for this benchmark is the total number of source lines of code.
 This will be used to see whether an agent system implemented in Elixir is more concise than a system implemented using JADE\@.
