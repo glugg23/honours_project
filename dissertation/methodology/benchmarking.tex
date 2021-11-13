@@ -2,14 +2,59 @@
 
 Explain the different metrics that will be used for the experiments.
 
-The first metric that will be measured for this benchmark is the total number of source lines of code.
+The first benchmark that will be taken is the CPU utilisation.
+If the CPU utilisation of the system is low then it means that less pressure is being put on the hardware.
+Low CPU utilisation can come from writing efficient code or from having a runtime that properly spreads the load between all CPU cores.
+
+As the benchmark will be running using Docker, the CPU load may be different if the system were running natively.
+This is a limitation of choosing Docker as the way to run these benchmarks, however, as both systems will be running under Docker there should not be any significant differences between them caused by this.
+
+The CPU utilisation will be measured for each round of the simulation.
+Due to the system being non-deterministic because of random consumer demand and the possibility of losing messages, the CPU utilisation benchmark will be run multiple times and an average will be taken for all the runs in an experiment.
+
+Elixir.
+Use Erlang module \verb|cpu_sup|.
+Runtime uses one scheduler thread per CPU core, these handle all the processes that are running.
+
+JADE\@.
+Unsure what to use at the moment in order to measure the CPU usage.
+Each agent runs on a separate OS thread.
+
+Another way to measure the speed of the system is to measure the time it takes in order to complete all 220 rounds of the simulation.
+This would show the actual speed of the multi-agent system instead of just how much CPU utilisation it uses.
+
+Both the Elixir and JADE implementation print log messages each time a new simulation round starts.
+By looking at when the final round message is printed and subtracting the time when the first round message was printed, we get the total runtime for the simulation.
+
+As a message is printed for each round, it is also possible to work out the time between each round.
+This would allow us to calculate the average round time as well as the minimum and maximum round times.
+This would be useful to see if each round completes in roughly the same amount of time or whether there are rounds that take significantly longer.
+
+The log messages are printed with millisecond precision time which should be enough precision for this benchmark.
+It would be possible to get nanosecond precision for the Elixir system by calling the Erlang standard library time functions and printing that separately.
+Unfortunately, nanosecond precision would not be possible for the JADE system.
+This feature was only made available in JDK 9 onwards, while this project is using JDK 8.
+
+The next way that the effectiveness of the two implementations will be measured is via their memory consumption.
+Lower memory consumption is important as it means that less expensive hardware would be required in order to run a system.
+By measuring the increase in memory usage over the rounds in the simulation we can see if there are any issues with how much information the agents remember between rounds.
+If the memory usage increase between each round is substantial, the agents could be tuned to forget stale information faster.
+
+Elixir.
+Use Erlang module \verb|memsup|.
+Maybe look into how Erlang GC works?
+
+JADE\@.
+Unsure how to measure memory usage in Java.
+Look at Java GC in JDK 8?
+
+The final metric that will be measured for this benchmark is the total number of source lines of code.
 This will be used to see whether an agent system implemented in Elixir is more concise than a system implemented using JADE\@.
 If Elixir is indeed more concise than JADE it would throw into question whether using a framework for implementing multi-agent systems is worth it.
 Having a more concise project is beneficial as the less lines of code there are, the more maintainable it is and the easier it is to find bugs.
 
 The command line application cloc (Count Lines of Code)\footnote{\url{https://github.com/AlDanial/cloc}} will be used to count the number of source code lines in each project.
 An external application will be used to count the number of lines due to the possibility of human error when counting lines in potentially dozens of files.
-The version of cloc that will be used is \verb|1.82|.
 
 \Cref{lst:cloc} shows the output of cloc when run against the directory containing the example projects for \cref{sec:comparison}.
 The arguments passed to cloc are \verb|--vcs=git| which tells it to use git to list the files in a directory, \verb|--hide-rate| which makes the output of cloc deterministic, and the directory name containing the source code files that need to be counted.
@@ -42,50 +87,3 @@ For the purpose of this benchmark only the ``code'' column is relevant as this i
 
 The directories that will be measured for the two projects will be \verb|src/|\\ \verb|supply_chain_elixir/lib| and \verb|src/supply_chain_jade/src/main/java|.
 These directories have been chosen as they only contain the source code for the application instead of also holding configuration files which would unfairly increase the line count.
-
-A way to measure the performance of the system is to measure the CPU usage.
-If the CPU usage of the system is low then it means that less pressure is being put on the hardware.
-Low CPU usage can come from writing efficient code or from having a runtime that properly spreads the load between all CPU cores.
-
-As the benchmark will be running using Docker, the CPU load may be different if the system were running natively.
-This is a limitation of choosing Docker as the way to run these benchmarks, however, as both systems will be running under Docker there should not be any significant differences between them caused by this.
-
-The CPU usage will be measured for each round of the simulation.
-Due to measuring the CPU usage of multiple distributed nodes and the fact that nodes can only communicate via message passing, the CPU usage measures will likely be non-deterministic.
-A way to ensure accurate results despite this is to run the benchmark multiple times and to calculate the average CPU usage per round for all benchmark runs.
-
-Elixir.
-Use Erlang module \verb|cpu_sup|.
-Runtime uses one scheduler thread per CPU core, these handle all the processes that are running.
-
-JADE\@.
-Unsure what to use at the moment in order to measure the CPU usage.
-Each agent runs on a separate OS thread.
-
-One of the ways to measure the speed of the system is to measure the time it takes in order to complete all 220 rounds of the simulation.
-This would show the actual speed of the multi-agent system instead of just how much CPU usage it uses.
-
-Both the Elixir and JADE implementation print log messages each time a new simulation round starts.
-By looking at when the final round message is printed and subtracting the time when the first round message was printed, we get the total runtime for the simulation.
-
-As a message is printed for each round, it is also possible to work out the time between each round.
-This would allow us to calculate the average round time as well as the minimum and maximum round times.
-This would be useful to see if each round completes in roughly the same amount of time or whether there are rounds that take significantly longer.
-
-The log messages are printed with millisecond precision time which should be enough precision for this benchmark.
-It would be possible to get nanosecond precision for the Elixir system by calling the Erlang standard library time functions and printing that separately.
-Unfortunately, nanosecond precision would not be possible for the JADE system.
-This feature was only made available in JDK 9 onwards, while this project is using JDK 8.
-
-The final way that the effectiveness of the two implementations will be measured is via their memory consumption.
-Lower memory consumption is important as it means that less expensive hardware would be required in order to run a system.
-By measuring the increase in memory usage over the rounds in the simulation we can see if there are any issues with how much information the agents remember between rounds.
-If the memory usage increase between each round is substantial, the agents could be tuned to forget stale information faster.
-
-Elixir.
-Use Erlang module \verb|memsup|.
-Maybe look into how Erlang GC works?
-
-JADE\@.
-Unsure how to measure memory usage in Java.
-Look at Java GC in JDK 8?
