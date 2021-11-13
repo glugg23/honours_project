@@ -28,6 +28,23 @@ This was to ensure that the Docker image was built and that any containers that 
 
 \input{results/lines_of_code.tex}
 
-\subsection{Conclusion}
+\subsection{Summary}
 
-Sum up all the results and determine which system is better.
+From the results gathered by running all five experiments, we can see that Elixir produces a system that is significantly more memory efficient and runs significantly faster.
+The downside is that it utilises practically all of the CPU resources available.
+
+The high CPU utilisation may be a product of the fact that in these experiments after one round finishes, the next round is immediately started.
+This provides the system with no downtime, resulting in all of the 16 scheduler threads being constantly active.
+If these experiments were modelled more closely to the round structure of TAC SCM where each round always takes 15 seconds, it is likely that the Elixir CPU utilisation may be closer to the JADE values.
+A multi-agent system where each round always starts immediately after the last round is not very representative of a real-world system which would be closer to a real-time system with periods of downtime.
+
+The consistently low memory usage of the Elixir system would be a benefit for using the language in a real-system.
+It would mean that an agent in a supply chain could be hosted on cheaper hardware and would not require a larger memory capacity just to deal with spikes in memory usage.
+
+The low execution time for the Elixir system would also be a benefit in a real-world system, as it indicates that the agent would be able to make decisions faster.
+Being able to make a decision faster means that a business plan can be put in place or adjusted quickly while the information the agent received is still current and accurate.
+
+The Elixir system was also found to be shorter in terms of lines of code than the JADE system.
+This shows that using a dedicated framework for agent-based programming may potentially not help in implementing a concise system.
+As systems written in Elixir are shorter it would allow them to be maintained with greater ease.
+This would help in a real-world system where the behaviour of an agent may need to be modified after it has been deployed.
