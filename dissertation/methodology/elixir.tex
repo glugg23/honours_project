@@ -66,13 +66,18 @@ Otherwise, the message is ignored.
 
 \subsubsection{Knowledge Layer}
 
-Loads config values into knowledge base.
-Knowledge base is also stored in ETS\@.
+The Knowledge layer is responsible for loading the initial knowledge into the agent.
+It reads a config file which stores all the knowledge that an agent needs to know before a simulation starts.
+Then these values are inserted into a table that is stored in ETS\@.
+This allows the Behaviour layer to read and update the knowledge base as well.
 
-Is responsible for updating Knowledge base as messages are received.
+When the Knowledge layer receives a forwarded message from the Information layer, it gets inserted into an ETS table called the Inbox.
+This allows messages to be handled in bulk by the Behaviour layer.
 
-Each agent uses a separate Knowledge layer implementation.
-Common functionality is included via the use of macros.
+At the end of the simulation the Knowledge layer prints out the total amount of money that an agent has made.
+
+Each agent uses a separate Knowledge layer implementation in order to be able to handle unique message types.
+As Elixir lacks a form of class inheritance, macros are used to ensure duplicate behaviour only needs to be written once.
 
 \subsubsection{Behaviour Layer}
 
