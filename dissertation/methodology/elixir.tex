@@ -49,11 +49,20 @@ The Information layer uses the Erlang module \verb|net_kernel| function\\ \verb|
 This message takes the form \verb|{:nodeup, node}| where node is the name of the node that was connected to.
 Once the Information layer has received this message that a node has connected, it can use the name of the node in order to request information about it.
 
-Builds the information filter for the agent.
+After the Information layer has requested information about a new node, it adds it to its information filter.
+First it looks up if the node is of a type that should be ignored.
+If it is it sets a boolean value to be true which indicates that messages from that node should always be ignored.
 
-Stores the node information in ETS, explain what ETS is.
+The information filter is stored as a table in Erlang Term Storage.
+Erlang Term Storage (ETS) is a runtime provided, in-memory key-value store.
+Each process can create new tables in order to store data.
+ETS allows for any type to be stored directly, meaning there is no need to convert between representations.
+ETS provides constant time access to data and tables can be configured to be accessible globally.
+This makes it ideal for storing information that is required by all of the layers in an agent.
 
-Forwards any messages that pass through the information filter to the Knowledge layer.
+When a message arrives the Information layer checks whether the sender is in the information filter or not.
+If the sender is not in the filter, then the message is passed on to the Knowledge layer.
+Otherwise, the message is ignored.
 
 \subsubsection{Knowledge Layer}
 
