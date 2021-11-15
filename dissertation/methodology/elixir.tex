@@ -1,6 +1,7 @@
 \subsection{Elixir}
 
-Introduction to Elixir system.
+This section describes how the Elixir system has been implemented.
+It looks at the general design decisions that were taken as well as the implementation of the Information, Knowledge and Behaviour layers.
 
 This system makes heavy use of the standard Erlang OTP behaviour\\ \verb|gen_server| (henceforth referred to as GenServer, following standard Elixir naming conventions).
 A GenServer is implemented as a Client-Server relationship where a public API is used to interact with user-defined callback functions.
@@ -81,8 +82,17 @@ As Elixir lacks a form of class inheritance, macros are used to ensure duplicate
 
 \subsubsection{Behaviour Layer}
 
-The proactive and reactive behaviour of the agent.
+The Behaviour layer defines how the agent should react to messages and what its proactive behaviour should be.
 
-Is implemented as a finite state machine using the library ``GenStateMachine'' which is a wrapper class for the Erlang module \verb|gen_statem|.
+The Behaviour layer is implemented as a finite state machine using the library \verb|GenStateMachine|\footnote{\url{https://github.com/ericentin/gen_state_machine}} which is a wrapper for the Erlang module \verb|gen_statem|.
+This library was chosen as using the base Erlang module in Elixir is cumbersome.
+As this library does little than provide an Elixir wrapper over the Erlang functionality, it was considered acceptable to use.
 
-Explain the behaviour of the different agent types.
+Each state is defined as a function that handles an event.
+An event is caused by a message being received, although this does not have to exclusively be external messages.
+Most transitions are caused by internal messages.
+The return value of each of these functions defines what state the state machine should move to.
+
+The behaviour of each Behaviour layer starts when the agent receives a message saying that a new round has started.
+After all the states have been finished, a message gets sent to the clock agent saying that the sender is finished.
+After all 220 rounds have been finished, the agent shuts down and stops the runtime.
