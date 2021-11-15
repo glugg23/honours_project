@@ -1,7 +1,7 @@
 \subsection{CPU Usage}
 
 The first benchmark taken was the CPU utilisation of the Manufacturer agent for each experiment.
-A higher CPU utilisation means that the CPU is spending less time being idle and shows what the proportion of execution time the system takes.
+A higher CPU utilisation means that the CPU is spending less time being idle and shows the proportion of execution time the program takes.
 The measurements shown here are the average CPU utilisation over 10 runs of each experiment.
 
 \Cref{fig:mean_cpu} shows the average CPU utilisation for the Elixir and JADE systems in each experiment.
@@ -35,13 +35,13 @@ This is close to the actual average CPU utilisation of the JADE system.
 
 \Cref{fig:cpu_per_round} shows the CPU utilisation per round in the first run of the fifth experiment.
 We can see that the Elixir system spends almost the entire time at a high CPU utilisation of over 75\% with only a few spikes that are lower.
-The JADE system starts off with a higher than average CPU utilisation, peaking at 31.25\% utilisation.
+The JADE system starts with a higher than average CPU utilisation, peaking at 31.25\% utilisation.
 If we assume that during the start of the benchmark there will be more load on the general JVM threads, this would explain why the system never comes close to this value of utilisation later on.
 
 The second characteristic where the CPU utilisation decreases with complexity seems likely to be caused by more cross-machine messages being sent.
 While this is difficult to verify without looking at the low-level implementation details of how messages are sent in JADE and Elixir, it seems likely that at some point when sending a message to another machine they would need to ask the OS kernel to send a network message.
 As the more complex experiments increase the number of agent machines in the network, more messages between machines will be sent.
-Since the systems are running in sparse Ubuntu Docker images, this context switching to kernel space in order to make network requests can have a measurable impact on the CPU utilisation of the system itself.
+Since the systems are running in sparse Ubuntu Docker images, this context switching to kernel space to make network requests can have a measurable impact on the CPU utilisation of the system itself.
 
 Looking at only the metric of CPU utilisation in isolation, it would seem as though JADE is better than Elixir as JADE uses few system resources.
 However, it can also be interpreted that a low CPU utilisation indicates that the runtime is not using all of the system resources as effectively as it could be.

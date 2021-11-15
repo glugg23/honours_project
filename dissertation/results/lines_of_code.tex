@@ -1,22 +1,22 @@
 \subsection{Lines of Code}
 
-The final metric that was measured was the total numbers of lines of code required in order to implement the multi-agent system.
+The final metric that was measured was the total number of lines of code required to implement the multi-agent system.
 This can be seen as a measure of how maintainable the code base of such a system would be.
-As the fewer lines of code that are required, means that there are less lines of code that need to be checked for bugs.
+As the fewer lines of code that are required, means that there are fewer lines of code that need to be checked for bugs.
 
 This is an interesting comparison as Elixir and Java use different programming paradigms.
 Java is an object-oriented programming language while Elixir is a functional programming language.
-It is expected that Elixir would require less lines of code, however, potentially more functionality may need to be implemented as Elixir lacks a multi-agent framework like JADE\@.
+It is expected that Elixir would require fewer lines of code, however, potentially more functionality may need to be implemented as Elixir lacks a multi-agent framework like JADE\@.
 
 \Cref{tab:loc} shows the total lines of code that was used to implement both systems, as reported by cloc.
 We can see that a total of 1107 lines of source code were used to implement the entire Elixir system, this is excluding blank lines and comments.
 A total of 1602 lines of Java source code were used to implement the JADE system.
 
 The Elixir source code was formatted using the command \verb|mix format| which is provided by the standard build tool ``mix''.
-This formatter prioritises readability over using less lines of code.
-As an example it splits each function call argument onto a new line if there are enough of them.
+This formatter prioritises readability over using fewer lines of code.
+As an example, it splits each function call argument onto a new line if there are enough of them.
 The JADE source code was formatted using the standard Intellij IDE formatter.
-This formatter mainly ensures that the coding style is consistent and so a manual effort was made to avoid writing lines of code that were excessively long.
+This formatter mainly ensures that the coding style is consistent and so a manual effort was made to avoid excessively long lines of code.
 
 \begin{table}[h]
     \centering
@@ -31,12 +31,12 @@ This formatter mainly ensures that the coding style is consistent and so a manua
     \caption{Lines of code for both systems, reported by cloc}\label{tab:loc}
 \end{table}
 
-As expected the results show that implementing a system in Elixir requires less lines of code than using JADE to implement a multi-agent system.
+As expected the results show that implementing a system in Elixir requires fewer lines of code than using JADE to implement a multi-agent system.
 This shows that even though Elixir lacks the framework features of JADE, it still results in a smaller codebase after these features have been implemented.
 
 One of the largest contributors of code in the JADE system is defining storage classes for all the message or request information.
 Elixir uses a dynamic type system and is not an object-orient programming language, it encourages using tuples or maps of data instead of defining concrete types in the form of structs.
-As Elixir allows pattern matching on functions it is still possible avoid passing the wrong type of argument to a function.
+As Elixir allows pattern matching on functions it is still possible to avoid passing the wrong type of argument to a function.
 
 Another contributor to the number of lines of code in the JADE system is the way that a finite state machine behaviour needs to be defined.
 All the states in the finite state machine need to be declared upfront and each transition between the states needs to be declared as well.

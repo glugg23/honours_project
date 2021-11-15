@@ -1,11 +1,11 @@
 \section{Results}
 
 This section contains the results and analysis of the 5 experiments that were described in the previous section.
-The aim of this section is to answer the research questions that were proposed in the introduction of this dissertation.
+This section aims to answer the research questions that were proposed in the introduction of this dissertation.
 The results from running the 5 experiments will be used to determine whether the multi-agent system implemented in Elixir performs better than an identical system written used JADE\@.
-The source code for both systems will then be compared to see whether the Elixir system is short and potentially easier to maintain that the JADE version.
+The source code for both systems will then be compared to see whether the Elixir system is short and potentially easier to maintain than the JADE version.
 
-The hardware that these benchmarks were run on was an AMD Ryzen 7 3700X processor, running at a base clock speed of 3.6 Ghz and 16 logical processors.
+The hardware that these benchmarks were run on was an AMD Ryzen 7 3700X processor, running at a base clock speed of 3.6 GHz and 16 logical processors.
 The hardware had 32 GB of DDR4 memory, running at 3533 Mhz.
 As the experiments were run under Docker, the results may differ if the experiments were to be run directly on equivalent hardware.
 Docker was configured to use all the available CPU cores and to use a maximum of 25 GB of memory.
@@ -17,7 +17,7 @@ The JADE system was built using the Maven version 3.8.3 OpenJDK 8 image.
 Both of these images use Ubuntu as the base operating system.
 The version of cloc that was used to count the number of lines of code was version \verb|1.82|.
 
-Each experiment was run 10 times to ensure results were reproducible.
+Each experiment was run 10 times to ensure the results were reproducible.
 Before each experiment was run, a warmup run was conducted.
 This was to ensure that the Docker image was built and that any containers that were required had been instantiated.
 
@@ -36,10 +36,10 @@ The downside is that it utilises practically all of the CPU resources available.
 
 The high CPU utilisation may be a product of the fact that in these experiments after one round finishes, the next round is immediately started.
 This provides the system with no downtime, resulting in all of the 16 scheduler threads being constantly active.
-If these experiments were modelled more closely to the round structure of TAC SCM where each round always takes 15 seconds, it is likely that the Elixir CPU utilisation may be closer to the JADE values.
-A multi-agent system where each round always starts immediately after the last round is not very representative of a real-world system which would be closer to a real-time system with periods of downtime.
+If these experiments were modelled more closely to the round structure of TAC SCM where each round always takes 15 seconds, the Elixir CPU utilisation may likely be closer to the JADE values.
+A multi-agent system where each round always starts immediately after the last round is not very representative of a real-world system that would be closer to a real-time system with periods of downtime.
 
-The consistently low memory usage of the Elixir system would be a benefit for using the language in a real-system.
+The consistently low memory usage of the Elixir system would be a benefit for using the language in a real system.
 It would mean that an agent in a supply chain could be hosted on cheaper hardware and would not require a larger memory capacity just to deal with spikes in memory usage.
 
 The low execution time for the Elixir system would also be a benefit in a real-world system, as it indicates that the agent would be able to make decisions faster.

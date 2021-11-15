@@ -3,7 +3,7 @@
 This section looks at different ways that agents can be designed and how agents can communicate with each other in a multi-agent system.
 
 While Elixir and JADE place no restrictions on how agents can be designed, they do impose some restrictions as to how they can communicate.
-JADE agents can only communicate with each other using FIPA ACL messages, while Elixir allows processes to send any valid Elixir term between each other.
+JADE agents can only communicate with each other using FIPA ACL messages, while Elixir allows processes to send any valid Elixir terms between each other.
 
 \subsubsection{Composition}
 
@@ -22,13 +22,13 @@ This allows a Blackboard System to have many Knowledge Sources, some of which ar
 While it seemed as though Blackboard System technology was becoming more available in the 1990s, 30 years later this does not seem to have been the case and a Blackboard System would need to be implemented from scratch nowadays.
 
 \citeA{vytelingum2005framework} propose a new framework for designing trading agents.
-This framework is called the Information Knowledge Behavior (IKB) framework.
+This framework is called the Information Knowledge Behaviour (IKB) framework.
 This framework splits the agent into three distinct layers which can only communicate with the layers next to it.
 
 The Information layer handles gathering all the public information that is available in the environment and then adding the private information from the agent to it.
 This layer filters out any unnecessary information but is still usually a noisy view of all the information that can be gathered.
-The Knowledge layer then infers knowledge from the Information layer, converting it into a form that can be used by the Behavior layer.
-The Behavior layer then takes the knowledge from the Knowledge layer and uses it to decide the best course of action.
+The Knowledge layer then infers knowledge from the Information layer, converting it into a form that can be used by the Behaviour layer.
+The Behaviour layer then takes the knowledge from the Knowledge layer and uses it to decide the best course of action.
 
 \citeA{vytelingum2005framework} believe that this framework is important as it provides a structured approach to designing agents, one which they found lacking from existing design strategies.
 

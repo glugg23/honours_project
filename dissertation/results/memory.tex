@@ -12,17 +12,17 @@ The error bars indicate the standard deviation of the measurements.
     \caption{The mean memory usage for each experiment}\label{fig:mean_memory}
 \end{figure}
 
-From these results we can see that the Elixir system uses approximately the same amount of memory regardless of the complexity of the experiment.
+From these results, we can see that the Elixir system uses approximately the same amount of memory regardless of the complexity of the experiment.
 The average memory usage for any of the experiments was always between 64 and 65 megabytes with a consistent standard deviation of around 4.15.
 
-However, the JADE system uses more memory as the experiments become more complex, starting off with a mean memory usage of 173 megabytes in the first experiment and ending up with a mean memory usage of 254 megabytes in the final experiment.
+However, the JADE system uses more memory as the experiments become more complex, starting with a mean memory usage of 173 megabytes in the first experiment and ending up with a mean memory usage of 254 megabytes in the final experiment.
 It can also be seen that the standard deviation increases as the experiments become more complex.
 This shows that JADE does not consistently use the same amount of memory but rather frequently has dips or increases in memory usage.
-During the first experiment there was a standard deviation of 74 while in the final experiment there was a standard deviation of 160.
+During the first experiment, there was a standard deviation of 74 while in the final experiment there was a standard deviation of 160.
 
 \Cref{fig:memory_per_round} shows the memory usage each round for the first run of the final experiment.
 We can see that the Elixir system has only very slight deviations in terms of memory usage.
-However, in this chart we can clearly see where the large standard deviation comes from in the JADE system.
+However, in this chart, we can see where the large standard deviation comes from in the JADE system.
 
 We can see that the memory in the JADE system steadily rises before rapidly being freed.
 This is a result of the Java garbage collector running.
@@ -37,16 +37,16 @@ We can also see that as the experiment runs, garbage collections are called at a
 
 These differences in memory usage can likely be explained by the differing garbage collection strategies in Elixir and JADE, as well as some of the architectural design decisions.
 
-While both Java and Elixir use a generational garbage collector, the Java garbage collector runs globally while the Elixir garbage collector runs on a per process level.
-This means that in Java all the garbage memory will be cleared at once where as in Elixir only the processes that produce a lot of memory garbage will be required to run their garbage collector.
+While both Java and Elixir use a generational garbage collector, the Java garbage collector runs globally while the Elixir garbage collector runs on a per-process level.
+This means that in Java all the garbage memory will be cleared at once whereas in Elixir only the processes that produce a lot of memory garbage will be required to run their garbage collector.
 This along with the use of many more scheduler threads means that the Elixir system can have certain processes currently blocked by garbage collection, however other processes can still run and act on incoming messages.
 
-The Elixir system makes great use of ETS in order to store information that needs to be accessed by any of the layers in an agent.
+The Elixir system makes great use of ETS to store information that needs to be accessed by any of the layers in an agent.
 This means that there will only ever be one copy of an element in the knowledge base and the element would only need to be cleared if it were explicitly deleted.
-While a globally accessible knowledge base would be possible in JADE, this style of coding is discouraged in Java and would require the use of mutex locks in order to ensure thread safety.
+While a globally accessible knowledge base would be possible in JADE, this style of coding is discouraged in Java and would require the use of mutex locks to ensure thread safety.
 The approach taken in the JADE system was to pass around serialisable objects that store the state of the agent.
-However, this means that these objects must be cloned before they are sent to another layer and that when they are filtered during various operations in the Behaviour layer, they must collected back into new collections.
+However, this means that these objects must be cloned before they are sent to another layer and that when they are filtered during various operations in the Behaviour layer, they must be collected back into new collections.
 All of these operations would produce memory garbage.
 
-From these results we can see that Elixir practically always uses less memory than a system using JADE\@.
-While it could be possible to reduce some of the memory allocation in the JADE system, this could require dealing with mutex lock contention and other thread safety issues which were not required in Elixir.
+From these results, we can see that Elixir practically always uses less memory than a system using JADE\@.
+While it could be possible to reduce some of the memory allocations in the JADE system, this could require dealing with mutex lock contention and other thread-safety issues which were not required in Elixir.

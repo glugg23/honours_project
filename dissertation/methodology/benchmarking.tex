@@ -1,9 +1,9 @@
 \subsection{Benchmarking}
 
-The metrics that have been chosen to compare the performance of Elixir versus JADE are: CPU utilisation, memory usage and the total time for the experiment to complete.
-In order to compare to what extent it is easier to write a system in Elixir compared to JADE in a way that is empirical, the lines of source code for both systems will be compared.
+The metrics that have been chosen to compare the performance of Elixir versus JADE are CPU utilisation, memory usage and the total time for the experiment to complete.
+In order to compare to what extent it is easier to write a system in Elixir compared to JADE in an empirical way, the lines of source code for both systems will be compared.
 
-The first benchmark that will be taken is the CPU utilisation.
+The first benchmark that will be taken is CPU utilisation.
 If the CPU utilisation of the system is low then it means that less pressure is being put on the hardware.
 Low CPU utilisation can come from writing efficient code or from having a runtime that properly spreads the load between all CPU cores.
 
@@ -13,7 +13,7 @@ This is a limitation of choosing Docker as the way to run these benchmarks, howe
 The CPU utilisation will be measured for each round of the simulation.
 Due to the system being non-deterministic because of random consumer demand and the possibility of losing messages, the CPU utilisation benchmark will be run multiple times and an average will be taken for all the runs in an experiment.
 
-The CPU utilisation in the Elixir system will be measured by uses the Erlang process \verb|cpu_sup|.
+The CPU utilisation in the Elixir system will be measured by using the Erlang process \verb|cpu_sup|.
 This is a process from the standard library application ``OS\_Mon'' which is responsible for monitoring operating system data.
 By calling the \verb|util/0| function it returns the CPU utilisation since the last time this function was called.
 By calling this function at the end of every round we can see how much CPU utilisation each round takes.
@@ -22,7 +22,7 @@ The CPU utilisation in the JADE system will be measured by the Java class \verb|
 This bean can be retrieved from the ``ManagementFactory'' factory class and provides the function \verb|getProcessCpuLoad| which returns the CPU utilisation of the current Java process.
 This function will be called at the end of every round to measure the CPU utilisation of that round.
 
-Another way to measure the speed of the system is to measure the time it takes in order to complete all 220 rounds of the simulation.
+Another way to measure the speed of the system is to measure the time it takes to complete all 220 rounds of the simulation.
 This would show the actual speed of the multi-agent system instead of just how much CPU utilisation it uses.
 
 Both the Elixir and JADE implementation print log messages each time a new simulation round starts.
@@ -38,7 +38,7 @@ Unfortunately, nanosecond precision would not be possible for the JADE system.
 This feature was only made available in JDK 9 onwards, while this project is using JDK 8.
 
 The next way that the effectiveness of the two implementations will be measured is via their memory consumption.
-Lower memory consumption is important as it means that less expensive hardware would be required in order to run a system.
+Lower memory consumption is important as it means that less expensive hardware would be required to run a system.
 By measuring the increase in memory usage over the rounds in the simulation we can see if there are any issues with how much information the agents remember between rounds.
 If the memory usage increase between each round is substantial, the agents could be tuned to forget stale information faster.
 
@@ -50,19 +50,19 @@ This will be executed at the end of each round to see if the memory is use has i
 The memory in the JADE system will be measured by the Java class \\ \verb|MemoryMXBean|.
 This bean is also accessed from the ``ManagementFactory'' class and provides methods to measure the current heap and non-heap memory.
 Both of these will be called at the end of every round and summed together.
-This will provide a measured for the total amount of memory in use during that round.
+This will provide a measurement for the total amount of memory in use during that round.
 
 The final metric that will be measured for this benchmark is the total number of source lines of code.
 This will be used to see whether an agent system implemented in Elixir is more concise than a system implemented using JADE\@.
 If Elixir is indeed more concise than JADE it would throw into question whether using a framework for implementing multi-agent systems is worth it.
-Having a more concise project is beneficial as the less lines of code there are, the more maintainable it is and the easier it is to find bugs.
+Having a more concise project is beneficial as the fewer lines of code there are, the more maintainable it is and the easier it is to find bugs.
 
-The command line application cloc (Count Lines of Code)\footnote{\url{https://github.com/AlDanial/cloc}} will be used to count the number of source code lines in each project.
+The command-line application cloc (Count Lines of Code)\footnote{\url{https://github.com/AlDanial/cloc}} will be used to count the number of source code lines in each project.
 An external application will be used to count the number of lines due to the possibility of human error when counting lines in potentially dozens of files.
 
 \Cref{lst:cloc} shows the output of cloc when run against the directory containing the example projects for \cref{sec:comparison}.
 The arguments passed to cloc are \verb|--vcs=git| which tells it to use git to list the files in a directory, \verb|--hide-rate| which makes the output of cloc deterministic, and the directory name containing the source code files that need to be counted.
-The benefit of indicating that git is the version control system that is being used is that it prevents cloc from counted the lines of non-versioned files.
+The benefit of indicating that git is the version control system that is being used is that it prevents cloc from counting the lines of non-versioned files.
 This prevents build artefacts from being included in the line count.
 
 \begin{lstlisting}[numbers=none,float=ht,label=lst:cloc,caption=Output of cloc when run on the example projects]
@@ -87,7 +87,7 @@ SUM:                            20            122              0            491
 \end{lstlisting}
 
 The output of cloc is a table containing columns for each language that is used in the directory, along with the number files of that language, how many blank lines there are, how many comments there are and the actual lines of source code.
-For the purpose of this benchmark only the ``code'' column is relevant as this is the number of lines that contain program code.
+For this benchmark, only the ``code'' column is relevant as this is the number of lines that contain program code.
 
 The directories that will be measured for the two projects will be \verb|src/|\\ \verb|supply_chain_elixir/lib| and \verb|src/supply_chain_jade/src/main/java|.
 These directories have been chosen as they only contain the source code for the application instead of also holding configuration files which would unfairly increase the line count.

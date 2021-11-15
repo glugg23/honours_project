@@ -1,6 +1,6 @@
 \subsection{Experiments}
 
-In order to be able to compare the two systems, a set of experiments need to be defined so that it is possible to see how the systems perform in different scenarios.
+To be able to compare the two systems, a set of experiments need to be defined so that it is possible to see how the systems perform in different scenarios.
 It is important to use multiple scenarios as this would find potential bottlenecks that might not be visible in only a simple experiment.
 This is also relevant as in the real world a multi-agent system, especially one for supply chains would need to be able to handle varied and dynamic environments.
 For simplicity, all the experiments run will be static.
@@ -27,13 +27,14 @@ Now instead of having to decide where to buy a single component, the Manufacture
 This is again coming closer to a realistic scenario as the manufacturing of computers requires multiple different components.
 
 The fourth experiment combines aspects of the second and third experiment by using a two-component PC recipe where each component has two Producer agents that produce it.
-This now requires the Manufacturer agent to both handle multiple component types as well as being able to procure them from different agents.
+This now requires the Manufacturer agent to both handle multiple component types as well as be able to procure them from different agents.
 
 The final experiment is based on the scenario from TAC SCM but has been simplified to avoid adding extra development effort.
 The TAC SCM scenario has multiple producers for CPUs, motherboards, memory and hard drives, and each producer can create two types of components.
-Additionally, CPU types need to be paired up with specific motherboard types in order to be compatible.
+Additionally, CPU types need to be paired up with specific motherboard types to be compatible.
 This level of complexity means that TAC SCM defines 16 valid recipes for producing various types of computers.
 Recreating this scenario is a little out of scope for this project as it would require implementing the ability for Producer agents to produce different types of components, which is a feature that would only be required for this benchmark.
+
 Instead, the scenario will be that there are two recipes for producing PCs, one recipe for a ``slow'' computer and another recipe for a ``fast'' computer.
 These recipes would require 4 different components where two of them are unique to that recipe.
 This experiment will use 8 Producer agents, two for each of the common components and then one Producer agent per unique component.

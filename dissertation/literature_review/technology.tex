@@ -95,7 +95,7 @@ While SPADE has not been used in many multi-agent systems, it has been used for 
 \subsubsection{Comparison Between Technologies}\label{sec:comparison}
 
 This section compares all the previously mentioned technologies, in order to evaluate them for this project.
-A short example program has written for each technology so that the ease of writing a multi-agent system can be objectively compared.
+A short example program has been written for each technology so that the ease of writing a multi-agent system can be objectively compared.
 See \cref{tab:tech_comparison} for an overview of the comparison.
 
 \begin{table}[h]
@@ -163,14 +163,14 @@ This calls into question whether JADE is still an active project.
 \citeA{bergenti2020first} mention a shift towards developing Jadescript, however, at present, this project does not seem to be generally available for review.
 
 \citeA{christos2016agent} have compared the experience writing a supply chain model in both NetLogo and JADE\@.
-They found that NetLogo not requiring an external IDE for programming and having easily embeddable graphical controls made it easy to use.
+They found that the fact that NetLogo did not require an external IDE for programming and having easily embeddable graphical controls made it easy to use.
 However, they conclude that JADE programs provide more flexible and robust programs assuming the user is willing to spend the time to learn the technology.
 
 \Cref{lst:netlogo} shows the counter agent example implemented in NetLogo.
 This is the shortest implementation of the counter agent at only 32 lines of code.
 This conciseness however comes at a price.
 NetLogo does not have a native way to send messages between `turtles' and has no way for a `turtle' to refuse to do an action it has been asked to do.
-This makes NetLogo unsuitable for writing distributed systems, as a lack of autonomy over program state means a poorly written agent can cause corruption to the rest of the system.
+This makes NetLogo unsuitable for writing distributed systems, as a lack of autonomy over the program state means a poorly written agent can cause corruption to the rest of the system.
 While this makes example programs short and easy to read, it would likely cause issues as models grow larger and more complex.
 NetLogo does have a library\footnote{\url{https://users.uom.gr/~iliass/projects/NetLogo/}} to support sending messages between agents, however, this library only supports \verb|NetLogo 5| whereas the current version is \verb|NetLogo 6.2|~\cite{sakellariou2008enhancing}.
 
@@ -193,7 +193,7 @@ While JADE has a class for defining a sequence of behaviours, the only way to do
 Another issue is that, at present, SPADE entirely relies on third-party XMPP servers.
 This requires the user to learn how to set up an XMPP server before even starting to use SPADE\@.
 
-The reason why Elixir has been chosen for this project is its short and concise syntax for multi-agent system primitives such as message sending.
+The reason why Elixir has been chosen for this project is its concise syntax for multi-agent system primitives such as message sending.
 This plus being able to leverage the abilities of Erlang's OTP modules should make it possible to implement a multi-agent system without having to rely on third-party frameworks like Java needs to do with JADE\@.
 JADE has been chosen as the comparison technology due to its dominance in existing multi-agent systems.
 Making this a worthwhile comparison if it can be shown that other technologies exist that produce better systems than JADE\@.

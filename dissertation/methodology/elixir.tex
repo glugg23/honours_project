@@ -26,7 +26,7 @@ Where appropriate, such as the callback functions for GenServers use simpler mes
 
 Instead of creating a separate project for each agent type, a single project is used for all agents.
 This is beneficial as all the agent types share a common information layer implementation and reuse common knowledge layer responses.
-The type of the agent is set at the start up of the application by reading the system environment variables and checking the value of the \verb|AGENT_TYPE| variable.
+The type of the agent is set at the start-up of the application by reading the system environment variables and checking the value of the \verb|AGENT_TYPE| variable.
 This variable indicates which knowledge and behaviour layer implementations should be started.
 If this variable is not set or is set to an unrecognised value, then the agent application will exit with an error.
 
@@ -34,7 +34,7 @@ The config for each agent type is loaded in as an Elixir script file, using the 
 An Elixir script file is a source code file that is run by being interpreted at runtime instead of being compiled to bytecode.
 By importing the Config module, macros can be used to define key-value pairs in a scoped namespace.
 This is used to store the initial knowledge for each agent type.
-Since this is just an Elixir source code file, any Elixir datatypes can be used.
+Since this is just an Elixir source code file, any Elixir data types can be used.
 This means that complex types such as maps or lists of values can be used without having to parse them from a markup language like XML\@.
 This is useful as it unifies the language that is used for configuration with the language that is used for code.
 
@@ -48,17 +48,17 @@ This strategy uses multicast UDP (User Datagram Protocol) to send information pa
 
 The Information layer uses the Erlang module \verb|net_kernel| function\\ \verb|monitor_nodes/1| to received messages when a new connection is formed between nodes.
 This message takes the form \verb|{:nodeup, node}| where node is the name of the node that was connected to.
-Once the Information layer has received this message that a node has connected, it can use the name of the node in order to request information about it.
+Once the Information layer has received this message that a node has connected, it can use the name of the node to request information about it.
 
 After the Information layer has requested information about a new node, it adds it to its information filter.
-First it looks up if the node is of a type that should be ignored.
+First, it looks up if the node is of a type that should be ignored.
 If it is it sets a boolean value to be true which indicates that messages from that node should always be ignored.
 
 The information filter is stored as a table in Erlang Term Storage.
 Erlang Term Storage (ETS) is a runtime provided, in-memory key-value store.
-Each process can create new tables in order to store data.
+Each process can create new tables to store data in.
 ETS allows for any type to be stored directly, meaning there is no need to convert between representations.
-ETS provides constant time access to data and tables can be configured to be accessible globally.
+ETS provides constant-time access to data and tables can be configured to be accessible globally.
 This makes it ideal for storing information that is required by all of the layers in an agent.
 
 When a message arrives the Information layer checks whether the sender is in the information filter or not.
@@ -68,7 +68,7 @@ Otherwise, the message is ignored.
 \subsubsection{Knowledge Layer}
 
 The Knowledge layer is responsible for loading the initial knowledge into the agent.
-It reads a config file which stores all the knowledge that an agent needs to know before a simulation starts.
+It reads a config file that stores all the knowledge that an agent needs to know before a simulation starts.
 Then these values are inserted into a table that is stored in ETS\@.
 This allows the Behaviour layer to read and update the knowledge base as well.
 
@@ -77,7 +77,7 @@ This allows messages to be handled in bulk by the Behaviour layer.
 
 At the end of the simulation the Knowledge layer prints out the total amount of money that an agent has made.
 
-Each agent uses a separate Knowledge layer implementation in order to be able to handle unique message types.
+Each agent uses a separate Knowledge layer implementation to be able to handle unique message types.
 As Elixir lacks a form of class inheritance, macros are used to ensure duplicate behaviour only needs to be written once.
 
 \subsubsection{Behaviour Layer}

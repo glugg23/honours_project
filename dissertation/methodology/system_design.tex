@@ -1,14 +1,14 @@
 \subsection{System Design}
 
 This section covers what each component is in the multi-agent system that has been implemented.
-The multi-agent system that was implemented in order to benchmark Elixir and JADE is a PC manufacturing simulation where an agent tries to meet the demand of consumers by buying raw components and producing finished PCs.
+The multi-agent system that was implemented to benchmark Elixir and JADE is a PC manufacturing simulation where an agent tries to meet the demand of consumers by buying raw components and producing finished PCs.
 This is similar to the scenario in TAC SCM but is less complex as there is only one manufacturing agent.
 A description is given of each of the agent types in this multi-agent system.
 An overview of what messages are sent between the agents in a typical round is also given.
 
 \subsubsection{Agent Types}
 
-There are 4 agent types that have been implemented for both of the multi-agent systems.
+Four agent types have been implemented for both of the multi-agent systems.
 These are the minimum number of agents types to allow the benchmarks to be run.
 
 The first agent type is the Clock agent.
@@ -32,7 +32,7 @@ The Manufacturer agent has been written without the assumption of competition so
 As such there will only be one Manufacturer agent in the simulation.
 
 The final agent type is the Consumer agent.
-This agent makes a number of requests to buy finished PCs from the Manufacturer agent each round.
+This agent makes several requests to buy finished PCs from the Manufacturer agent each round.
 It will offer to buy a certain number of PCs at a given price and any offers that are not accepted during the next round will be regarded as being rejected.
 The Consumer agent ignores all messages from the Producer agent as it does not care about raw goods.
 There will only ever be one Consumer agent as adding multiple agents would just result in there being too many orders for the Manufacturer agent to fulfil.
@@ -55,7 +55,7 @@ A summary of all the messages that are usually sent is given below.
 
 The Consumer agent will send messages to all other agents announcing what orders it wishes to buy.
 The Manufacturer agent will respond to order messages from the Consumer agent by accepting or rejecting them.
-It will then make offers to specific Producer agents in order to procure components.
+It will then make offers to specific Producer agents to procure components.
 The Producer agents will send messages broadcasting their available stock to all other agents.
 They will also respond to messages from the Manufacturer agent to accept or reject orders to buy components.
 
