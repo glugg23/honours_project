@@ -24,16 +24,28 @@ The Information layer uses this behaviour class to wait on messages and override
 
 \subsubsection{Knowledge Layer}
 
-Acts as the knowledge base in the system.
+The Knowledge layer acts as the knowledge base in the system.
+Since JADE does not have an equivalent to ETS, the Knowledge layer agent is instead used for storing all the knowledge.
 
-There is an abstract Knowledge agent which the others extend.
-This agent defines common behaviour like the Elixir macros.
+Similar to the macros used in Elixir for reducing code duplication, a single abstract Knowledge agent has been defined which implements common functionality.
+Each instance of the Knowledge agent also uses a ``KnowledgeBehaviour'' class which extends the ``GenServerBehaviour'' class to provide common but specific message responses for the Knowledge layer.
 
-This class loads config values from a properties file.
+The abstract Knowledge agent first loads the config file for the experiment as well as loading an XML file for the information about every agent in the multi-agent system.
+The configuration for each experiment is saved in a properties file as key-value string pairs.
+Unlike Elixir where types such as arrays and maps can be used directly in the config file, Java only supports string data unless the config file is a serialised object.
+Therefore, some amount of code is required to parse the config values in the properties file.
 
-Write about attempt to form agent federation and why this did not work.
+Notably, the JADE system does not attempt to dynamically connect to other agents in the network which is what the Elixir system does.
+JADE supports this functionality under the name of federations where multiple Directory Facilitator (df) agents can be connected together.
+Once multiple df agents have been connected, any agent in the same container can query all the connected df agents to find an agent providing a certain service.
+In practice, this functionality was found to be inconsistent at working correctly and frequently resulted in race conditions where one or more agents would fail to join the federation.
+From reading the JADE mailing lists, \citeA{giovanni2009problem} says ``that typically DF federations \dots{} are performed by the administrator `by hand'\,''.
+As this is not possible when running the system under Docker, federations were not used in this system.
 
-Write about de-serialising agent information from XML file and why JADE custom collections made serialising JADE objects more difficult.
+Instead of using federations, an XML file was provided for each experiment which contains all the connection information for each agent in the system.
+This XML file is a serialised HashMap object which is loaded into the system by the Knowledge layer.
+
+Similar to the Elixir system, when the JADE system receives a message from the Information layer it is placed into a HashMap called the inbox.
 
 \subsubsection{Behaviour Layer}
 
