@@ -10,9 +10,17 @@ At start-up the specific layers are started depending on the system environment.
 
 \subsubsection{Information Layer}
 
-Passes messages to Knowledge layer.
+Compared to the Information layer in the Elixir system, the Information layer in the JADE system is a lot simpler.
 
-Is implemented in a similar style to a GenServer, this is done by extending the Cyclic Behaviour from JADE and implementing that in the class.
+When the agent for the Information layer starts, it requests a list of all agents from the Knowledge layer and uses this for the information filter.
+Once it receives a message it forwards the message to the Knowledge layer if the sender is not in the information filter.
+
+A new behaviour class was implemented which acts similar to the GenServer Erlang behaviour.
+This abstract behaviour class is similar to the ``CyclicBehaviour'' class provided by JADE\@.
+However, the ``action'' method has been overridden to perform a blocking receive for a message.
+This message is then passed to a ``handle'' method which is defined as being abstract and needs to be implemented by any agent using this behaviour.
+
+The Information layer uses this behaviour class to wait on messages and overrides the ``handle'' method to do any message filtering.
 
 \subsubsection{Knowledge Layer}
 
