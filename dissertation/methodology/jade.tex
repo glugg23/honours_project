@@ -1,0 +1,34 @@
+\subsection{JADE}
+
+Introduction to JADE system.
+
+Using Java 8 as this is the last long term support version where JADE can be compiled, although due to the nature of Java bytecode a later version could be used.
+
+Each layer is a separate agent instance.
+
+At start-up the specific layers are started depending on the system environment.
+
+\subsubsection{Information Layer}
+
+Passes messages to Knowledge layer.
+
+Is implemented in a similar style to a GenServer, this is done by extending the Cyclic Behaviour from JADE and implementing that in the class.
+
+\subsubsection{Knowledge Layer}
+
+Acts as the knowledge base in the system.
+
+There is an abstract Knowledge agent which the others extend.
+This agent defines common behaviour like the Elixir macros.
+
+This class loads config values from a properties file.
+
+Write about attempt to form agent federation and why this did not work.
+
+Write about de-serialising agent information from XML file and why JADE custom collections made serialising JADE objects more difficult.
+
+\subsubsection{Behaviour Layer}
+
+Implemented using JADE's finite state machine behaviour.
+
+Explain the behaviour of the different agent types.
