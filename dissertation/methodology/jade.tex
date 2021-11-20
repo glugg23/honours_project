@@ -1,12 +1,20 @@
 \subsection{JADE}
 
-Introduction to JADE system.
+This section looks at how the JADE system has been implemented.
+It compares the JADE system to the Elixir system to see what aspects have been kept the same and what needed to be changed.
 
-Using Java 8 as this is the last long term support version where JADE can be compiled, although due to the nature of Java bytecode a later version could be used.
+The JADE system has been written using Java 8.
+Although this is a fairly out of date Java version, it is the last version where the JADE framework can be compiled on.
+While this is not an issue for this project as Maven is being used as a build tool that uses a jar file to provide access to JADE libraries, some projects might compile JADE themselves and so it would make sense to use a version of Java that can still compile JADE\@.
 
-Each layer is a separate agent instance.
+Each agent layer in the JADE system has been implemented as a separate agent.
+This maps more closely to how the system has been designed in Elixir.
+Each internal agent communicates with the other by sending messages.
+Although a single unified agent could be used, the choice of using multiple agents was made to more rigorously separate the layers in the IKB framework.
 
-At start-up the specific layers are started depending on the system environment.
+The configuration of the JADE system has been done programmatically instead of by passing flags to the JADE boot class.
+This ensures that the same configuration is used for all experiments.
+Which type of layers need to be started is also controlled programmatically, based on the value of a system environment variable.
 
 \subsubsection{Information Layer}
 
