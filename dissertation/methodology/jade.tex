@@ -49,6 +49,24 @@ Similar to the Elixir system, when the JADE system receives a message from the I
 
 \subsubsection{Behaviour Layer}
 
-Implemented using JADE's finite state machine behaviour.
+The Behaviour layer in the JADE system has also been implemented as a finite state machine, as was done in the Elixir system.
+This finite state machine uses the ``FSMBehaviour'' class from JADE and defines states for each element of the agent's behaviour.
+States for this class are defined as classes that extend an existing JADE behaviour class.
+For the state machines that have been defined in this project, all the states extend the ``OneShotBehaviour'' class.
 
-Explain the behaviour of the different agent types.
+Due to the states being added via polymorphic classes, any references to the agent that the behaviour belongs to will always be of the superclass ``Agent''.
+This means that any class member variables will not be accessible in the behaviour without casting the Agent instance to the specialised type.
+To avoid this issue, each state class has a constructor which takes the specialised agent class and assigns it to a member variable in the state class.
+This variable is then used whenever a reference to the agent is required.
+
+At the start of the round, the Behaviour layer requests a copy of the agent state from the Knowledge layer.
+As Java does not have a globally accessible place to store data such as ETS, this was the approach chosen to synchronise information between layers.
+The downside of this approach is that the Behaviour layer is only sent a snapshot of the current knowledge base.
+This means that if a new message were to be received the behaviour layer would be unaware of it.
+To fix this issue another command was to the Knowledge layer which allows the Behaviour layer to request a new copy of just the inbox.
+At the end of the round, the Behaviour layer sends the modified agent state back to the Knowledge layer.
+
+While JADE allows agents to send Java objects in messages if they are on the same machine, this is not possible between remote agents.
+Due to needing structured data in the form of objects when agents make requests, a manual way to encode request objects in a string format has been implemented.
+This is only possible because it is known that all the agents are running the same version of JADE and would likely not be an adequate solution for a real-world system.
+For a real-world, system a text-based representation such as JSON or XML could be used.
