@@ -1,5 +1,33 @@
 \subsection{Agent Design}
 
-Describe each of the layers of the agent and what they do.
+The agents in this system have been designed after the Information Knowledge Behaviour (IKB) framework.
+This means that the agents have been split into 3 distinct sub-systems.
+The systems developed for these experiments take this idea further by isolating each layer into a separate process or agent.
 
-Add message sequence diagram for communication between layers.
+The Information layer is responsible for receiving all the messages from other remote agents.
+It uses an information filter to decide which messages need to be passed onto the Knowledge layer.
+For example, a Manufacturer agent is interested in all the messages that are being sent and so has an empty information filter.
+On the contrary, Producer agents have a knowledge filter of the Consumer agent as well as other Producer agents, as this type of agent is not interested in messages these agents send.
+
+The Knowledge layer stores the information that it receives in a format that can be used by the Behaviour layer.
+For this system, the Knowledge layer takes messages it receives and places them in an inbox.
+The messages that are in the inbox can then be handled in batch by the Behaviour layer.
+
+The Behaviour layer acts on the information that it receives from the Knowledge layer and decides what the agent shall do.
+In a Consumer agent, this would be to check whether orders have been correctly delivered and to order new PCs.
+In a Manufacturer agent, this would be to accept new PC orders and order the components required to build them.
+In a Producer agent, this would be to accept component requests and to produce the correct amount of them.
+
+\Cref{fig:agent_sequence_diagram} shows an example sequence diagram for the messages that are sent between the agent layers.
+The dotted messages are messages that are only sent in the JADE system.
+The Information layer forwards any messages that pass through the information filter to the Knowledge layer.
+We can see that the Behaviour layer does not have access to the Information layer.
+It can only communicate with the Knowledge layer and the Information layer can also only communicate with the Knowledge layer.
+The Behaviour layer is responsible for sending messages to other agents but the messages are configured so that any replies are sent to the Information layer.
+Therefore, it can be considered that the Information layer is the only part of the agent that is accessible to the rest of the multi-agent system.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{agent_sequence_diagram.png}
+    \caption{A sequence diagram showing example internal messages for a Manufacturer agent. Dotted messages are only sent in the JADE system}\label{fig:agent_sequence_diagram}
+\end{figure}
