@@ -47,7 +47,7 @@ Notably, the JADE system does not attempt to dynamically connect to other agents
 JADE supports this functionality under the name of federations where multiple Directory Facilitator (df) agents can be connected together.
 Once multiple df agents have been connected, any agent in the same container can query all the connected df agents to find an agent providing a certain service.
 In practice, this functionality was found to be inconsistent at working correctly and frequently resulted in race conditions where one or more agents would fail to join the federation.
-From reading the JADE mailing lists, \citeA{giovanni2009problem} says ``that typically DF federations \dots{} are performed by the administrator `by hand'\,''.
+From reading the JADE mailing lists, \citeA{caire2009problem} says ``that typically DF federations \dots{} are performed by the administrator `by hand'\,''.
 As this is not possible when running the system under Docker, federations were not used in this system.
 
 Instead of using federations, an XML file was provided for each experiment which contains all the connection information for each agent in the system.
