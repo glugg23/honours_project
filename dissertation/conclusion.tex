@@ -22,9 +22,26 @@ This is due to it both requiring fewer lines of code to implement a multi-agent 
 
 \subsection{Reflection}
 
-Reflect on project short comings.
+While this project was able to answer the research questions that were set in the beginning, there were still some major shortcomings.
+The largest shortcoming was the lack of complexity in the decision making of the individual agents in the system.
 
-Put results in larger MAS context.
+While the agents can buy and sell their goods, a lot of planned strategic decision making had to be cut due to time constraints.
+The agents currently only seek to sell their goods for an immediate amount of profit, with no behaviour to plan for the future.
+This can be seen with the amount of money that the Manufacturer agent makes.
+Either the Manufacturer agent makes a nice profit or spends the entire experiment haemorrhaging funds.
+Similarly, there is a lack of handling for exceptional circumstances such as if an order were to arrive late or not at all.
+Implementing more complex behaviour might have narrowed the performance gap between Elixir and JADE as Elixir is not a language where the performance of `number-crunching' tasks is prioritised, whereas in Java these types of workloads are more common.
+
+This leads to the second shortcoming which is a lack of detailed performance analysis.
+While the results measured show that JADE is significantly slower than Elixir, they don't show why JADE might be slower than Elixir.
+This could be investigated by the use of detailed profiling.
+This would allow us to see where the JADE system was spending most of its time, and whether this was something that could be fixed in the agent.
+
+If performance issues were to be found in the JADE framework itself, it might be difficult for a fix to be applied.
+As mentioned in the literature review, development on JADE has affectively halted since 2017.
+During the writing of this dissertation, the original JADE website and project ended up being taken down.
+Currently a fork of JADE is being maintained by C\'edric Herpson\footnote{\url{http://www-desir.lip6.fr/~herpsonc/en/}} at Sorbonne University, France.\footnote{\url{https://jade-project.gitlab.io/}}
+It has yet to be seen how this will impact the use of JADE for multi-agent systems, but it highlights the importance of evaluating alternate technologies for research.
 
 \subsection{Future Work}
 
