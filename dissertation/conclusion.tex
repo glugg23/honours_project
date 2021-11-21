@@ -45,4 +45,16 @@ It has yet to be seen how this will impact the use of JADE for multi-agent syste
 
 \subsection{Future Work}
 
-List any future work that could be done.
+Building off this dissertation, there are two avenues in which future work can be done.
+
+The first would be to cooperate with other researchers in the field of multi-agent systems to determine what functionality they would require from Elixir.
+This would help gauge the community interest in using Elixir for multi-agent systems.
+It would also hopefully provide a list of features that Elixir would need to implement to be used in research.
+As Elixir is a general-purpose programming language, these features would not likely be implemented at the language level.
+However, Elixir supports the easy use of software libraries and has a centralised package repository.
+This would allow any required functionality such as a FIPA compliant message protocol to be implemented as a library and then distributed as open-source software.
+
+The other avenue would be to investigate other features of Elixir to see how they could be used when implementing multi-agent systems.
+Currently, this dissertation mostly uses the features of OTP, built-in support for distributed systems and some of the support for concurrent processes.
+However, a system could be designed that uses these features to their full extent as well as investigating how the language support for fault tolerance and hot-code reloading could be applied to multi-agent systems.
+This system could also look at using the web-framework Phoenix\footnote{\url{https://www.phoenixframework.org/}} to provide a method of human-agent communication.
