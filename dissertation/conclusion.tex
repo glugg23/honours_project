@@ -1,10 +1,24 @@
 \section{Conclusion}
 
-Answer research question 1.
+Using the results from \cref{sec:results}, the two research questions introduced in \cref{sec:research_questions} will now be answered.
 
-Answer research question 2.
+When looking at the extent to which Elixir is easier to use when writing a multi-agent system compared to JADE, the empiric metric chosen was the number of lines of code that were required.
+The results in \cref{tab:loc} show that Elixir required 495 fewer lines of code compared to JADE\@.
+This results in around a third reduction in lines of code compared to JADE\@.
+This shows that the provided OTP behaviours in Elixir can be easily used for agent-based design in a multi-agent system.
+Furthermore, it shows that a lack of a standardised message format such as FIPA ACL does not hinder the design of a multi-agent system in Elixir.
+Therefore, the answer to this research question would be that it is easier to write a multi-agent system in Elixir compared to JADE\@.
 
-Draw a general conclusion.
+Using the results in \cref{sec:cpu_usage,sec:memory,sec:time} we can answer to what extent a system written in Elixir performs better than a system written using JADE\@.
+We can see that Elixir performs better in terms of memory usage and the total time taken for an experiment, but performs worse in CPU utilisation when compared to JADE\@.
+The CPU utilisation result is surprising but seems to be due to the difference in runtime compared with JADE, as well as the fact that the experiments provide no downtime for the agents.
+Arguably, the most important metric is the time taken for the experiments.
+This is because, in a real-world system, agents that perform their tasks as quickly as possible would be performed.
+For this metric Elixir performed between 1 and 2 orders of magnitude better than the equivalent JADE system.
+The answer to this research question would be that for the most part, a system written in Elixir performs better than a system written in JADE\@.
+
+The answers to both of the research questions asked in this dissertation indicate that Elixir could be a viable alternative instead of using JADE for multi-agent systems.
+This is due to it both requiring fewer lines of code to implement a multi-agent system, as well as performing significantly better than a system using JADE\@.
 
 \subsection{Reflection}
 
