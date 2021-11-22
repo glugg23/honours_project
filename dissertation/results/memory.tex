@@ -6,7 +6,7 @@ Higher memory usage means that the multi-agent system would need more expensive 
 \Cref{fig:mean_memory} shows the average memory for the Elixir and JADE systems in each of the experiments.
 The error bars indicate the standard deviation of the measurements.
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{mean_memory.png}
     \caption{The mean memory usage for each experiment}\label{fig:mean_memory}
@@ -29,7 +29,7 @@ This is a result of the Java garbage collector running.
 We can note that after every two garbage collections the limit of memory that is in use before another garbage collection is called increases.
 We can also see that as the experiment runs, garbage collections are called at a more frequent interval.
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{memory_per_round.png}
     \caption{The memory usage per round for run 1 of experiment 5}\label{fig:memory_per_round}
