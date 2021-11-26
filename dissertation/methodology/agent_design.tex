@@ -20,13 +20,16 @@ In a Producer agent, this would be to accept component requests and to produce t
 
 \Cref{fig:agent_sequence_diagram} shows an example sequence diagram for the messages that are sent between the agent layers.
 The dotted messages are messages that are only sent in the JADE system.
+These are required as JADE lacks a global data store for storing knowledge.
+Therefore, the Behaviour layer needs to request any new knowledge that has been gained at the start of the round.
+Once the round is finished it asks the Knowledge layer to update its knowledge base.
 The Information layer forwards any messages that pass through the information filter to the Knowledge layer.
 We can see that the Behaviour layer does not have access to the Information layer.
 It can only communicate with the Knowledge layer and the Information layer can also only communicate with the Knowledge layer.
 The Behaviour layer is responsible for sending messages to other agents but the messages are configured so that any replies are sent to the Information layer.
 Therefore, it can be considered that the Information layer is the only part of the agent that is accessible to the rest of the multi-agent system.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{agent_sequence_diagram.png}
     \caption{A sequence diagram showing example internal messages for a Manufacturer agent. Dotted messages are only sent in the JADE system}\label{fig:agent_sequence_diagram}

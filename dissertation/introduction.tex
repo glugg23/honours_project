@@ -19,12 +19,12 @@ Such as lightweight threads which do not share state and can only communicate us
 Elixir could be considered a good technology to use for implementing multi-agent systems as the concepts behind agent-based design can be easily mapped to existing functionality in the language itself.
 
 Most multi-agent systems have been implemented using a framework called JADE~\cite{bellifemine1999jade}.
-This is a Java framework that allows you to create FIPA compliant agent systems.
+This is a Java framework that can be used to create FIPA compliant agent systems.
 FIPA is a set of agent system specifications that define how to identify and communicate with agents~\cite{obrien1998fipa}.
-This project tries to see whether Elixir as a language is better suited for writing agents or whether the specification compliance of JADE is enough to ensure it is a good choice.
+This project evaluates whether Elixir as a language is better suited for writing agents or whether a specialised framework such as JADE is better.
 
 This project aims to implement a multi-agent system in Elixir and then to reimplement the same system using JADE\@.
-After this is done, both of these systems can be compared to find which one is superior.
+After this is done, both of these systems can be compared to find which one is superior in terms of runtime performance and code length.
 
 This project could be important for other computer scientists studying multi-agent systems as Elixir has not yet been used in this area.
 If the Elixir implementation is more performant and easier to write than a version written in JADE, it could show that more modern technologies should be considered instead of using JADE\@.

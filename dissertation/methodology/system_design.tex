@@ -32,7 +32,9 @@ The Manufacturer agent has been written without the assumption of competition so
 As such there will only be one Manufacturer agent in the simulation.
 
 The final agent type is the Consumer agent.
-This agent makes several requests to buy finished PCs from the Manufacturer agent each round.
+This agent broadcasts several requests to buy finished PCs each round.
+The decision to broadcast requests was made as the Consumer agent might not be aware of all the Manufacturer agents in the system.
+This is less of an issue when there is only one Manufacturer agent, but it could cause problems at the very start of the simulation.
 It will offer to buy a certain number of PCs at a given price and any offers that are not accepted during the next round will be regarded as being rejected.
 The Consumer agent ignores all messages from the Producer agent as it does not care about raw goods.
 There will only ever be one Consumer agent as adding multiple agents would just result in there being too many orders for the Manufacturer agent to fulfil.
